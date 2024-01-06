@@ -1,0 +1,91 @@
+@import "../../abstracts/variables";
+
+.auth {
+  margin: 0 4rem;
+  position: relative;
+  background-color: $light-grey-1;
+
+  &__header {
+    height: 7rem;
+  }
+
+  &__body {
+    height: 87vh;
+
+    background-image: url(../../assets/img/sign-in_photo.jpg.jpg);
+    background-size: cover;
+    background-position: top;
+
+    display: flex;
+
+    &__app-description {
+      flex: 0 1 auto;
+      font-size: 2rem;
+      margin-left: 5rem;
+      padding: 2rem;
+      width: 50%;
+      height: 100%;
+      color: $blue-grey-1;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+
+      // #D6DBDF
+      & > * {
+        background-image: linear-gradient(to right, #fae5d3, #aeb6bf);
+        opacity: 0.9;
+        margin-bottom: 2rem;
+      }
+    }
+
+    &__form-container {
+      flex: 0 1 auto;
+      width: 50%;
+      height: 100%;
+      background-color: rgba($light-grey-1, 0.7);
+      clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 8rem;
+
+    flex: 1 1 auto;
+    display: flex;
+
+    &__details {
+      font-size: 1.4rem;
+      border-top: 1px solid $black;
+      
+
+      display: flex;
+      justify-content: space-around;
+
+      &__item {
+        margin-left: 1rem;
+        text-decoration: none;
+        margin-right: 1rem;
+      }
+    }
+
+    &__logo {
+
+      text-align: center;
+    }
+
+    &__credit {
+      border-top: 1px solid $black;
+      width: 27rem;
+      text-align: center;
+    }
+  }
+}
