@@ -62,25 +62,32 @@ const SignInForm = ({ setDisplaySignIn }) => {
   return (
     <div className="sign-in">
       <h2 className="sign-in__form-title">Sign in</h2>
-      <form className="sign-in__input-container" onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          required
-          name="email"
-          value={email}
-          onChange={handleChange}
-        ></input>
-
-        <input
-          type="password"
-          placeholder="Password"
-          minLength={5}
-          required
-          name="password"
-          value={password}
-          onChange={handleChange}
-        ></input>
+      <form className="sign-in__form" onSubmit={handleSubmit}>
+        <div className="sign-in__form__field">
+          <input
+            type="email"
+            placeholder="Email"
+            required
+            name="email"
+            value={email}
+            onChange={handleChange}
+            className="sign-in__form__field__input"
+          ></input>
+          <label for='email' className="sign-in__form__field__label">Email</label>
+        </div>
+        <div className="sign-in__form__field">
+          <input
+            type="password"
+            placeholder="Password"
+            minLength={6}
+            required
+            name="password"
+            value={password}
+            onChange={handleChange}
+            className="sign-in__form__field__input"
+          ></input>
+          <label for='password' className="sign-in__form__field__label">Password</label>
+        </div>
 
         <button type="submit" className="sign-in__btn sign-in__btn-submit">
           Submit

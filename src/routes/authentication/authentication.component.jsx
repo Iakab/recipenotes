@@ -3,6 +3,8 @@ import { useState } from "react";
 import SignInForm from "../../components/sign-in-form/sign-in-form.component";
 import SignUpForm from "../../components/sign-up-form/sign-up-form.component";
 
+import logo from '../../assets/img/logo.png'
+
 import "./authentication.styles.scss";
 
 const defaultDisplaySignIn = {
@@ -15,7 +17,14 @@ const Authentication = () => {
   return (
     <div className="auth">
       <div className="auth__header">
-        <h2>Header</h2>
+        <h1>
+          <span className="auth__header__heading-primary--main">
+            RecipeNotes
+          </span>
+          <span className="auth__header__heading-primary--secondary">
+            Your source of inspiration
+          </span>
+        </h1>
       </div>
 
       <div className="auth__body">
@@ -48,7 +57,7 @@ const Authentication = () => {
           </a>
         </div>
 
-        <h3 className="auth__footer__logo">logo</h3>
+        <img src={logo} alt='Logo' className="auth__footer__logo"/>
 
         <div className="auth__footer__credit">
         &copy; 2024 by Iakab Fineas. All rights reserved.

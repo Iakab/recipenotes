@@ -65,43 +65,59 @@ const SignUpForm = ({ setDisplaySignIn }) => {
   return (
     <div className="sign-up">
       <h2 className="sign-up__form-title">Sign Up</h2>
-      <form className="sign-up__input" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Name"
-          required
-          name="displayName"
-          value={displayName}
-          onChange={handleChange}
-        ></input>
+      <form className="sign-up__form" onSubmit={handleSubmit}>
+        <div className="sign-up__form__field">
+          <input
+            type="text"
+            placeholder="Name"
+            required
+            name="displayName"
+            value={displayName}
+            onChange={handleChange}
+            className="sign-up__form__field__input"
+          ></input>
+          <label for='name' className="sign-up__form__field__label">Name</label>
+        </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          required
-          name="email"
-          value={email}
-          onChange={handleChange}
-        ></input>
+        <div className="sign-up__form__field">
+          <input
+            type="email"
+            placeholder="Email"
+            required
+            name="email"
+            value={email}
+            onChange={handleChange}
+            className="sign-up__form__field__input"
+          ></input>
+          <label for='email' className="sign-up__form__field__label">Email</label>
+        </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          minLength={5}
-          required
-          name="password"
-          value={password}
-          onChange={handleChange}
-        ></input>
+        <div className="sign-up__form__field">
+          <input
+            type="password"
+            placeholder="Password"
+            minLength={6}
+            required
+            name="password"
+            value={password}
+            onChange={handleChange}
+            className="sign-up__form__field__input"
+          ></input>
+          <label for='password' className="sign-up__form__field__label">Password</label>
+        </div>
 
-        <input
-          type="password"
-          placeholder="Confirm password"
-          required
-          name="confirmPassword"
-          value={confirmPassword}
-          onChange={handleChange}
-        ></input>
+        <div className="sign-up__form__field">
+          <input
+            type="password"
+            placeholder="Confirm password"
+            required
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={handleChange}
+            className="sign-up__form__field__input"
+          ></input>
+          <label for='confirmPassword' className="sign-up__form__field__label">Confirm password</label>
+        </div>
 
         <button type="submit" className="sign-up__btn sign-up__btn-submit">
           Submit

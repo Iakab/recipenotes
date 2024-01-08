@@ -1,8 +1,18 @@
-.nav-bar {
+@import '../../abstracts/variables';
 
-  margin: 0 4rem;
+.nav-bar {
+  color: $light-grey-1;
+  height: 4rem;
+  margin: 0 3rem;
+  background-color: $dark-grey-2;
+
+
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
-
+  &__logo-icon {
+    width: 6rem;
+    margin-left: 1rem;
+  }
 }
