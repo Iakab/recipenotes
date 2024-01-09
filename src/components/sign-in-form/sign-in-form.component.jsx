@@ -73,7 +73,7 @@ const SignInForm = ({ setDisplaySignIn }) => {
             onChange={handleChange}
             className="sign-in__form__field__input"
           ></input>
-          <label for='email' className="sign-in__form__field__label">Email</label>
+          <label htmlFor='email' className="sign-in__form__field__label">Email</label>
         </div>
         <div className="sign-in__form__field">
           <input
@@ -86,7 +86,7 @@ const SignInForm = ({ setDisplaySignIn }) => {
             onChange={handleChange}
             className="sign-in__form__field__input"
           ></input>
-          <label for='password' className="sign-in__form__field__label">Password</label>
+          <label htmlFor='password' className="sign-in__form__field__label">Password</label>
         </div>
 
         <button type="submit" className="sign-in__btn sign-in__btn-submit">

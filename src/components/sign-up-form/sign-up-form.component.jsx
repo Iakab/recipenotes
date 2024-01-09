@@ -76,7 +76,7 @@ const SignUpForm = ({ setDisplaySignIn }) => {
             onChange={handleChange}
             className="sign-up__form__field__input"
           ></input>
-          <label for='name' className="sign-up__form__field__label">Name</label>
+          <label htmlFor='name' className="sign-up__form__field__label">Name</label>
         </div>
 
         <div className="sign-up__form__field">
@@ -89,7 +89,7 @@ const SignUpForm = ({ setDisplaySignIn }) => {
             onChange={handleChange}
             className="sign-up__form__field__input"
           ></input>
-          <label for='email' className="sign-up__form__field__label">Email</label>
+          <label htmlFor='email' className="sign-up__form__field__label">Email</label>
         </div>
 
         <div className="sign-up__form__field">
@@ -103,7 +103,7 @@ const SignUpForm = ({ setDisplaySignIn }) => {
             onChange={handleChange}
             className="sign-up__form__field__input"
           ></input>
-          <label for='password' className="sign-up__form__field__label">Password</label>
+          <label htmlFor='password' className="sign-up__form__field__label">Password</label>
         </div>
 
         <div className="sign-up__form__field">
@@ -116,7 +116,7 @@ const SignUpForm = ({ setDisplaySignIn }) => {
             onChange={handleChange}
             className="sign-up__form__field__input"
           ></input>
-          <label for='confirmPassword' className="sign-up__form__field__label">Confirm password</label>
+          <label htmlFor='confirmPassword' className="sign-up__form__field__label">Confirm password</label>
         </div>
 
         <button type="submit" className="sign-up__btn sign-up__btn-submit">
