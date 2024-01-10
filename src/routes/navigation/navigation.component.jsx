@@ -70,10 +70,13 @@ const Navigation = () => {
                 <label htmlFor="user_btn" className="nav--main__user__label">
                   <ul className="nav--main__user__label__list">
                     <li>
-                      <a href="/auth" className="nav--main__user__label__list--link">Profile</a>
+                      <a href="/auth" className="nav--main__user__label__list__link">Profile</a>
                     </li>
                     <li>
-                      <button onClick={signOutUser} className="nav--main__user__label__list--btn">Sign out</button>
+                      <a href="/auth" className="nav--main__user__label__list__link">Stored recipes</a>
+                    </li>
+                    <li>
+                      <button onClick={signOutUser} className="nav--main__user__label__list__btn">Sign out</button>
                     </li>
                   </ul>
                 </label>
