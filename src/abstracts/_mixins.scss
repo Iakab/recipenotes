@@ -1,1 +1,33 @@
+@mixin input-field {
+  font-size: 1.6rem;
+  width: 24rem;
+  height: 1rem;
+  padding: 1.5rem 1rem;
+  display: block;
+  border-radius: 10px;
+  border: solid 2px $light-grey-2;
+  background-color: $white-grey-1;
+  box-shadow: 0 1rem 2rem rgba($black, 0.2);
+  transition: 0.2s all;
+  cursor: auto;
+}
 
+@mixin btn-submit {
+  font-size: 1.7rem;
+  color: $blue-grey-3;
+  padding: 0.3rem 1.3rem;
+  border-radius: 50px;
+  border: 1.5px solid $dark-grey-1;
+  box-shadow: 0 1rem 2rem rgba($black, 0.2);
+  transition: all 0.1s;
+
+  &:hover {
+    transform: scale(1.07);
+    cursor: pointer;
+    background-color: $light-grey-1;
+
+    &:focus {
+      transform: scale(0.98);
+    }
+  }
+}

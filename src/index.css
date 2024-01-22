@@ -3,9 +3,6 @@
 
 }
 
-
-
-
 *{
   margin: 0;
   padding: 0;
@@ -19,7 +16,8 @@
 
 html {
   box-sizing: border-box;
-  font-size: 62.5%; //1rem = 10px   (10/16)
+  font-size: 62.5%; 
+  /* 1rem = 10px   (10/16) */
 }
 
 body {

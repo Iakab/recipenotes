@@ -9,33 +9,52 @@
 
   display: flex;
 
-  &__logo-icon {
-    fill: $blue-grey-3;
-    flex: 0 1 auto;
+  .logo {
     width: 6rem;
+    height: 100%;
     margin-left: 1rem;
-    align-self: center;
+    flex: 0 1 auto;
+    fill: $blue-grey-3;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+
+    .icon {
+      width: 5rem;
+      height: 100%;
+      fill: $blue-grey-3;
+      transition: all 0.2s;
+      &:hover {
+        transform: rotate(10deg) scale(1.1);
+      }
+      &:active {
+        transform: scale(1);
+      }
+    }
+  }
+
+  .loading {
+    margin: 25rem 50rem;
   }
 }
 
-.nav--main {
+.main {
   font-size: 1.6rem;
   flex: 1 1 auto;
   justify-content: space-between;
-  // background-color: aquamarine;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  &__search {
+  .search {
     flex: 1 1 100rem;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    &__input {
+    .input {
       font-family: inherit;
       font-size: 1.4rem;
       font-weight: 600;
@@ -43,7 +62,7 @@
       height: 2.5rem;
       width: 20rem;
       margin-left: 3rem;
-      padding: 0 2rem .2rem 1rem;
+      padding: 0 2rem 0.2rem 1rem;
       outline: 2px solid $blue-grey-3;
       outline-offset: -2px;
       border-radius: 20px;
@@ -57,27 +76,27 @@
       }
     }
 
-    &__icon {
+    .icon {
       width: 1.5rem;
-      margin-left: -2rem;
+      margin-left: -2.2rem;
       z-index: 2;
       transition: all 0.2s;
     }
 
-    &__input:focus + &__icon,
-    &__input:not(:placeholder-shown) + &__icon {
+    .input:focus + .icon,
+    .input:not(:placeholder-shown) + .icon {
       transform: translateX(3rem);
     }
   }
 
-  &__saved-items {
+  .saved-items {
     text-align: center;
     height: 100%;
     flex: 1 0 3rem;
     padding: 0 1rem;
     position: relative;
 
-    &__heart-icon {
+    .heart-icon {
       width: 2.4rem;
       position: absolute;
       top: 0.5rem;
@@ -85,7 +104,7 @@
       fill: red;
     }
 
-    &__items-num {
+    .items-num {
       font-size: 1.2rem;
       width: 1.8rem;
       height: 1.8rem;
@@ -98,15 +117,16 @@
     }
   }
 
-  &__user {
+  .user {
     flex: 1 1 auto;
-    padding: 0.5rem 3rem;
-    text-align: end;
+    padding: 0.5rem 1rem;
+    height: 100%;
     position: relative;
 
-    &__btn {
-      font-size: inherit;
-      font-family: inherit;
+    .btn {
+      font-size: 2rem;
+      font-family: 600;
+      margin: 0 auto;
       width: 100%;
       height: 100%;
       border: none;
@@ -114,69 +134,88 @@
       cursor: pointer;
 
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       align-items: center;
       transition: all 0.2s;
 
-      &__icon-box {
-        width: 2.7rem;
-        height: 2.7rem;
-        margin-right: 3px;
+      &:hover {
+        background-color: $dark-grey-1;
+      }
+
+      .icon-box {
+        width: 3rem;
+        height: 3rem;
+        margin-right: 0.5rem;
         border-radius: 50%;
         background-color: $white;
 
-        &--default {
+        .default {
           height: 2.2rem;
           fill: rgb(52, 52, 224);
-          margin-left: -2px;
+          margin-left: -1px;
+          margin-top: 2px;
+        }
+
+        .photo {
+          width: 100%;
+          height: 100%;
+          border-radius: 100%;
+          object-fit: cover;
+          object-position: 50% 50%;
         }
       }
     }
 
-    &__label {
+    .list {
+      font-size: 1.6rem;
+      font-weight: 600;
       text-align: start;
+      color: $blue-grey-3;
       width: 25rem;
-      padding: 1rem 2rem;
+      padding: 2rem;
       position: absolute;
-      top: 3.5rem;
+      top: 4rem;
       right: 0;
+      list-style-type: none;
       background-color: $dark-grey-1;
-      animation: moveInDown .2s ease-out;
-
-      &__list {
-        font-size: 1.6rem;
-        font-weight: 600;
-        padding-bottom: 1rem;
-        list-style-type: none;
-        color: $blue-grey-3;
-
-        & > * {
+      animation: moveInDown 0.2s ease-out;
+      z-index: 2;
+      & > * {
+        &:not(:first-child) {
           margin-top: 1rem;
-          padding: .5rem;
-          padding-left: 1.5rem;
-          width: 100%;
-          height: 100%;
-          background-color: $white-grey-1;
-          cursor: pointer;
-
-          &:hover{
-            background-color: $light-grey-3;
-          }
         }
 
-        &__link {
-          text-decoration: none;
-          color: inherit;
-        }
+        background-color: $white-grey-1;
 
-        &__btn {
-          font-family: inherit;
-          font-size: inherit;
-          font-weight: inherit;
-          background: none;
-          border: none;
-          cursor: pointer;
+        &:hover {
+          background-color: $light-grey-3;
         }
+      }
+
+      .link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding: 0.5rem;
+        padding-left: 1.5rem;
+        cursor: pointer;
+      }
+
+      .btn {
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        text-align: start;
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding: 0.5rem;
+        padding-left: 1.5rem;
+        background: none;
+        border: none;
+        cursor: pointer;
       }
     }
   }

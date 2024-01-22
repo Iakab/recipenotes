@@ -1,5 +1,6 @@
-import { Outlet, Navigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { Outlet, Navigate, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState, useRef } from "react";
+import Loading from "react-loading";
 
 import { UserContext } from "../../context/user.context";
 import { signOutUser } from "../../utils/firebase/firebase.utils";
@@ -10,13 +11,11 @@ import { ReactComponent as UserIcon } from "../../assets/icons/SVG/user.svg";
 import { ReactComponent as SearchIcon } from "../../assets/icons/SVG/search.svg";
 import "./navigation.styles.scss";
 
-const defaultIsUserDropdownOpen = false;
-
 const Navigation = () => {
-  const { currentUser } = useContext(UserContext);
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(
-    defaultIsUserDropdownOpen
-  );
+  const navigate = useNavigate();
+  const { currentUser, userIsLoading } = useContext(UserContext);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const userMenu = useRef(null);
 
   useEffect(() => {
     if (isUserDropdownOpen) {
@@ -24,7 +23,7 @@ const Navigation = () => {
     }
   }, []);
 
-  const toggleUserBox = () => {
+  const toggleUserMenu = () => {
     if (!isUserDropdownOpen) {
       return setIsUserDropdownOpen(true);
     } else {
@@ -32,61 +31,76 @@ const Navigation = () => {
     }
   };
 
+  const closeUserMenu = (event) => {
+    if (isUserDropdownOpen && !userMenu.current?.contains(event.target)) {
+      setIsUserDropdownOpen(false);
+    }
+  };
+  document.addEventListener("mousedown", closeUserMenu);
+
+  const returnHome = () => {
+    navigate("/");
+  };
+
   return (
     <div>
       <div className="nav">
-        <img src={logoIcon} alt="Logo" className="nav__logo-icon" />
-        {currentUser ? (
-          <div className="nav--main">
-            {/* ///// SEARCH BOX /////*/}
-            <div className="nav--main__search">
-              {/* <div className="nav--main__search__box"> */}
+        <button onClick={returnHome} className="logo">
+          <img src={logoIcon} alt="Logo" className="icon" />
+        </button>
 
-              <input type="text" placeholder="food or main incredient" className="nav--main__search__input" />
-              <SearchIcon className="nav--main__search__icon" />
-              {/* </div> */}
+        {userIsLoading ? (
+          <Loading type="spin" color="#000" className="loading" />
+        ) : currentUser ? (
+          <div className="main">
+            <div className="search">
+              <input
+                type="text"
+                placeholder="food or main ingredient"
+                className="input"
+              />
+              <SearchIcon className="icon" />
             </div>
 
-            {/* /// HEART ICON ///*/}
-            <div className="nav--main__saved-items">
-              <HeartIcon className="nav--main__saved-items__heart-icon" />
-              <span className="nav--main__saved-items__items-num">2</span>
+            <div className="saved-items">
+              <HeartIcon className="heart-icon" />
+              <span className="items-num">2</span>
             </div>
 
-            {/* /// PROFILE ///*/}
-            <div className="nav--main__user">
-              <button
-                id="user_btn"
-                onClick={toggleUserBox}
-                className="nav--main__user__btn"
-              >
-                <div className="nav--main__user__btn__icon-box">
-                  <UserIcon className="nav--main__user__btn__icon-box--default" />
-                </div>
+            <div className="user" ref={userMenu}>
+              <button id="user_btn" onClick={toggleUserMenu} className="btn">
+                {currentUser.userPhotoUrl ? (
+                  <div className="icon-box">
+                    <img src={currentUser.userPhotoUrl} className="photo" />
+                  </div>
+                ) : (
+                  <div className="icon-box">
+                    <UserIcon className="default" />
+                  </div>
+                )}
                 {currentUser.displayName}
               </button>
 
               {isUserDropdownOpen ? (
-                <label htmlFor="user_btn" className="nav--main__user__label">
-                  <ul className="nav--main__user__label__list">
-                    <li>
-                      <a href="/auth" className="nav--main__user__label__list__link">Profile</a>
-                    </li>
-                    <li>
-                      <a href="/auth" className="nav--main__user__label__list__link">Stored recipes</a>
-                    </li>
-                    <li>
-                      <button onClick={signOutUser} className="nav--main__user__label__list__btn">Sign out</button>
-                    </li>
-                  </ul>
-                </label>
-              ) : (
-                <div></div>
-              )}
+                <ul className="list">
+                  <li>
+                    <a href="/profile/" className="link">
+                      Profile
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="link">
+                      Stored recipes
+                    </a>
+                  </li>
+                  <li>
+                    <button onClick={signOutUser} className="btn">
+                      Sign out
+                    </button>
+                  </li>
+                </ul>
+              ) : null}
             </div>
-            {/* <button onClick={signOutUser}>Sign out</button> */}
-
-            <Navigate to="/" />
           </div>
         ) : (
           <Navigate to="/auth" />

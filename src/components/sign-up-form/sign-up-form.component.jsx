@@ -56,17 +56,11 @@ const SignUpForm = ({ setDisplaySignIn }) => {
     }
   };
 
-  const switchForms = () => {
-    setDisplaySignIn({
-      signIn: true,
-    });
-  };
-
   return (
     <div className="sign-up">
-      <h2 className="sign-up__form-title">Sign Up</h2>
-      <form className="sign-up__form" onSubmit={handleSubmit}>
-        <div className="sign-up__form__field">
+      <h2 className="form-title">Sign Up</h2>
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="field">
           <input
             type="text"
             placeholder="Name"
@@ -74,12 +68,14 @@ const SignUpForm = ({ setDisplaySignIn }) => {
             name="displayName"
             value={displayName}
             onChange={handleChange}
-            className="sign-up__form__field__input"
+            className="input"
           ></input>
-          <label htmlFor='name' className="sign-up__form__field__label">Name</label>
+          <label htmlFor="name" className="label">
+            Name
+          </label>
         </div>
 
-        <div className="sign-up__form__field">
+        <div className="field">
           <input
             type="email"
             placeholder="Email"
@@ -87,12 +83,14 @@ const SignUpForm = ({ setDisplaySignIn }) => {
             name="email"
             value={email}
             onChange={handleChange}
-            className="sign-up__form__field__input"
+            className="input"
           ></input>
-          <label htmlFor='email' className="sign-up__form__field__label">Email</label>
+          <label htmlFor="email" className="label">
+            Email
+          </label>
         </div>
 
-        <div className="sign-up__form__field">
+        <div className="field">
           <input
             type="password"
             placeholder="Password"
@@ -101,12 +99,14 @@ const SignUpForm = ({ setDisplaySignIn }) => {
             name="password"
             value={password}
             onChange={handleChange}
-            className="sign-up__form__field__input"
+            className="input"
           ></input>
-          <label htmlFor='password' className="sign-up__form__field__label">Password</label>
+          <label htmlFor="password" className="label">
+            Password
+          </label>
         </div>
 
-        <div className="sign-up__form__field">
+        <div className="field">
           <input
             type="password"
             placeholder="Confirm password"
@@ -114,19 +114,21 @@ const SignUpForm = ({ setDisplaySignIn }) => {
             name="confirmPassword"
             value={confirmPassword}
             onChange={handleChange}
-            className="sign-up__form__field__input"
+            className="input"
           ></input>
-          <label htmlFor='confirmPassword' className="sign-up__form__field__label">Confirm password</label>
+          <label htmlFor="confirmPassword" className="label">
+            Confirm password
+          </label>
         </div>
 
-        <button type="submit" className="sign-up__btn sign-up__btn-submit">
+        <button type="submit" className="btn">
           Submit
         </button>
       </form>
 
-      <div className="sign-up__path">
-        <span className="sign-up__span">Already have an account?</span>
-        <button onClick={switchForms} className="sign-up__path__btn-text">
+      <div className="path">
+        <span className="span">Already have an account?</span>
+        <button onClick={() => setDisplaySignIn(true)} className="btn-text">
           Sign In
         </button>
       </div>

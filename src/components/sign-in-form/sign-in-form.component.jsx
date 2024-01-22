@@ -1,5 +1,4 @@
-import { useState, useContext } from "react";
-import { UserContext } from "../../context/user.context";
+import { useState } from "react";
 
 import {
   signInAuthWithUserAndPassword,
@@ -13,7 +12,7 @@ const defaultFormFields = {
   password: "",
 };
 
-const SignInForm = ({ setDisplaySignIn }) => {
+const SignInForm = ({ setDisplaySignIn, setShowPasswordReset }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
@@ -46,24 +45,20 @@ const SignInForm = ({ setDisplaySignIn }) => {
 
     try {
       await signInAuthWithUserAndPassword(email, password);
+      resetFormFields();
     } catch (error) {
       if (error.code === "auth/invalid-credential") {
         alert("Wrong email or password.");
       }
       console.log(error);
     }
-    resetFormFields();
-  };
-
-  const switchForms = () => {
-    setDisplaySignIn({ signIn: false });
   };
 
   return (
     <div className="sign-in">
-      <h2 className="sign-in__form-title">Sign in</h2>
-      <form className="sign-in__form" onSubmit={handleSubmit}>
-        <div className="sign-in__form__field">
+      <h2 className="form-title">Sign in</h2>
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="field">
           <input
             type="email"
             placeholder="Email"
@@ -71,11 +66,13 @@ const SignInForm = ({ setDisplaySignIn }) => {
             name="email"
             value={email}
             onChange={handleChange}
-            className="sign-in__form__field__input"
+            className="input"
           ></input>
-          <label htmlFor='email' className="sign-in__form__field__label">Email</label>
+          <label htmlFor="email" className="label">
+            Email
+          </label>
         </div>
-        <div className="sign-in__form__field">
+        <div className="field">
           <input
             type="password"
             placeholder="Password"
@@ -84,29 +81,38 @@ const SignInForm = ({ setDisplaySignIn }) => {
             name="password"
             value={password}
             onChange={handleChange}
-            className="sign-in__form__field__input"
+            className="input"
           ></input>
-          <label htmlFor='password' className="sign-in__form__field__label">Password</label>
+          <label htmlFor="password" className="label">
+            Password
+          </label>
         </div>
 
-        <button type="submit" className="sign-in__btn sign-in__btn-submit">
-          Submit
+        <button type="submit" className="btn">
+          Sign in
         </button>
       </form>
 
-      <span className="sign-in__span sign-in__span-1">or</span>
+      <span className="span">
+        Forgot your password?{" "}
+        <button onClick={() => setShowPasswordReset(true)} className="btn-text">
+          Reset password
+        </button>
+      </span>
+
+      <span className="span-1">or</span>
 
       <button
         type="googleButton"
         onClick={signInWithGoogle}
-        className="sign-in__btn sign-in__btn-google"
+        className="btn btn-google"
       >
         Sign in with Google
       </button>
 
-      <div className="sign-in__path">
-        <span className="sign-in__span">Don't have an account?</span>
-        <button className="sign-in__path__btn-text" onClick={switchForms}>
+      <div className="path">
+        <span className="span">Don't have an account?</span>
+        <button className="btn-text" onClick={() => setDisplaySignIn(false)}>
           Sign Up
         </button>
       </div>
