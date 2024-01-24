@@ -23,6 +23,10 @@ const Navigation = () => {
     }
   }, []);
 
+  if (!userIsLoading && !currentUser) {
+    navigate('/auth');
+  }
+
   const toggleUserMenu = () => {
     if (!isUserDropdownOpen) {
       return setIsUserDropdownOpen(true);

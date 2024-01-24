@@ -41,9 +41,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!updateUserDoc) {
-      return;
-    } else {
+    if (updateUserDoc) {
       const update = async () => {
         const snapshot = await updateUserDocumentFormAuth(
           currentUser,

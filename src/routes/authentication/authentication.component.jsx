@@ -2,9 +2,9 @@ import { useState, useContext, useEffect } from "react";
 import { Outlet, Navigate } from "react-router-dom";
 import Loading from "react-loading";
 
-import { UserContext } from "../../context/user.context";
+import { UserContext } from 'context/user.context';
 
-import { resetPassword } from "../../utils/firebase/firebase.utils";
+import { resetPassword } from "utils/firebase/firebase.utils";
 
 import SignInForm from "../../components/sign-in-form/sign-in-form.component";
 import SignUpForm from "../../components/sign-up-form/sign-up-form.component";

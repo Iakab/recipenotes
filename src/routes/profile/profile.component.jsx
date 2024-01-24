@@ -6,7 +6,7 @@ import {
   displayNameIsUnique,
   resetPassword,
   deleteAccount,
-} from "../../utils/firebase/firebase.utils";
+} from "../../utils/firebase";
 
 import { ReactComponent as DefaultProfileIcon } from "../../assets/icons/SVG/user.svg";
 import { ReactComponent as CameraIcon } from "../../assets/icons/SVG/camera.svg";
@@ -97,6 +97,8 @@ const Profile = () => {
     setPromptPassword(value);
   };
 
+  if (!currentUser) return null;
+
   return (
     <div>
       {!currentUser ? null : (
@@ -105,7 +107,7 @@ const Profile = () => {
             <h1>Your profile</h1>
           </div>
 
-          {!renderPrompt ? null : (
+          {renderPrompt && (
             <div className="prompt">
               <form onSubmit={handleSubmitPrompt} className="form">
                 <div className="password">
