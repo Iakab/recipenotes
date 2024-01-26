@@ -1,5 +1,5 @@
-import { Outlet, Navigate, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState, useRef } from "react";
+import { Outlet, Navigate, useNavigate } from "react-router-dom";
 import Loading from "react-loading";
 
 import { UserContext } from "../../context/user.context";
@@ -7,7 +7,6 @@ import { signOutUser } from "../../utils/firebase/firebase.utils";
 
 import logoIcon from "../../assets/img/logo-icon.png";
 import { ReactComponent as HeartIcon } from "../../assets/icons/SVG/heart.svg";
-import { ReactComponent as UserIcon } from "../../assets/icons/SVG/user.svg";
 import { ReactComponent as SearchIcon } from "../../assets/icons/SVG/search.svg";
 import "./navigation.styles.scss";
 
@@ -15,7 +14,7 @@ const Navigation = () => {
   const navigate = useNavigate();
   const { currentUser, userIsLoading } = useContext(UserContext);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const userMenu = useRef(null);
+  const userMenu = useRef<null | HTMLInputElement>(null);
 
   useEffect(() => {
     if (isUserDropdownOpen) {
@@ -25,14 +24,18 @@ const Navigation = () => {
 
   const toggleUserMenu = () => {
     if (!isUserDropdownOpen) {
-      return setIsUserDropdownOpen(true);
+      setIsUserDropdownOpen(true);
     } else {
-      return setIsUserDropdownOpen(false);
+      setIsUserDropdownOpen(false);
     }
   };
 
-  const closeUserMenu = (event) => {
-    if (isUserDropdownOpen && !userMenu.current?.contains(event.target)) {
+  const closeUserMenu = (event: MouseEvent) => {
+    // event.preventDefault();
+    if (
+      isUserDropdownOpen &&
+      !userMenu.current?.contains(event.target as Node)
+    ) {
       setIsUserDropdownOpen(false);
     }
   };
@@ -69,15 +72,9 @@ const Navigation = () => {
 
             <div className="user" ref={userMenu}>
               <button id="user_btn" onClick={toggleUserMenu} className="btn">
-                {currentUser.userPhotoUrl ? (
-                  <div className="icon-box">
-                    <img src={currentUser.userPhotoUrl} className="photo" />
-                  </div>
-                ) : (
-                  <div className="icon-box">
-                    <UserIcon className="default" />
-                  </div>
-                )}
+                <div className="icon-box">
+                  <img src={currentUser.userPhotoUrl} className="photo" />
+                </div>
                 {currentUser.displayName}
               </button>
 

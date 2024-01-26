@@ -1,38 +1,58 @@
-import { createContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  SetStateAction,
+  PropsWithChildren,
+} from "react";
 
 import {
   onAuthStateChangedListener,
   createUserDocumentFormAuth,
   updateUserDocumentFormAuth,
 } from "../utils/firebase/firebase.utils";
+import { DocumentData } from "firebase/firestore";
 
-export const UserContext = createContext({
+export type UserContextType = {
+  currentUser: DocumentData | null | undefined;
+  setCurrentUser: React.Dispatch<
+    SetStateAction<DocumentData | null | undefined>
+  >;
+  userIsLoading: boolean;
+  setUpdateUserDoc: React.Dispatch<SetStateAction<Updates | null | undefined>>;
+};
+
+export const UserContext = createContext<UserContextType>({
   currentUser: null,
   setCurrentUser: () => null,
   userIsLoading: true,
-  setUserIsLoading: () => true,
-  updateUserDoc: null,
   setUpdateUserDoc: () => null,
 });
 
-export const UserProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [userIsLoading, setUserIsLoading] = useState(true);
-  const [updateUserDoc, setUpdateUserDoc] = useState(null);
+type Updates = {
+  displayName?: string;
+  userBio?: string;
+};
 
+export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
+  const [currentUser, setCurrentUser] = useState<
+    DocumentData | null | undefined
+  >(null);
+  const [userIsLoading, setUserIsLoading] = useState(true);
+  const [updateUserDoc, setUpdateUserDoc] = useState<
+    Updates | null | undefined
+  >(null);
 
   useEffect(() => {
     onAuthStateChangedListener(async (user) => {
       if (user) {
         try {
           const userSnapshot = await createUserDocumentFormAuth(user);
-          setCurrentUser(userSnapshot.data());
+          setCurrentUser(userSnapshot?.data());
           setUserIsLoading(false);
-        } catch(error) {
+        } catch (error) {
           console.log(error);
         }
-
-
       } else {
         setCurrentUser(null);
         setUserIsLoading(false);
@@ -41,7 +61,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!updateUserDoc) {
+    if (!updateUserDoc || !currentUser) {
       return;
     } else {
       const update = async () => {
@@ -49,7 +69,7 @@ export const UserProvider = ({ children }) => {
           currentUser,
           updateUserDoc
         );
-        setCurrentUser(snapshot.data());
+        setCurrentUser(snapshot?.data());
       };
       update();
     }

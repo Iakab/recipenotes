@@ -1,5 +1,6 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, FormEvent, ChangeEvent } from "react";
 import { UserContext } from "../../context/user.context";
+
 import {
   uploadUserImage,
   getUserImage,
@@ -8,27 +9,43 @@ import {
   deleteAccount,
 } from "../../utils/firebase/firebase.utils";
 
-import { ReactComponent as DefaultProfileIcon } from "../../assets/icons/SVG/user.svg";
 import { ReactComponent as CameraIcon } from "../../assets/icons/SVG/camera.svg";
 import { ReactComponent as PencilIcon } from "../../assets/icons/SVG/create.svg";
 import "./profile.styles.scss";
 
+type Field = {
+  displayName?: string;
+  userBio?: string;
+  userPhotoUrl?: string;
+};
+
 const Profile = () => {
-  const [userPhoto, setUserPhoto] = useState("");
+  const [userPhoto, setUserPhoto] = useState<File | null>(null);
   const [showInput, setShowInput] = useState(false);
-  const [field, setField] = useState(null);
+  const [field, setField] = useState<Field | null | undefined>(null);
   const [renderPrompt, setRenderPrompt] = useState(false);
   const [promptPassword, setPromptPassword] = useState("");
-  const [submitPrompt, setSubmitPrompt] = useState(false);
+  const [submitPrompt, setSubmitPrompt] = useState<
+    { password: string } | boolean
+  >(false);
   const { currentUser, setUpdateUserDoc } = useContext(UserContext);
 
+  const handlePhotoChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) {
+      return;
+    } else {
+      setUserPhoto(event.target.files[0]);
+    }
+  };
+
   useEffect(() => {
-    if (userPhoto) {
+    if (userPhoto && currentUser) {
       const handleUpload = async () => {
         try {
           await uploadUserImage(userPhoto, currentUser.userUid);
           const userPhotoUrl = await getUserImage(currentUser.userUid);
-          setUpdateUserDoc({ userPhotoUrl: userPhotoUrl });
+          if (!userPhotoUrl) return;
+          setUpdateUserDoc({ [userPhotoUrl]: userPhotoUrl });
         } catch (error) {
           console.log(error);
         }
@@ -37,20 +54,26 @@ const Profile = () => {
     }
   }, [userPhoto]);
 
-  const handleNameChange = (event) => {
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const { name, value } = event.target;
     setField({ ...field, [name]: value });
   };
 
-  const handleBioChange = (name, value) => {
-    setField({ ...field, [name.value]: value });
+  const handleBioChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.currentTarget.textContent;
+    const userBio: string = "userBio";
+
+    setField({ ...field, [userBio]: value });
   };
 
   const handleSubmit = async () => {
-    const updates = {};
+    const updates: Field = {};
     try {
       //UPDATE NAME
+      if (!field?.displayName) {
+        return;
+      }
       if (field.hasOwnProperty("displayName")) {
         if (!(await displayNameIsUnique(field.displayName))) {
           throw new Error("Username already in use");
@@ -66,7 +89,7 @@ const Profile = () => {
       setShowInput(false);
       setField(null);
     } catch (error) {
-      if (error.message === "Username already in use") {
+      if ((error as Error).message === "Username already in use") {
         alert("Username already in use");
       }
       console.log(error);
@@ -85,12 +108,14 @@ const Profile = () => {
     }
   }, [submitPrompt]);
 
-  const handleSubmitPrompt = (event) => {
+  const handleSubmitPrompt = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitPrompt(event.target);
+    if (event.target) {
+      setSubmitPrompt(true);
+    }
   };
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
 
     const { value } = event.target;
@@ -128,20 +153,13 @@ const Profile = () => {
             <div className="details">
               <div className="photo">
                 <div className="box">
-                  {currentUser.userPhotoUrl ? (
-                    <img
-                      src={currentUser.userPhotoUrl}
-                      alt="Photo"
-                      className="preview"
-                    />
-                  ) : (
-                    <DefaultProfileIcon className="preview preview-icon" />
-                  )}
+                  <img
+                    src={currentUser.userPhotoUrl}
+                    alt="Photo"
+                    className="preview"
+                  />
                   <div className="btn">
-                    <input
-                      type="file"
-                      onChange={(e) => setUserPhoto(e.target.files[0])}
-                    />
+                    <input type="file" onChange={handlePhotoChange} />
                     <CameraIcon className="icon" />
                   </div>
                 </div>
@@ -192,17 +210,12 @@ const Profile = () => {
                     <label className="label">Bio:</label>
                     <div>
                       <div
+                        id="editableDiv"
                         contentEditable
                         className="input"
-                        name="userBio"
                         suppressContentEditableWarning={true}
                         role="textbox"
-                        onInput={(event) =>
-                          handleBioChange(
-                            event.currentTarget.attributes.name,
-                            event.currentTarget.textContent
-                          )
-                        }
+                        onInput={handleBioChange}
                       >
                         {currentUser.userBio}
                       </div>

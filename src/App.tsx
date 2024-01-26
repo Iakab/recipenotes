@@ -1,7 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import { useContext } from "react";
-
-import { UserContext } from "./context/user.context";
 
 import Navigation from "./routes/navigation/navigation.component";
 import Authentication from "./routes/authentication/authentication.component";
@@ -10,8 +7,7 @@ import Profile from "./routes/profile/profile.component";
 
 
 function App() {
-  const { currentUser } = useContext(UserContext);
-
+ 
   return (
     <Routes>
       <Route path="/" element={<Navigation />}>

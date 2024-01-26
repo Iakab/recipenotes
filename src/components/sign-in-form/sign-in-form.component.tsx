@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState, MouseEvent } from "react";
+
+import { AuthError, AuthErrorCodes } from "firebase/auth";
 
 import {
   signInAuthWithUserAndPassword,
@@ -12,42 +14,50 @@ const defaultFormFields = {
   password: "",
 };
 
-const SignInForm = ({ setDisplaySignIn, setShowPasswordReset }) => {
+type SignInParams = {
+  setDisplaySignIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowPasswordReset: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const SignInForm = ({
+  setDisplaySignIn,
+  setShowPasswordReset,
+}: SignInParams) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
   const resetFormFields = () => setFormFields(defaultFormFields);
 
   //set form fields
-  const handleChange = (event) => {
-    event.preventDefault();
-
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });
   };
 
   //Google Sign in
-  const signInWithGoogle = async (event) => {
-    event.preventDefault();
-
+  const signInWithGoogle = async (
+    event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
     try {
       await signInWithGooglePopup();
     } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
+      if ((error as AuthError).code === AuthErrorCodes.EXPIRED_POPUP_REQUEST) {
         console.log("Popup closed by user");
       }
     }
   };
 
   //Sign in
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
       await signInAuthWithUserAndPassword(email, password);
       resetFormFields();
     } catch (error) {
-      if (error.code === "auth/invalid-credential") {
+      if (
+        (error as AuthError).code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS
+      ) {
         alert("Wrong email or password.");
       }
       console.log(error);
@@ -102,11 +112,7 @@ const SignInForm = ({ setDisplaySignIn, setShowPasswordReset }) => {
 
       <span className="span-1">or</span>
 
-      <button
-        type="googleButton"
-        onClick={signInWithGoogle}
-        className="btn btn-google"
-      >
+      <button onClick={signInWithGoogle} className="btn btn-google">
         Sign in with Google
       </button>
 

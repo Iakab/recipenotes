@@ -1,6 +1,5 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, ChangeEvent } from "react";
 import { Outlet, Navigate } from "react-router-dom";
-import Loading from "react-loading";
 
 import { UserContext } from "../../context/user.context";
 
@@ -19,7 +18,7 @@ const Authentication = () => {
   const [emailField, setEmailField] = useState("");
   const { currentUser } = useContext(UserContext);
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
 
     const { value } = event.target;

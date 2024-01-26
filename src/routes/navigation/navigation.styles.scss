@@ -147,14 +147,7 @@
         height: 3rem;
         margin-right: 0.5rem;
         border-radius: 50%;
-        background-color: $white;
 
-        .default {
-          height: 2.2rem;
-          fill: rgb(52, 52, 224);
-          margin-left: -1px;
-          margin-top: 2px;
-        }
 
         .photo {
           width: 100%;
@@ -162,6 +155,7 @@
           border-radius: 100%;
           object-fit: cover;
           object-position: 50% 50%;
+          background-color: $light-grey-1;
         }
       }
     }

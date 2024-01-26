@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 
 import {
   createAuthUserWithEmailAndPassword,
@@ -7,6 +7,7 @@ import {
 } from "../../utils/firebase/firebase.utils";
 
 import "./sign-up-form.styles.scss";
+import { AuthError, AuthErrorCodes } from "firebase/auth";
 
 const defaultFormFields = {
   displayName: "",
@@ -15,19 +16,22 @@ const defaultFormFields = {
   confirmPassword: "",
 };
 
-const SignUpForm = ({ setDisplaySignIn }) => {
+type SetDisplaySignIn = {
+  setDisplaySignIn: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const SignUpForm = ({ setDisplaySignIn }: SetDisplaySignIn) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
 
   const resetFormFields = () => setFormFields(defaultFormFields);
 
-  const handleChange = (event) => {
-    event.preventDefault();
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
@@ -46,10 +50,12 @@ const SignUpForm = ({ setDisplaySignIn }) => {
 
       resetFormFields();
     } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
+      if (
+        (error as AuthError).code === AuthErrorCodes.CREDENTIAL_ALREADY_IN_USE
+      ) {
         alert("Email already in use!");
       }
-      if (error.message === "Username already in use") {
+      if ((error as Error).message === "Username already in use") {
         alert("Username already in use");
       }
       console.log(error);

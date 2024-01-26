@@ -11,6 +11,8 @@ import {
   deleteUser,
   reauthenticateWithCredential,
   EmailAuthProvider,
+  User,
+  NextOrObserver,
 } from "firebase/auth";
 
 import {
@@ -22,6 +24,8 @@ import {
   getDocs,
   updateDoc,
   deleteDoc,
+  DocumentSnapshot,
+  DocumentData,
 } from "firebase/firestore";
 
 import {
@@ -53,22 +57,28 @@ googleProvider.setCustomParameters({
   prompt: "select_account",
 });
 
+export type AdditionalInformation = {
+  displayName?: string;
+};
+
 //Add user's credentials to db or return the snapshot
 export const createUserDocumentFormAuth = async (
-  userAuth,
-  additionalInformation = {}
-) => {
+  userAuth: User,
+  additionalInformation: AdditionalInformation = {}
+): Promise<void | DocumentSnapshot<DocumentData>> => {
   const userDocRef = doc(db, "users", userAuth.uid);
   const userSnapshot = await getDoc(userDocRef);
 
   if (!userSnapshot.exists()) {
     const { displayName, email } = userAuth;
     const userUid = userAuth.uid;
-    let userPhotoUrl = "";
+
     let userBio = "";
 
-    //get photo from Google
-    userPhotoUrl = userAuth.photoURL;
+    //get photo from Google or set the default icon
+    const userPhotoUrl =
+      userAuth.photoURL ??
+      (await getDownloadURL(ref(storage, `images/defaultUserIcon.png`)));
 
     try {
       await setDoc(userDocRef, {
@@ -81,15 +91,15 @@ export const createUserDocumentFormAuth = async (
       });
       return createUserDocumentFormAuth(userAuth);
     } catch (e) {
-      console.error("Error adding document: ", e);
+      console.log("Error adding document: ", e);
     }
   }
   return userSnapshot;
 };
 
 //Check if username already exists
-export const displayNameIsUnique = async (displayNameInput) => {
-  let usernames = [];
+export const displayNameIsUnique = async (displayNameInput: string):Promise<boolean> => {
+  let usernames: string[] = [];
   const querySnapshot = await getDocs(collection(db, "users"));
 
   querySnapshot.forEach((user) => usernames.push(user.data().displayName));
@@ -98,19 +108,23 @@ export const displayNameIsUnique = async (displayNameInput) => {
 };
 
 //Authentication(for Sign-up)
-export const createAuthUserWithEmailAndPassword = async (email, password) => {
-  if (!email || !password) return;
+export const createAuthUserWithEmailAndPassword = async (
+  email: string,
+  password: string
+) => {
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 
 //Google Sign in
 export const signInWithGooglePopup = async () => {
-  const snapshot = await signInWithPopup(auth, googleProvider);
-  console.log(snapshot);
+  await signInWithPopup(auth, googleProvider);
 };
 
 //Sign In
-export const signInAuthWithUserAndPassword = async (email, password) => {
+export const signInAuthWithUserAndPassword = async (
+  email: string,
+  password: string
+) => {
   if (!email || !password) return;
   return await signInWithEmailAndPassword(auth, email, password);
 };
@@ -121,12 +135,12 @@ export const signOutUser = async () => {
 };
 
 //Auth listener
-export const onAuthStateChangedListener = (callback) => {
+export const onAuthStateChangedListener = (callback: NextOrObserver<User>) => {
   onAuthStateChanged(auth, callback);
 };
 
 //Upload photo
-export const uploadUserImage = async (file, userUid) => {
+export const uploadUserImage = async (file: File, userUid: string) => {
   const userImgRef = ref(storage, `images/${userUid}`);
 
   //with blob api
@@ -136,7 +150,7 @@ export const uploadUserImage = async (file, userUid) => {
 };
 
 //Get img url
-export const getUserImage = async (userUid) => {
+export const getUserImage = async (userUid: string) => {
   const userImageRef = ref(storage, `images/${userUid}`);
 
   try {
@@ -146,8 +160,15 @@ export const getUserImage = async (userUid) => {
   }
 };
 
+type Updates = {
+  displayName?: string;
+  userBio?: string;
+};
 //Update doc
-export const updateUserDocumentFormAuth = async (userAuth, updates) => {
+export const updateUserDocumentFormAuth = async (
+  userAuth: DocumentData,
+  updates: Updates
+):  Promise<void | DocumentSnapshot<DocumentData>>  => {
   let userDocRef = doc(db, "users", userAuth.userUid);
   try {
     await updateDoc(userDocRef, updates);
@@ -161,7 +182,7 @@ export const updateUserDocumentFormAuth = async (userAuth, updates) => {
 };
 
 //Change password
-export const resetPassword = (email) => {
+export const resetPassword = (email: string) => {
   try {
     sendPasswordResetEmail(auth, email).then(() => {
       alert("Password reset email sent!");
@@ -172,11 +193,17 @@ export const resetPassword = (email) => {
 };
 
 //Delete user
-export const deleteAccount = (password) => {
-  const user = auth.currentUser;
+export const deleteAccount = (password: string) => {
+  if(!auth.currentUser?.email) return;
+  const user:User = auth.currentUser;
+  const email:string = auth.currentUser.email;
+
   const userImageRef = ref(storage, `images/${user.uid}`);
 
-  const userCredentials = EmailAuthProvider.credential(user.email, password);
+  const userCredentials = EmailAuthProvider.credential(
+    email,
+    password,
+  );
 
   try {
     reauthenticateWithCredential(user, userCredentials).then(() => {
