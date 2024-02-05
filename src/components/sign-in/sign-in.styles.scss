@@ -1,0 +1,133 @@
+@import '../../abstracts/animations';
+@import '../../abstracts/variables';
+@import '../../abstracts/mixins';
+
+.sign-in {
+  color: $blue-grey-3;
+  margin-left: 10rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  flex: 0 1 auto;
+  animation: moveInLeft 1s cubic-bezier(0.71, -0.07, 0.37, 0.73);
+
+  .form-title {
+    font-size: 2.5rem;
+    color: $blue-grey-2;
+    align-self: flex-start;
+    cursor: default;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .field {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+
+      .input {
+        @include input-field;
+
+        &:focus {
+          transform: scale(1.05);
+          border: solid 3px $dark-grey-1;
+          outline: none;
+        }
+
+        &:focus:invalid {
+          border: solid 3px $light-pink;
+        }
+
+        &::-webkit-input-placeholder {
+          color: $blue-grey-1;
+        }
+      }
+      .label {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: $blue-grey-1;
+        margin-left: 1rem;
+
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        transition: all 0.3s;
+        order: -1;
+      }
+
+      .input:placeholder-shown + .label {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(3rem);
+        display: block;
+      }
+    }
+  }
+
+  .btn {
+    @include btn-submit;
+    width: fit-content;
+  }
+
+  .btn-google {
+    align-self: flex-end;
+    background-color: #aabac5;
+    margin: 0 auto;
+
+    &:hover {
+      background-color: #869eaf;
+
+      &:active {
+        background-color: #aabac5;
+      }
+    }
+  }
+
+  .btn-text {
+    font-size: 1.3rem;
+    font-weight: 400;
+    padding: 0.3rem;
+    margin-bottom: 0.5rem;
+    display: inline;
+
+    border: none;
+    border-bottom: 1px solid $black;
+    background-color: transparent;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.06);
+    }
+  }
+
+  .path {
+    margin: 3rem auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .span {
+    font-size: 1.3rem;
+    font-weight: 400;
+    display: inline;
+    margin-top: 1rem;
+    cursor: default;
+
+    &:last-child {
+      margin-top: 3rem;
+      align-self: center;
+    }
+  }
+  .span-1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 1rem auto;
+
+    color: $blue-1;
+  }
+}

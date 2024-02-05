@@ -1,12 +1,11 @@
-@import "../../abstracts/variables";
-@import "../../abstracts/animations";
+@import '../../abstracts/variables';
+@import '../../abstracts/animations';
+@import '../../abstracts/mixins';
 
 .auth {
   margin: 0 3rem;
-  box-shadow: 0  1rem 2rem rgba($black, .4);
-  ////////////////////////////
-  /// //HEADER
-  &__header {
+  box-shadow: 0 1rem 2rem rgba($black, 0.4);
+  .header {
     height: 13rem;
     display: block;
     text-align: center;
@@ -14,7 +13,7 @@
     position: relative;
     color: $blue-grey-3;
 
-    &__heading-primary--main {
+    .heading-primary {
       font-size: 5rem;
       font-weight: 800;
       letter-spacing: 1rem;
@@ -28,7 +27,7 @@
       animation: moveInRight 1s ease-out;
     }
 
-    &__heading-primary--secondary {
+    .heading-secondary {
       font-size: 2rem;
       letter-spacing: 0.5rem;
       position: absolute;
@@ -41,89 +40,49 @@
     }
   }
 
-  ////////////////////////////
-  //BODY
-  &__body {
+  .body {
     height: 87vh;
-
     background-image: url(../../assets/img/auth.compressed-90.png);
     background-size: cover;
     background-position: top;
+    position: relative;
 
-    display: flex;
-
-    &__app-description {
-      font-size: 2rem;
-      color: $blue-grey-3;
-      flex: 0 1 auto;
-      margin-left: 5rem;
-      padding: 2rem;
-      width: 50%;
+    .main {
       height: 100%;
-
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
 
-      & > * {
-        margin-bottom: 2rem;
-        background-image: linear-gradient(to right, #fae5d3, #aeb6bf);
-        opacity: 0.9;
+      .app-description {
+        font-size: 2rem;
+        color: $blue-grey-3;
+        flex: 0 1 auto;
+        margin-left: 5rem;
+        padding: 2rem;
+        width: 50%;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+
+        & > * {
+          margin-bottom: 2rem;
+          background-image: linear-gradient(to right, #fae5d3, #aeb6bf);
+          opacity: 0.9;
+        }
       }
-    }
 
-    &__form-container {
-      flex: 0 1 auto;
-      width: 50%;
-      height: 100%;
-      background-color: rgba($light-grey-1, 0.7);
-      clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
+      .form-container {
+        flex: 0 1 auto;
+        width: 50%;
+        height: 100%;
+        background-color: rgba($light-grey-1, 0.7);
+        clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
-
-  ////////////////////////////
-  //FOOTER
-  &__footer {
-    height: 10rem;
-    width: 100%;
-    background-image: linear-gradient(to top, $light-grey-1, #abb2b9);
-
-    display: flex;
-    justify-content: stretch;
-    align-items: center;
-
-    &__details {
-      flex: 1 1 auto;
-      font-size: 1.4rem;
-      border-top: 1px solid $black;
-
-      display: flex;
-      justify-content: center;
-
-      &__item {
-        margin-left: -1rem;
-        text-decoration: none;
-        margin-right: 3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
-    }
-
-    &__logo {
-      flex: 0 1 auto;
-      width: 18rem;
-      text-align: center;
-      margin-left: 8rem;
-      margin-right: 14rem;
-    }
-
-    &__credit {
-      flex: 1 1 27rem;
-      border-top: 1px solid $black;
-      text-align: center;
     }
   }
 }
