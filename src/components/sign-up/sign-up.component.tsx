@@ -12,7 +12,7 @@ import {
 
 import './sign-up.styles.scss';
 
-type SetDisplaySignIn = {
+type SignUpProps = {
   setDisplaySignIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 type FormValues = {
@@ -22,7 +22,7 @@ type FormValues = {
   confirmPassword: string;
 };
 
-const SignUpForm = ({ setDisplaySignIn }: SetDisplaySignIn) => {
+const SignUpForm: React.FC<SignUpProps> = ({ setDisplaySignIn }) => {
   const {
     register,
     handleSubmit,
@@ -117,9 +117,9 @@ const SignUpForm = ({ setDisplaySignIn }: SetDisplaySignIn) => {
             })}
             className="input"
           ></input>
-          {errors.password && (
+          {errors.password?.type === 'minLength' && (
             <p style={{ color: 'rgb(252, 51, 51)', fontWeight: '600' }}>
-              {`*Password: ${errors.password.type}`}
+              {`*Password: min-length: 6`}
             </p>
           )}
           <label htmlFor="password" className="label">
@@ -138,9 +138,9 @@ const SignUpForm = ({ setDisplaySignIn }: SetDisplaySignIn) => {
             })}
             className="input"
           ></input>
-          {errors.confirmPassword && (
+          {errors.password?.type === 'minLength' && (
             <p style={{ color: 'rgb(252, 51, 51)', fontWeight: '600' }}>
-              {`*Confirm password: ${errors.confirmPassword.type}`}
+              {`*Password: min-length: 6`}
             </p>
           )}
           <label htmlFor="confirmPassword" className="label">

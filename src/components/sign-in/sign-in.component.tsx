@@ -18,7 +18,10 @@ type FormValues = {
   password: string;
 };
 
-const SignIn = ({ setDisplaySignIn, setPasswordReset }: SignInParams) => {
+const SignIn: React.FC<SignInParams> = ({
+  setDisplaySignIn,
+  setPasswordReset,
+}) => {
   const {
     register,
     handleSubmit,
@@ -41,10 +44,10 @@ const SignIn = ({ setDisplaySignIn, setPasswordReset }: SignInParams) => {
     }
   };
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     const { email, password } = data;
     try {
-      signInAuthWithEmailAndPassword(email, password);
+      await signInAuthWithEmailAndPassword(email, password);
     } catch (error) {
       if (
         (error as AuthError).code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS

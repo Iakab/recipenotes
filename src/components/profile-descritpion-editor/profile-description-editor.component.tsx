@@ -15,7 +15,9 @@ type ProfileEditProps = {
   setShowInputFields: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const ProfileDescriptionEditor = ({ setShowInputFields }: ProfileEditProps) => {
+const ProfileDescriptionEditor: React.FC<ProfileEditProps> = ({
+  setShowInputFields,
+}) => {
   const { currentUser, setUpdateUserDoc } = useContext(UserContext);
 
   const {

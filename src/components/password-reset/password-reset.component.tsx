@@ -12,7 +12,7 @@ type FormValues = {
   email: string;
 };
 
-const PasswordReset = ({ setPasswordReset }: SetPasswordReset) => {
+const PasswordReset:React.FC<SetPasswordReset> = ({ setPasswordReset }) => {
   const {
     register,
     handleSubmit,

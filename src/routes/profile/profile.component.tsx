@@ -1,10 +1,11 @@
-import { useEffect, useState, useContext, FormEvent, ChangeEvent } from 'react';
+import { useEffect, useState, useContext, ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { UserContext } from '../../context/user.context';
 
 import { uploadUserImage, getUserImage } from '../../utils/firebase/storage';
 
-import { resetPassword, deleteAccount } from '../../utils/firebase/auth';
+import { resetPassword } from '../../utils/firebase/auth';
 
 import ProfileDescriptionEditor from '../../components/profile-descritpion-editor/profile-description-editor.component';
 import ReauthPrompt from '../../components/reauth-prompt/reauth-prompt.component';
@@ -14,8 +15,9 @@ import { ReactComponent as PencilIcon } from '../../assets/icons/SVG/create.svg'
 import './profile.styles.scss';
 
 const Profile = () => {
-  const [userPhoto, setUserPhoto] = useState<File | null>(null);
+  const [userPhoto, setUserPhoto] = useState<File>();
   const [showInputFields, setShowInputFields] = useState(false);
+  const navigate = useNavigate();
 
   const [reauthModal, setReauthModal] = useState(false);
 
@@ -33,8 +35,9 @@ const Profile = () => {
         try {
           await uploadUserImage(userPhoto, currentUser.userUid);
           const userPhotoUrl = await getUserImage(currentUser.userUid);
-          if (!userPhotoUrl) return;
-          setUpdateUserDoc({ [userPhotoUrl]: userPhotoUrl });
+          const name = 'userPhotoUrl';
+
+          setUpdateUserDoc({ [name]: userPhotoUrl });
         } catch (error) {
           console.log(error);
         }
@@ -42,6 +45,12 @@ const Profile = () => {
       handleUpload();
     }
   }, [userPhoto]);
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/auth');
+    }
+  });
 
   return (
     <div className="profile">

@@ -13,13 +13,12 @@ import { onAuthStateChangedListener } from '../utils/firebase/auth';
 import {
   createUserDocumentFormAuth,
   updateUserDocumentFormAuth,
+  Updates,
 } from '../utils/firebase/db';
 
-export type UserContextType = {
-  currentUser: DocumentData | null | undefined;
-  setCurrentUser: React.Dispatch<
-    SetStateAction<DocumentData | null | undefined>
-  >;
+type UserContextType = {
+  currentUser?: DocumentData | null;
+  setCurrentUser: React.Dispatch<SetStateAction<DocumentData | null>>;
   userIsLoading: boolean;
   setUpdateUserDoc: React.Dispatch<SetStateAction<Updates | null | undefined>>;
 };
@@ -30,11 +29,6 @@ export const UserContext = createContext<UserContextType>({
   userIsLoading: true,
   setUpdateUserDoc: () => null,
 });
-
-type Updates = {
-  displayName?: string;
-  userBio?: string;
-};
 
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   const [currentUser, setCurrentUser] = useState<

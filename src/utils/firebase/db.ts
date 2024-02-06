@@ -37,7 +37,7 @@ export const createUserDocumentFormAuth = async (
     //  get photo from Google or set the default icon
     const userPhotoUrl =
       userAuth.photoURL ??
-      (await getDownloadURL(ref(storage, `images/defaultUserIcon.png`)));
+      (await getDownloadURL(ref(storage, 'images/defaultUserIcon.png')));
 
     try {
       await setDoc(userDocRef, {
@@ -50,7 +50,7 @@ export const createUserDocumentFormAuth = async (
       });
       return await createUserDocumentFormAuth(userAuth);
     } catch (e) {
-      console.log('Error adding document: ', e);
+      console.error('Error adding document: ', e);
     }
   }
   return userSnapshot;
@@ -67,9 +67,10 @@ export const displayNameIsUnique = async (displayNameInput: string) => {
   return false;
 };
 
-type Updates = {
+export type Updates = {
   displayName?: string;
   userBio?: string;
+  userPhotoUrl?: string;
 };
 //  Update doc
 export const updateUserDocumentFormAuth = async (
@@ -77,6 +78,7 @@ export const updateUserDocumentFormAuth = async (
   updates: Updates,
 ): Promise<void | DocumentSnapshot<DocumentData>> => {
   let userDocRef = doc(db, 'users', userAuth.userUid);
+
   updateDoc(userDocRef, updates);
 
   userDocRef = doc(db, 'users', userAuth.userUid);

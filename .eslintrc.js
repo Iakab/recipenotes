@@ -26,5 +26,6 @@ module.exports = {
     'import/prefer-default-export': 1,
     'no-unused-vars': 1,
     '@typescript-eslint/no-unused-vars': 1,
+
   },
 };

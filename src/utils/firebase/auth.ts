@@ -44,8 +44,9 @@ export const signInAuthWithEmailAndPassword = async (
   email: string,
   password: string,
 ) => {
-  if (!email || !password) return;
-  await signInWithEmailAndPassword(auth, email, password);
+  if (email && password) {
+    await signInWithEmailAndPassword(auth, email, password);
+  }
 };
 
 //  Sign Out
