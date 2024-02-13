@@ -1,8 +1,27 @@
-@import '../../abstracts/variables';
+@import 'abstracts/variables';
 
 .home {
+  height: fit-content;
   background-color: $light-grey-1;
-  height: 60rem;
   margin: 0 3rem;
   background-color: rgb(225, 226, 226);
+  background-image: url(../../assets/img/light-wood.jpg);
+  display: flex;
+
+  position: relative;
+
+  .content {
+    overflow: hidden;
+
+    .title {
+    }
+    .body {
+      width: 100%;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-around;
+    }
+  }
 }

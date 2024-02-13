@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { displayNameIsUnique } from '../../utils/firebase/db';
-import { UserContext } from '../../context/user.context';
+import { displayNameIsUnique } from 'utils/firebase/db';
+import { UserContext } from 'context/user.context';
 
 import './profile-description-editor.styles.scss';
 
@@ -53,10 +53,10 @@ const ProfileDescriptionEditor: React.FC<ProfileEditProps> = ({
     <form className="profile-form" onSubmit={handleSubmit(onSubmit)}>
       <label className="label">Name:</label>
       <input
-        type="text"
-        autoFocus
         {...register('displayName', { minLength: 4 })}
+        autoFocus
         className="input"
+        type="text"
       ></input>
       {errors.displayName && (
         <p style={{ color: 'rgb(252, 51, 51)', fontWeight: '600' }}>
@@ -66,9 +66,9 @@ const ProfileDescriptionEditor: React.FC<ProfileEditProps> = ({
 
       <label className="label">Bio:</label>
       <textarea
-        id="bio-input"
-        className=" input input-bio"
         {...register('userBio')}
+        className=" input input-bio"
+        id="bio-input"
       ></textarea>
 
       <button type="submit" className="btn-update">

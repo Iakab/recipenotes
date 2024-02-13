@@ -1,4 +1,4 @@
-@import '../../abstracts/variables';
+@import 'abstracts/variables';
 
   .footer {
     height: 8rem;
@@ -17,7 +17,7 @@
       display: flex;
       justify-content: center;
 
-      .item {
+      .option {
         margin-left: -1rem;
         text-decoration: none;
         margin-right: 3rem;

@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 
-import { resetPassword } from '../../utils/firebase/auth';
+import { resetPassword } from 'utils/firebase/auth';
 
-import { ReactComponent as CancelIcon } from '../../assets/icons/SVG/cross.svg';
+import { ReactComponent as CancelIcon } from 'assets/icons/SVG/cross.svg';
 import './password-reset.styles.scss';
 
 type SetPasswordReset = {
@@ -14,9 +14,9 @@ type FormValues = {
 
 const PasswordReset:React.FC<SetPasswordReset> = ({ setPasswordReset }) => {
   const {
-    register,
-    handleSubmit,
     formState: { errors },
+    handleSubmit,
+    register,
   } = useForm<FormValues>({
     defaultValues: {
       email: '',
@@ -41,17 +41,17 @@ const PasswordReset:React.FC<SetPasswordReset> = ({ setPasswordReset }) => {
       <form className="form" onSubmit={handleSubmit(onSubmit)}>
         <button type="button" className="cancel-btn">
           <CancelIcon
-            onClick={() => setPasswordReset(false)}
             className="cancel-icon"
+            onClick={() => setPasswordReset(false)}
           />
         </button>
         <h3>Request password reset</h3>
 
         <h4>Your email:</h4>
         <input
-          type="email"
-          className="input"
           {...register('email', { required: true })}
+          className="input"
+          type="email"
         ></input>
         {errors.email && (
           <p

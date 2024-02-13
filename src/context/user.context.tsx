@@ -1,33 +1,33 @@
 import {
   createContext,
-  useState,
-  useEffect,
-  SetStateAction,
   PropsWithChildren,
+  SetStateAction,
+  useEffect,
+  useState,
 } from 'react';
 
 import { DocumentData } from 'firebase/firestore';
 
-import { onAuthStateChangedListener } from '../utils/firebase/auth';
+import { onAuthStateChangedListener } from 'utils/firebase/auth';
 
 import {
   createUserDocumentFormAuth,
-  updateUserDocumentFormAuth,
   Updates,
-} from '../utils/firebase/db';
+  updateUserDocumentFormAuth,
+} from 'utils/firebase/db';
 
 type UserContextType = {
   currentUser?: DocumentData | null;
   setCurrentUser: React.Dispatch<SetStateAction<DocumentData | null>>;
-  userIsLoading: boolean;
   setUpdateUserDoc: React.Dispatch<SetStateAction<Updates | null | undefined>>;
+  userIsLoading: boolean;
 };
 
 export const UserContext = createContext<UserContextType>({
   currentUser: null,
   setCurrentUser: () => null,
-  userIsLoading: true,
   setUpdateUserDoc: () => null,
+  userIsLoading: true,
 });
 
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
@@ -57,6 +57,7 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   }, []);
 
   useEffect(() => {
+    console.log(currentUser)
     if (updateUserDoc && currentUser) {
       const update = async () => {
         const snapshot = await updateUserDocumentFormAuth(
@@ -72,8 +73,8 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   const value = {
     currentUser,
     setCurrentUser,
-    userIsLoading,
     setUpdateUserDoc,
+    userIsLoading,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

@@ -1,11 +1,11 @@
 import { useState, useContext, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import { UserContext } from '../../context/user.context';
+import { UserContext } from 'context/user.context';
 
-import SignIn from '../../components/sign-in/sign-in.component';
-import SignUp from '../../components/sign-up/sign-up.component';
-import PasswordReset from '../../components/password-reset/password-reset.component';
+import SignIn from 'components/sign-in/sign-in.component';
+import SignUp from 'components/sign-up/sign-up.component';
+import PasswordReset from 'components/password-reset/password-reset.component';
 
 import './authentication.styles.scss';
 

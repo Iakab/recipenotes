@@ -1,25 +1,29 @@
 import {
-  getFirestore,
-  setDoc,
-  getDoc,
-  doc,
   collection,
-  getDocs,
-  updateDoc,
-  DocumentSnapshot,
+  doc,
   DocumentData,
+  DocumentSnapshot,
+  getDoc,
+  getDocs,
+  getFirestore,
   query,
+  setDoc,
+  updateDoc,
   where,
+  writeBatch,
 } from 'firebase/firestore';
 
 import { getDownloadURL, ref } from 'firebase/storage';
 
-import { User } from 'firebase/auth';
+import { User, getAuth } from 'firebase/auth';
+
 import { app } from './config';
 import { storage } from './storage';
 
-export const db = getFirestore(app);
+import { Recipes, RecipeItem } from '../api/api.types';
 
+export const db = getFirestore(app);
+const auth = getAuth();
 //  Add user's credentials to db or return the snapshot
 export const createUserDocumentFormAuth = async (
   userAuth: User,
@@ -41,14 +45,14 @@ export const createUserDocumentFormAuth = async (
 
     try {
       await setDoc(userDocRef, {
+        ...additionalInformation,
         displayName,
         email,
-        userUid,
-        userPhotoUrl,
         userBio,
-        ...additionalInformation,
+        userPhotoUrl,
+        userUid,
       });
-      return await createUserDocumentFormAuth(userAuth);
+      await createUserDocumentFormAuth(userAuth);
     } catch (e) {
       console.error('Error adding document: ', e);
     }
@@ -59,12 +63,12 @@ export const createUserDocumentFormAuth = async (
 //  Check if username already exists
 export const displayNameIsUnique = async (displayNameInput: string) => {
   const usersRef = collection(db, 'users');
-  const q = query(usersRef, where('displayName', '==', displayNameInput));
-  const querySnapshot = await getDocs(q);
-  if (querySnapshot.empty) {
-    return true;
-  }
-  return false;
+  const queryResults = query(
+    usersRef,
+    where('displayName', '==', displayNameInput),
+  );
+  const docSnapshot = await getDocs(queryResults);
+  return docSnapshot.empty;
 };
 
 export type Updates = {
@@ -82,6 +86,28 @@ export const updateUserDocumentFormAuth = async (
   updateDoc(userDocRef, updates);
 
   userDocRef = doc(db, 'users', userAuth.userUid);
-  const snapshot = await getDoc(userDocRef);
-  return snapshot;
+  return getDoc(userDocRef);
+};
+
+export const addCollectionAndDocuments = async (
+  objectsToAdd: Recipes,
+  collectionName: string,
+  documentName: string,
+) => {
+  const collectionRef = collection(db, collectionName);
+  const batch = writeBatch(db);
+  const docRef = doc(collectionRef, documentName);
+
+  batch.set(docRef, objectsToAdd);
+  await batch.commit();
+  console.log('done');
+};
+
+export const getRecipesDocument = async (
+  collectionName: string,
+  documentName: string,
+) => {
+  const docRef = doc(db, collectionName, documentName);
+  const docSnapshot = await getDoc(docRef);
+  return docSnapshot;
 };

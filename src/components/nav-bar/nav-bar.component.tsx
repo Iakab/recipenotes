@@ -1,13 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DocumentData } from 'firebase/firestore';
 
-import UserDropdown from '../user-dropdown/userDropdown.component';
+import logoIcon from 'assets/img/logo-icon.png';
+import { ReactComponent as HeartIcon } from 'assets/icons/SVG/heart.svg';
 
-import logoIcon from '../../assets/img/logo-icon.png';
-import { ReactComponent as HeartIcon } from '../../assets/icons/SVG/heart.svg';
-import { ReactComponent as SearchIcon } from '../../assets/icons/SVG/search.svg';
+import UserDropdown from '../user-dropdown/userDropdown.component';
+import SearchBar from '../search-bar/search-bar.component';
 
 import './nav-bar.styles.scss';
 
@@ -32,10 +32,17 @@ const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
       setIsUserDropdownOpen(false);
     }
   };
-  document.addEventListener('mousedown', closeUserMenu);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', closeUserMenu);
+  }, []);
 
   const returnHome = () => {
     navigate('/');
+  };
+
+  const handleFavourites = () => {
+    navigate('/favourites');
   };
 
   return (
@@ -46,16 +53,9 @@ const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
 
       {currentUser && (
         <div className="main">
-          <div className="search">
-            <input
-              type="text"
-              placeholder="food or main ingredient"
-              className="input"
-            />
-            <SearchIcon className="icon" />
-          </div>
+          <SearchBar />
 
-          <div className="saved-items">
+          <div className="saved-items" onClick={handleFavourites}>
             <HeartIcon className="heart-icon" />
             <span className="items-num">2</span>
           </div>
