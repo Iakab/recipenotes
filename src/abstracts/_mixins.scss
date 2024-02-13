@@ -1,6 +1,3 @@
-@import './variables';
-
-
 @mixin input-field {
   font-size: 1.6rem;
   width: 24rem;
@@ -19,11 +16,12 @@
   font-size: 1.7rem;
   color: $blue-grey-3;
   padding: 0.3rem 1.3rem;
-  border-radius: 5px;
+
+  border-radius: 50px;
+
   border: 1.5px solid $dark-grey-1;
   box-shadow: 0 1rem 2rem rgba($black, 0.2);
   transition: all 0.1s;
-
 
   &:hover {
     transform: scale(1.07);

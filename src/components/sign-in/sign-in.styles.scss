@@ -48,11 +48,10 @@
         }
       }
       .label {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         font-weight: 600;
         color: $blue-grey-1;
         margin-left: 1rem;
-
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
@@ -63,7 +62,9 @@
       .input:placeholder-shown + .label {
         opacity: 0;
         visibility: hidden;
-        transform: translateY(3rem);
+
+        transform: translateY(-3rem);
+
         display: block;
       }
     }
@@ -71,7 +72,6 @@
 
   .btn {
     @include btn-submit;
-    width: fit-content;
   }
 
   .btn-google {
@@ -92,8 +92,8 @@
     font-size: 1.3rem;
     font-weight: 400;
     padding: 0.3rem;
+
     margin-bottom: 0.5rem;
-    display: inline;
 
     border: none;
     border-bottom: 1px solid $black;
@@ -114,8 +114,10 @@
   .span {
     font-size: 1.3rem;
     font-weight: 400;
-    display: inline;
-    margin-top: 1rem;
+
+    display: block;
+    margin-top: 0.5rem;
+
     cursor: default;
 
     &:last-child {
@@ -124,10 +126,7 @@
     }
   }
   .span-1 {
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin: 1rem auto;
-
-    color: $blue-1;
+    font-size: 1.3rem;
+    margin: 0 auto;
   }
 }
