@@ -32,10 +32,6 @@
       }
     }
   }
-
-  .loading {
-    margin: 25rem 50rem;
-  }
 }
 
 .main {
@@ -119,11 +115,12 @@
 
   .user {
     flex: 1 1 auto;
-    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    padding: 0.3rem 0;
     height: 100%;
     position: relative;
 
-    .btn {
+    .btn_user {
       font-size: 2rem;
       font-family: 600;
       margin: 0 auto;
@@ -143,18 +140,10 @@
       }
 
       .icon-box {
-        width: 3rem;
-        height: 3rem;
+        width: 2.9rem;
+        height: 2.9rem;
         margin-right: 0.5rem;
         border-radius: 50%;
-        background-color: $white;
-
-        .default {
-          height: 2.2rem;
-          fill: rgb(52, 52, 224);
-          margin-left: -1px;
-          margin-top: 2px;
-        }
 
         .photo {
           width: 100%;
@@ -162,60 +151,8 @@
           border-radius: 100%;
           object-fit: cover;
           object-position: 50% 50%;
+          background-color: $light-grey-1;
         }
-      }
-    }
-
-    .list {
-      font-size: 1.6rem;
-      font-weight: 600;
-      text-align: start;
-      color: $blue-grey-3;
-      width: 25rem;
-      padding: 2rem;
-      position: absolute;
-      top: 4rem;
-      right: 0;
-      list-style-type: none;
-      background-color: $dark-grey-1;
-      animation: moveInDown 0.2s ease-out;
-      z-index: 2;
-      & > * {
-        &:not(:first-child) {
-          margin-top: 1rem;
-        }
-
-        background-color: $white-grey-1;
-
-        &:hover {
-          background-color: $light-grey-3;
-        }
-      }
-
-      .link {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-        width: 100%;
-        height: 100%;
-        padding: 0.5rem;
-        padding-left: 1.5rem;
-        cursor: pointer;
-      }
-
-      .btn {
-        font-family: inherit;
-        font-size: inherit;
-        font-weight: inherit;
-        text-align: start;
-        display: block;
-        width: 100%;
-        height: 100%;
-        padding: 0.5rem;
-        padding-left: 1.5rem;
-        background: none;
-        border: none;
-        cursor: pointer;
       }
     }
   }

@@ -1,0 +1,49 @@
+@import '../../abstracts/variables';
+@import '../../abstracts/mixins';
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .input {
+    width: 20rem;
+    font-size: 1.6rem;
+    font-family: inherit;
+    font-weight: inherit;
+    background-color: transparent;
+    padding: 0.5rem;
+    border-radius: 5px;
+  }
+  .label {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+
+  #bio-input {
+    width: 40rem;
+    height: 15rem;
+
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 1.5rem;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $dark-grey-1;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $blue-grey-3;
+      border-radius: 10px;
+    }
+  }
+  .btn-update {
+    @include btn-submit;
+    align-self: flex-end;
+    margin-right: 2.5rem;
+    margin-top: 0.5rem;
+  }
+}

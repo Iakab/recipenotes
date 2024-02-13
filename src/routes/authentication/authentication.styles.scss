@@ -1,11 +1,11 @@
-@import "../../abstracts/variables";
-@import "../../abstracts/animations";
+@import '../../abstracts/variables';
+@import '../../abstracts/animations';
+@import '../../abstracts/mixins';
 
 .auth {
   margin: 0 3rem;
   box-shadow: 0 1rem 2rem rgba($black, 0.4);
-  ////////////////////////////
-  /// //HEADER
+
   .header {
     height: 13rem;
     display: block;
@@ -41,15 +41,14 @@
     }
   }
 
-  ////////////////////////////
-  //BODY
-  .body-initial {
+  .body {
     height: 87vh;
     background-image: url(../../assets/img/auth.compressed-90.png);
     background-size: cover;
     background-position: top;
+    position: relative;
 
-    .body-main {
+    .main {
       height: 100%;
       display: flex;
 
@@ -89,29 +88,28 @@
     .body-secondary {
       height: 100%;
       width: 100%;
-      
-      background-color: rgba($white, .4);
+
+      background-color: rgba($white, 0.4);
       position: relative;
 
       .form {
         font-size: 1.6rem;
         width: 40rem;
         height: 25rem;
-        
+
         position: absolute;
         top: 10rem;
         right: 45rem;
         padding: 3rem 4rem;
         border: 5px groove $blue-grey-2;
-        box-shadow: 0 .5rem 1.5rem rgba($black, .5);
+        box-shadow: 0 0.5rem 1.5rem rgba($black, 0.5);
         background-color: $light-grey-1;
 
-        
         & > :first-child {
           margin-bottom: 2rem;
         }
 
-        .input{
+        .input {
           font-size: inherit;
           font-family: inherit;
           font-weight: 600;

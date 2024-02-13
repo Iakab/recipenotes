@@ -1,0 +1,54 @@
+@import '../../abstracts/variables';
+
+.list {
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: start;
+  color: $blue-grey-3;
+  width: 25rem;
+  padding: 2rem;
+  position: absolute;
+  top: 4rem;
+  right: 0;
+  list-style-type: none;
+  background-color: $dark-grey-1;
+  animation: moveInDown 0.2s ease-out;
+  z-index: 2;
+  & > * {
+    &:not(:first-child) {
+      margin-top: 1rem;
+    }
+
+    background-color: $white-grey-1;
+
+    &:hover {
+      background-color: $light-grey-3;
+    }
+  }
+
+  .link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem;
+    padding-left: 1.5rem;
+    cursor: pointer;
+  }
+
+  .btn_li {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    text-align: start;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem;
+    padding-left: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+}
