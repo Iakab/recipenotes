@@ -1,7 +1,9 @@
 @import '../../abstracts/variables';
 @import '../../abstracts/mixins';
 .profile {
+  background-color: $light-grey-1;
   margin: 0 3rem;
+  position: relative;
 
   .header {
     width: 100%;
@@ -11,19 +13,14 @@
   .body {
     display: flex;
     flex-direction: row;
-    height: 100%;
-    position: relative;
-    background-color: $light-grey-1;
 
     .details {
       color: $blue-grey-3;
       width: 40%;
-      min-height: 77vh;
-      padding: 3rem 5rem 0 5rem;
-      background-color: $light-grey-3;
 
-      display: flex;
-      flex-direction: column;
+      padding: 3rem 5rem 5rem;
+
+      background-color: $light-grey-3;
 
       & > * {
         margin-top: 2.5rem;
@@ -105,13 +102,10 @@
         }
       }
 
-      .preview {
-        height: 100%;
-      }
       .text {
-        font-size: 1.4rem;
-        min-width: 20rem;
+        width: fit-content;
         max-width: 42rem;
+        height: fit-content;
 
         padding: 1.5rem;
         position: relative;
@@ -159,6 +153,87 @@
           width: 100%;
           height: 100%;
         }
+
+        .name {
+          .username {
+            font-size: 1.8rem;
+            margin-right: 12rem;
+            display: block;
+          }
+          .input {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: $blue-grey-3;
+            width: 50%;
+            border: none;
+            border-bottom: 1px solid $black;
+            outline: none;
+            background-color: inherit;
+            padding: 2px;
+
+            &:hover {
+              background-color: $dark-grey-2;
+            }
+
+            &:focus {
+              border-bottom: 2px solid $black;
+              background-color: $dark-grey-2;
+            }
+          }
+        }
+
+        .label {
+          font-size: 1.4rem;
+          font-weight: 600;
+          margin-bottom: 3px;
+          display: block;
+        }
+
+        .bio {
+          font-size: 1.3rem;
+          font-weight: 600;
+
+          .content {
+            padding: 1rem;
+            border: 4px double $black;
+            max-height: 30rem;
+            overflow-y: auto;
+            word-wrap: break-word;
+
+            &::-webkit-scrollbar {
+              width: 1.5rem;
+            }
+
+            &::-webkit-scrollbar-track {
+              background: $dark-grey-1;
+            }
+
+            &::-webkit-scrollbar-thumb {
+              background: $blue-grey-3;
+              border-radius: 10px;
+            }
+          }
+
+          .input {
+            font-size: 1.3rem;
+            font-weight: 600;
+            width: 30rem;
+            min-height: 8rem;
+            max-height: 20rem;
+            padding: 0.5rem;
+            overflow-y: auto;
+            border: 1px solid $black;
+            background-color: $white-grey-1;
+          }
+        }
+        .btn-update {
+          font-size: 1.6rem;
+          font-family: inherit;
+          padding: 0.3rem;
+          display: block;
+          align-self: flex-end;
+          cursor: pointer;
+        }
       }
 
       .span {
@@ -169,12 +244,8 @@
         text-decoration: underline;
         cursor: pointer;
         transition: transform 0.2s;
-        margin-top: 2rem;
 
-        &:last-child {
-          margin-bottom: 3rem;
-          margin-top: 0.5rem;
-        }
+        margin-bottom: -1rem;
 
         &:hover {
           color: $blue-grey-1;
@@ -188,7 +259,46 @@
 
     .activity {
       width: 60%;
-      height: 100%;
+    }
+  }
+  .prompt {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba($dark-grey-2, 0.8);
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .form {
+      padding: 3rem;
+      margin-top: -7rem;
+      background-color: $light-grey-1;
+      box-shadow: 0.2rem 0.2rem 1.5rem rgba($black, 0.4);
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .password {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+
+        .input {
+          @include input-field;
+        }
+      }
+
+      .btn {
+        @include btn-submit;
+        align-self: center;
+      }
     }
   }
 }
