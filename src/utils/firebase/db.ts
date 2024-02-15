@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteField,
   doc,
   DocumentData,
   DocumentSnapshot,
@@ -15,15 +16,15 @@ import {
 
 import { getDownloadURL, ref } from 'firebase/storage';
 
-import { User, getAuth } from 'firebase/auth';
+import { User } from 'firebase/auth';
 
 import { app } from './config';
 import { storage } from './storage';
 
-import { Recipes, RecipeItem } from '../api/api.types';
+import { RecipeItem } from '../api/api.types';
 
 export const db = getFirestore(app);
-const auth = getAuth();
+
 //  Add user's credentials to db or return the snapshot
 export const createUserDocumentFormAuth = async (
   userAuth: User,
@@ -89,25 +90,59 @@ export const updateUserDocumentFormAuth = async (
   return getDoc(userDocRef);
 };
 
-export const addCollectionAndDocuments = async (
-  objectsToAdd: Recipes,
+// UPLOAD CATEGORIES
+export const addCollectionAndDocumentsAsBatch = async (
   collectionName: string,
   documentName: string,
+  jsonToAdd: string,
 ) => {
-  const collectionRef = collection(db, collectionName);
   const batch = writeBatch(db);
-  const docRef = doc(collectionRef, documentName);
+  const docRef = doc(db, collectionName, documentName);
 
-  batch.set(docRef, objectsToAdd);
+  batch.set(docRef, { data: jsonToAdd });
   await batch.commit();
   console.log('done');
 };
 
+// GET
 export const getRecipesDocument = async (
   collectionName: string,
   documentName: string,
 ) => {
   const docRef = doc(db, collectionName, documentName);
-  const docSnapshot = await getDoc(docRef);
-  return docSnapshot;
+  return getDoc(docRef);
+};
+
+// UPDATE OR CREATE FAVOURITES
+export const updateFavouritesCollection = async (
+  collectionName: string,
+  documentName: string,
+  objectsToAdd: RecipeItem,
+) => {
+  const recipeDocRef = doc(db, collectionName, documentName);
+  const favouritesSnapshot = await getDoc(recipeDocRef);
+
+  if (favouritesSnapshot.exists()) {
+    await updateDoc(recipeDocRef, { [objectsToAdd.id]: objectsToAdd });
+  } else {
+    await setDoc(recipeDocRef, {
+      [objectsToAdd.id]: objectsToAdd,
+    });
+  }
+
+  return getDoc(recipeDocRef);
+};
+
+// REMOVE RECIPE FROM FAVOURITES
+export const removeRecipeFromDoc = async (
+  collectionName: string,
+  documentName: string,
+  objectsToAdd: RecipeItem,
+) => {
+  const recipeDocRef = doc(db, collectionName, documentName);
+  await updateDoc(recipeDocRef, {
+    [objectsToAdd.id]: deleteField(),
+  });
+
+  return getDoc(recipeDocRef);
 };

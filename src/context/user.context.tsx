@@ -57,7 +57,6 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   }, []);
 
   useEffect(() => {
-    console.log(currentUser)
     if (updateUserDoc && currentUser) {
       const update = async () => {
         const snapshot = await updateUserDocumentFormAuth(

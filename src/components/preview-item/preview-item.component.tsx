@@ -1,11 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext, useEffect } from 'react';
 
 import ReactPlayer from 'react-player';
+import { FavourtiesContext } from 'context/favourites.context';
 
 import { RecipeItem, Component, Instruction } from 'utils/api/api.types';
 
 import { ReactComponent as CloseIcon } from 'assets/icons/SVG/cross.svg';
-import { ReactComponent as HeartIcon } from 'assets/icons/SVG/heart-outlined.svg';
+import { ReactComponent as HeartIconOutlined } from 'assets/icons/SVG/heart-outlined.svg';
+import { ReactComponent as HeartIcon } from 'assets/icons/SVG/heart.svg';
 
 import './preview-item.styles.scss';
 
@@ -19,7 +21,10 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
   setTargetRecipe,
 }) => {
   const closeIconRef = useRef<null | SVGAElement>(null);
-  const [favouriteRecipe, setFavouriteRecipe] = useState();
+  const [addedToFavorites, setAddedToFavorites] = useState<RecipeItem>();
+  const { updateFavourites, isItemFavourite, favouriteRecipes } =
+    useContext(FavourtiesContext);
+
   const {
     description,
     instructions,
@@ -42,9 +47,14 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
     }
   };
 
-  const handleFavourites = (
-    event: React.MouseEvent<SVGAElement, MouseEvent>,
-  ) => {};
+  const handleAddToFavourites = async () => {
+    updateFavourites(recipe);
+  };
+
+  useEffect(() => {
+    const itemIsFavourite = isItemFavourite(recipe);
+    setAddedToFavorites(itemIsFavourite);
+  }, [favouriteRecipes]);
 
   return (
     <div className="overlay" onClick={exitPreview}>
@@ -56,8 +66,16 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
 
       <div className="preview">
         <div className="options">
-          <HeartIcon onClick={handleFavourites} />
+          {addedToFavorites ? (
+            <HeartIcon onClick={handleAddToFavourites} className="icon-heart" />
+          ) : (
+            <HeartIconOutlined
+              onClick={handleAddToFavourites}
+              className="icon-heart"
+            />
+          )}
         </div>
+
         <h2 className="title">{name}</h2>
         <h4 className="description">{description}</h4>
         <div className="presentation">

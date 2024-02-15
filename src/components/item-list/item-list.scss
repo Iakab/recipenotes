@@ -1,6 +1,5 @@
 @import 'abstracts/variables';
 
-
 .item-list {
   font-size: 1.4rem;
   width: 100%;
@@ -8,7 +7,6 @@
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-
 
   .photo-container {
     flex: 0 1 20rem;
@@ -37,7 +35,7 @@
       display: flex;
       justify-content: space-between;
       padding: 1rem;
-      
+
       .name {
         padding-left: 1.5rem;
       }
@@ -55,7 +53,7 @@
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-      gap: .5rem;
+      gap: 0.5rem;
       justify-content: center;
       align-content: space-between;
       align-items: flex-start;
@@ -64,7 +62,7 @@
     .btn {
       width: 100%;
       font-size: 1.6rem;
-      padding: .6rem;
+      padding: 0.6rem;
       line-height: 1.8rem;
       text-align: center;
       border: none;
@@ -87,7 +85,7 @@
     background-color: $light-grey-3;
 
     .name {
-      margin-bottom: .8rem;
+      margin-bottom: 0.8rem;
     }
 
     .reviews {

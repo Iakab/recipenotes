@@ -66,14 +66,16 @@ export const resetPassword = (email: string) => {
 //  Delete user
 export const deleteAccount = (password: string) => {
   // TODO: Review currentUser and email types
-  if (auth.currentUser) {
+
     const { currentUser } = auth;
-    const { email } = currentUser;
+    const { email } = currentUser || {};
+    
+    if (!currentUser || !email) return;
 
     const userImageRef = ref(storage, `images/${currentUser.uid}`);
 
     const userCredentials = EmailAuthProvider.credential(
-      email as string,
+      email,
       password,
     );
 
@@ -90,7 +92,7 @@ export const deleteAccount = (password: string) => {
     } catch (error) {
       console.log(error);
     }
-  }
+  
 };
 
 //  Auth listener

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { BrowserRouter } from 'react-router-dom';
+import { FavouritesProvider } from 'context/favourites.context';
 import { UserProvider } from './context/user.context';
 import { RecipesProvider } from './context/recipes.context';
 
@@ -15,11 +16,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <UserProvider>
-      <RecipesProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </RecipesProvider>
+      <FavouritesProvider>
+        <RecipesProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </RecipesProvider>
+      </FavouritesProvider>
     </UserProvider>
   </React.StrictMode>,
 );

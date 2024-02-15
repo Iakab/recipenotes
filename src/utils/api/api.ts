@@ -1,10 +1,59 @@
-import { Recipes } from './api.types';
 
-export const asdf = () => {};
+import { Recipes, RecipeItem } from './api.types';
 
-export const getRecipes = async (searchTag: string): Promise<Recipes> => {
+
+
+export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
+  const recipes:Recipes = unalteredRecipes.map((recipe: RecipeItem):RecipeItem=> {
+    const {
+      description,
+      instructions,
+      name,
+      original_video_url: originalVideoUrl,
+      sections,
+      thumbnail_url: thumbnail,
+      video_url: videoUrl,
+      country,
+      credits,
+      id,
+      nutrition,
+      prep_time_minuntes: prepTime,
+      tags,
+      tips_summary: tipsSummary,
+      total_time_tier: totalTimeTier,
+      user_ratings: UserRatings,
+      video_id: videoId,
+      yields,
+    } = recipe;
+
+    return {
+      description,
+      instructions,
+      name,
+      original_video_url: originalVideoUrl,
+      sections,
+      thumbnail_url: thumbnail,
+      video_url: videoUrl,
+      country,
+      credits,
+      id,
+      nutrition,
+      prep_time_minuntes: prepTime,
+      tags,
+      tips_summary: tipsSummary,
+      total_time_tier: totalTimeTier,
+      user_ratings: UserRatings,
+      video_id: videoId,
+      yields,
+    };
+  });
+  return recipes;
+};
+
+export const getRecipes = async (searchTag: string) => {
+
   // try {
-  const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=10&tags=under_30_minutes&q=${searchTag}`;
+  const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes&q=${searchTag}`;
 
   const options = {
     method: 'GET',
@@ -16,9 +65,11 @@ export const getRecipes = async (searchTag: string): Promise<Recipes> => {
 
   const response = await fetch(url, options);
   const data = await response.json();
-  return data.results;
+
+  const unalteredRecipes = data.results;
+  
+  const recipes = reduceRecipesSize(unalteredRecipes);
+
+  console.log(recipes);
+  return recipes;
 };
-
-
-
-

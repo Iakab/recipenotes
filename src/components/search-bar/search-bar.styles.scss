@@ -1,7 +1,7 @@
 @import 'abstracts/variables';
 
 .search {
-  flex: 1 1 100rem;
+  flex: 1 1 auto;
 
   display: flex;
   justify-content: center;
@@ -32,7 +32,6 @@
   #btn-icon {
     width: 1.5rem;
     height: 2rem;
-    margin-left: -2.2rem;
     border: none;
     background-color: transparent;
 
@@ -43,12 +42,12 @@
       cursor: pointer;
       transform: scale(1.1);
     }
-    
+
     .icon {
       width: 1.5rem;
-      
+
       position: absolute;
-      top: -.6rem;
+      top: -0.6rem;
       left: 0;
     }
   }

@@ -110,7 +110,7 @@ export type RecipeItem = {
   nutrition: Nutrition[];
   original_video_url: string;
   prep_time_minuntes: number;
-  renditions: Renditions[];
+  // renditions: Renditions[];
   sections: Section[];
   tags: Tags[];
   thumbnail_url: string;

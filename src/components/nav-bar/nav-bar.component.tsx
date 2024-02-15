@@ -1,7 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DocumentData } from 'firebase/firestore';
+
+import { FavourtiesContext } from 'context/favourites.context';
 
 import logoIcon from 'assets/img/logo-icon.png';
 import { ReactComponent as HeartIcon } from 'assets/icons/SVG/heart.svg';
@@ -17,6 +19,7 @@ type NavBar = {
 
 const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const { favouriteRecipes } = useContext(FavourtiesContext);
   const userMenu = useRef<null | HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -55,9 +58,14 @@ const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
         <div className="main">
           <SearchBar />
 
-          <div className="saved-items" onClick={handleFavourites}>
+          <div className="favorites" onClick={handleFavourites}>
             <HeartIcon className="heart-icon" />
-            <span className="items-num">2</span>
+
+            {favouriteRecipes ? (
+              <span className="items-num">{favouriteRecipes.length}</span>
+            ) : (
+              <span className="items-num">0</span>
+            )}
           </div>
 
           <div className="user" ref={userMenu}>

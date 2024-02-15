@@ -1,40 +1,40 @@
 @import 'abstracts/variables';
 
-  .footer {
-    height: 8rem;
-    width: 100%;
-    background-image: linear-gradient(to top, $light-grey-1, #abb2b9);
+.footer {
+  height: 8rem;
+  width: 100%;
+  background-image: linear-gradient(to top, $light-grey-1, #abb2b9);
+
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+
+  .details {
+    flex: 1 1 auto;
+    font-size: 1.4rem;
+    border-top: 1px solid $black;
 
     display: flex;
-    justify-content: stretch;
-    align-items: center;
+    justify-content: center;
 
-    .details {
-      flex: 1 1 auto;
-      font-size: 1.4rem;
-      border-top: 1px solid $black;
-
-      display: flex;
-      justify-content: center;
-
-      .option {
-        margin-left: -1rem;
-        text-decoration: none;
-        margin-right: 3rem;
-      }
-    }
-
-    .logo {
-      flex: 0 1 auto;
-      width: 18rem;
-      text-align: center;
-      margin-left: 8rem;
-      margin-right: 14rem;
-    }
-
-    .credit {
-      flex: 1 1 27rem;
-      border-top: 1px solid $black;
-      text-align: center;
+    .option {
+      margin-left: -1rem;
+      text-decoration: none;
+      margin-right: 3rem;
     }
   }
+
+  .logo {
+    flex: 0 1 auto;
+    width: 18rem;
+    text-align: center;
+    margin-left: 8rem;
+    margin-right: 14rem;
+  }
+
+  .credit {
+    flex: 1 1 27rem;
+    border-top: 1px solid $black;
+    text-align: center;
+  }
+}

@@ -12,7 +12,7 @@ type FormValues = {
   email: string;
 };
 
-const PasswordReset:React.FC<SetPasswordReset> = ({ setPasswordReset }) => {
+const PasswordReset: React.FC<SetPasswordReset> = ({ setPasswordReset }) => {
   const {
     formState: { errors },
     handleSubmit,
@@ -30,11 +30,13 @@ const PasswordReset:React.FC<SetPasswordReset> = ({ setPasswordReset }) => {
     setPasswordReset(false);
   };
 
-  const cancelAction = (event:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if(event.target === event.currentTarget) {
-      setPasswordReset(false)
+  const cancelAction = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    if (event.target === event.currentTarget) {
+      setPasswordReset(false);
     }
-  }
+  };
 
   return (
     <div className="password-reset" onClick={cancelAction}>

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { RecipesContext } from 'context/recipes.context';
+import { FavourtiesContext } from 'context/favourites.context';
 
 import ItemList from 'components/item-list/item-list';
 
@@ -9,14 +9,13 @@ import { RecipeItem } from 'utils/api/api.types';
 import './favourites.styles.scss';
 
 const Favourites = () => {
-  
-  const { recipes } = useContext(RecipesContext);
-  
-  console.log(recipes)
+  const { favouriteRecipes } = useContext(FavourtiesContext);
+
   return (
     <div className="favourites">
-      {recipes?.map((item: RecipeItem) => <ItemList key={item.id} recipe={item} />)}
-      
+      {favouriteRecipes?.map((item: RecipeItem) => (
+        <ItemList key={item.id} recipe={item} />
+      ))}
     </div>
   );
 };

@@ -13,7 +13,6 @@ import Footer from 'components/footer/footer.component';
 const Navigation = () => {
   const { currentUser, userIsLoading } = useContext(UserContext);
 
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,13 +21,12 @@ const Navigation = () => {
     }
   }, [currentUser]);
 
-
   return (
     <div className="navigation">
       {userIsLoading ? (
         <Loading type="spin" color="#000" className="loading" />
       ) : (
-        <div>
+        <div className="">
           <NavigationBar currentUser={currentUser} />
           <Outlet />
           <Footer />

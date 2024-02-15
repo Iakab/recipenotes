@@ -1,8 +1,10 @@
 import { createContext, useState, PropsWithChildren, useEffect } from 'react';
 
-import { getRecipesDocument } from 'utils/firebase/db';
+import {
+  // addCollectionAndDocumentsAsBatch,
+  getRecipesDocument,
+} from 'utils/firebase/db';
 import { Recipes } from 'utils/api/api.types';
-
 
 type RecipesContextType = {
   recipes: Recipes | undefined;
@@ -17,12 +19,24 @@ export const RecipesContext = createContext<RecipesContextType>({
 export const RecipesProvider = ({ children }: PropsWithChildren<{}>) => {
   const [recipes, setRecipes] = useState<Recipes>();
 
+  // FOR UPLOADING NEW CATEGORIES OF RECEPIES
+  // const recipesJson = JSON.stringify(recipes);
+
+  // useEffect(() => {
+  //   if(recipes) {
+  //     console.log(recipes)
+  //     addCollectionAndDocumentsAsBatch('categories', 'soup', recipesJson)
+  //   }
+  // },[recipes]);
+
   useEffect(() => {
     if (!recipes) {
       const retriveData = async () => {
-        const res = await getRecipesDocument('items', 'recipes');
-        const data = res.data();
-        setRecipes(data?.newRecipes);
+        const response = await getRecipesDocument('categories', 'chicken');
+
+        const categoryJson = response.data();
+        // TODO: ({category:JSON.parse(categoryJson?.data)})
+        setRecipes(JSON.parse(categoryJson?.data));
       };
       retriveData();
     }

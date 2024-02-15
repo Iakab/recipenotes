@@ -21,17 +21,10 @@ const Home = () => {
     );
   };
 
-
-
   return (
     <div className="home">
       {targetRecipe && (
-        
-          <PreviewItem
-            recipe={targetRecipe}
-            setTargetRecipe={setTargetRecipe}
-          />
-        
+        <PreviewItem recipe={targetRecipe} setTargetRecipe={setTargetRecipe} />
       )}
       <div className="content">
         <h2 className="title">HOME page</h2>

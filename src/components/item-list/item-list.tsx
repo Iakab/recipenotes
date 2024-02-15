@@ -38,7 +38,7 @@ const ItemList: React.FC<ItemListProps> = ({ recipe }) => {
         <h4 className="description">{description}</h4>
         <div className="ingredients">
           {components.map((item) => (
-            <p>&bull; {item.raw_text}</p>
+            <p key={item.id}>&bull; {item.raw_text}</p>
           ))}
         </div>
         <button className="btn">START COOKING &rarr;</button>
