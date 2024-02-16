@@ -38,7 +38,9 @@ const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
 
   useEffect(() => {
     document.addEventListener('mousedown', closeUserMenu);
-  }, []);
+
+    return () => document.removeEventListener('mousedown', closeUserMenu);
+  }, [isUserDropdownOpen]);
 
   const returnHome = () => {
     navigate('/');
@@ -61,11 +63,7 @@ const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
           <div className="favorites" onClick={handleFavourites}>
             <HeartIcon className="heart-icon" />
 
-            {favouriteRecipes ? (
-              <span className="items-num">{favouriteRecipes.length}</span>
-            ) : (
-              <span className="items-num">0</span>
-            )}
+            <span className="items-num">{favouriteRecipes?.length || 0}</span>
           </div>
 
           <div className="user" ref={userMenu}>

@@ -88,10 +88,9 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
           <img src={thumbnail} className="image"></img>
         </div>
         <div className="instructions">
-          {instructions.map((instruction: Instruction) => (
+          {instructions.map((instruction: Instruction, index: number) => (
             <p key={instruction.id}>
-              {instructions.indexOf(instruction) + 1}.{' '}
-              {instruction.display_text}
+              {index + 1}. {instruction.display_text}
             </p>
           ))}
         </div>

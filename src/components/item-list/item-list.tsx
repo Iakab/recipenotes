@@ -20,7 +20,7 @@ const ItemList: React.FC<ItemListProps> = ({ recipe }) => {
   } = recipe;
 
   const { components } = sections[0];
-  const { count_negative:negativeRatings, count_positive:positiveRatings} =
+  const { count_negative: negativeRatings, count_positive: positiveRatings } =
     authorRatings;
 
   const totalRatings = negativeRatings + positiveRatings;

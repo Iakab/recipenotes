@@ -1,6 +1,6 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 
-import { RecipesContext } from 'context/recipes.context';
+import { useCategories } from 'context/recipes.context';
 
 import Item from 'components/item/item.component';
 import PreviewItem from 'components/preview-item/preview-item.component';
@@ -8,7 +8,7 @@ import { RecipeItem } from 'utils/api/api.types';
 import './home.styles.scss';
 
 const Home = () => {
-  const { recipes } = useContext(RecipesContext);
+  const { recipes } = useCategories();
   const [targetRecipe, setTargetRecipe] = useState<RecipeItem>();
 
   const handlePreview = (

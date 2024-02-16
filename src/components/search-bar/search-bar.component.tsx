@@ -1,7 +1,6 @@
-import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { RecipesContext } from 'context/recipes.context';
+import { useCategories } from 'context/recipes.context';
 import { getRecipes } from 'utils/api/api';
 import { ReactComponent as SearchIcon } from 'assets/icons/SVG/search.svg';
 
@@ -12,7 +11,7 @@ type SearchTag = {
 };
 
 const SearchBar = () => {
-  const { recipes, setRecipes } = useContext(RecipesContext);
+  const { setRecipes } = useCategories();
   const {
     formState: { errors },
     handleSubmit,

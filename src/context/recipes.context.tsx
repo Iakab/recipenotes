@@ -1,4 +1,10 @@
-import { createContext, useState, PropsWithChildren, useEffect } from 'react';
+import {
+  createContext,
+  useState,
+  PropsWithChildren,
+  useEffect,
+  useContext,
+} from 'react';
 
 import {
   // addCollectionAndDocumentsAsBatch,
@@ -50,4 +56,13 @@ export const RecipesProvider = ({ children }: PropsWithChildren<{}>) => {
   return (
     <RecipesContext.Provider value={value}>{children}</RecipesContext.Provider>
   );
+};
+
+export const useCategories = () => {
+  const { recipes, setRecipes } = useContext(RecipesContext);
+
+  return {
+    recipes,
+    setRecipes,
+  };
 };
