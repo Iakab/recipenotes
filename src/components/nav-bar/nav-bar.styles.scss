@@ -1,4 +1,4 @@
-@import '../../abstracts/variables';
+@import 'abstracts/variables';
 
 .nav {
   color: $light-grey-1;
@@ -32,126 +32,91 @@
       }
     }
   }
-}
 
-.main {
-  font-size: 1.6rem;
-  flex: 1 1 auto;
-  justify-content: space-between;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .search {
-    flex: 1 1 100rem;
+  .main {
+    font-size: 1.6rem;
+    flex: 1 1 auto;
+    justify-content: space-between;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    .input {
-      font-family: inherit;
-      font-size: 1.4rem;
-      font-weight: 600;
-      letter-spacing: 0.1px;
-      height: 2.5rem;
-      width: 20rem;
-      margin-left: 3rem;
-      padding: 0 2rem 0.2rem 1rem;
-      outline: 2px solid $blue-grey-3;
-      outline-offset: -2px;
-      border-radius: 20px;
-      background-color: $white-grey-1;
-      transition: all 0.2s;
-
-      &:focus,
-      &:not(:placeholder-shown) {
-        transform: scale(1.3, 1.1);
-        font-size: 1.3rem;
-      }
-    }
-
-    .icon {
-      width: 1.5rem;
-      margin-left: -2.2rem;
-      z-index: 2;
-      transition: all 0.2s;
-    }
-
-    .input:focus + .icon,
-    .input:not(:placeholder-shown) + .icon {
-      transform: translateX(3rem);
-    }
-  }
-
-  .saved-items {
-    text-align: center;
-    height: 100%;
-    flex: 1 0 3rem;
-    padding: 0 1rem;
-    position: relative;
-
-    .heart-icon {
-      width: 2.4rem;
-      position: absolute;
-      top: 0.5rem;
-      right: 1.5rem;
-      fill: red;
-    }
-
-    .items-num {
-      font-size: 1.2rem;
-      width: 1.8rem;
-      height: 1.8rem;
-      position: absolute;
-      top: 0;
-      right: 0.5rem;
-      border-radius: 50%;
-      z-index: 2;
-      background-color: rgb(29, 61, 50);
-    }
-  }
-
-  .user {
-    flex: 1 1 auto;
-    margin-right: 0.5rem;
-    padding: 0.3rem 0;
-    height: 100%;
-    position: relative;
-
-    .btn_user {
-      font-size: 2rem;
-      font-family: 600;
-      margin: 0 auto;
-      width: 100%;
+    .favorites {
+      text-align: center;
       height: 100%;
-      border: none;
-      background-color: inherit;
-      cursor: pointer;
+      flex: 0 1 auto;
+      padding: 0 1rem;
 
       display: flex;
-      justify-content: center;
       align-items: center;
       transition: all 0.2s;
+      cursor: pointer;
 
       &:hover {
         background-color: $dark-grey-1;
       }
 
-      .icon-box {
-        width: 2.9rem;
-        height: 2.9rem;
-        margin-right: 0.5rem;
-        border-radius: 50%;
+      .heart-icon {
+        width: 3rem;
+        height: 3rem;
+        fill: red;
+        margin-left: 0.6rem;
+      }
 
-        .photo {
-          width: 100%;
-          height: 100%;
-          border-radius: 100%;
-          object-fit: cover;
-          object-position: 50% 50%;
-          background-color: $light-grey-1;
+      .items-num {
+        font-size: 1.2rem;
+        width: 1.8rem;
+        height: 1.8rem;
+        margin-left: -0.6rem;
+        align-self: flex-start;
+        border-radius: 50%;
+        z-index: 2;
+        background-color: rgb(29, 61, 50);
+      }
+    }
+
+    .user {
+      flex: 1 1 17rem;
+      margin-right: 0.5rem;
+      padding: 0.3rem 0;
+      height: 100%;
+      position: relative;
+
+      .btn_user {
+        font-size: 2rem;
+        font-family: 600;
+        margin: 0 auto;
+        padding: 0 0.5rem;
+        width: 100%;
+        height: 100%;
+        border: none;
+        background-color: inherit;
+        cursor: pointer;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.2s;
+
+        &:hover {
+          background-color: $dark-grey-1;
+        }
+
+        .icon-box {
+          width: 2.9rem;
+          height: 2.9rem;
+          margin-right: 0.5rem;
+          border-radius: 50%;
+
+          .photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            object-fit: cover;
+            object-position: 50% 50%;
+            background-color: $light-grey-1;
+          }
         }
       }
     }

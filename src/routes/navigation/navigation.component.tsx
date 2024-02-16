@@ -3,15 +3,16 @@ import { Outlet, useNavigate } from 'react-router-dom';
 
 import Loading from 'react-loading';
 
-import { UserContext } from '../../context/user.context';
+import { UserContext } from 'context/user.context';
 
-import NavigationBar from '../../components/nav-bar/nav-bar.component';
+import NavigationBar from 'components/nav-bar/nav-bar.component';
 
 import './navigation.styles.scss';
-import Footer from '../../components/footer/footer.component';
+import Footer from 'components/footer/footer.component';
 
 const Navigation = () => {
   const { currentUser, userIsLoading } = useContext(UserContext);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const Navigation = () => {
       {userIsLoading ? (
         <Loading type="spin" color="#000" className="loading" />
       ) : (
-        <div>
+        <div className="">
           <NavigationBar currentUser={currentUser} />
           <Outlet />
           <Footer />

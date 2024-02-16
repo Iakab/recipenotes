@@ -1,13 +1,15 @@
-import { useState, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DocumentData } from 'firebase/firestore';
 
-import UserDropdown from '../user-dropdown/userDropdown.component';
+import { FavourtiesContext } from 'context/favourites.context';
 
-import logoIcon from '../../assets/img/logo-icon.png';
-import { ReactComponent as HeartIcon } from '../../assets/icons/SVG/heart.svg';
-import { ReactComponent as SearchIcon } from '../../assets/icons/SVG/search.svg';
+import logoIcon from 'assets/img/logo-icon.png';
+import { ReactComponent as HeartIcon } from 'assets/icons/SVG/heart.svg';
+
+import UserDropdown from '../user-dropdown/userDropdown.component';
+import SearchBar from '../search-bar/search-bar.component';
 
 import './nav-bar.styles.scss';
 
@@ -17,6 +19,7 @@ type NavBar = {
 
 const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const { favouriteRecipes } = useContext(FavourtiesContext);
   const userMenu = useRef<null | HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -32,10 +35,19 @@ const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
       setIsUserDropdownOpen(false);
     }
   };
-  document.addEventListener('mousedown', closeUserMenu);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', closeUserMenu);
+
+    return () => document.removeEventListener('mousedown', closeUserMenu);
+  }, [isUserDropdownOpen]);
 
   const returnHome = () => {
     navigate('/');
+  };
+
+  const handleFavourites = () => {
+    navigate('/favourites');
   };
 
   return (
@@ -46,18 +58,12 @@ const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
 
       {currentUser && (
         <div className="main">
-          <div className="search">
-            <input
-              type="text"
-              placeholder="food or main ingredient"
-              className="input"
-            />
-            <SearchIcon className="icon" />
-          </div>
+          <SearchBar />
 
-          <div className="saved-items">
+          <div className="favorites" onClick={handleFavourites}>
             <HeartIcon className="heart-icon" />
-            <span className="items-num">2</span>
+
+            <span className="items-num">{favouriteRecipes?.length || 0}</span>
           </div>
 
           <div className="user" ref={userMenu}>

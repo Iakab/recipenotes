@@ -1,4 +1,4 @@
-import { signOutUser } from '../../utils/firebase/auth';
+import { signOutUser } from 'utils/firebase/auth';
 
 import './userDropdown.styles.scss';
 

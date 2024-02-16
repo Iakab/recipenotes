@@ -1,22 +1,27 @@
 import {
-  getFirestore,
-  setDoc,
-  getDoc,
-  doc,
   collection,
-  getDocs,
-  updateDoc,
-  DocumentSnapshot,
+  deleteField,
+  doc,
   DocumentData,
+  DocumentSnapshot,
+  getDoc,
+  getDocs,
+  getFirestore,
   query,
+  setDoc,
+  updateDoc,
   where,
+  writeBatch,
 } from 'firebase/firestore';
 
 import { getDownloadURL, ref } from 'firebase/storage';
 
 import { User } from 'firebase/auth';
+
 import { app } from './config';
 import { storage } from './storage';
+
+import { RecipeItem } from '../api/api.types';
 
 export const db = getFirestore(app);
 
@@ -41,14 +46,14 @@ export const createUserDocumentFormAuth = async (
 
     try {
       await setDoc(userDocRef, {
+        ...additionalInformation,
         displayName,
         email,
-        userUid,
-        userPhotoUrl,
         userBio,
-        ...additionalInformation,
+        userPhotoUrl,
+        userUid,
       });
-      return await createUserDocumentFormAuth(userAuth);
+      await createUserDocumentFormAuth(userAuth);
     } catch (e) {
       console.error('Error adding document: ', e);
     }
@@ -59,12 +64,12 @@ export const createUserDocumentFormAuth = async (
 //  Check if username already exists
 export const displayNameIsUnique = async (displayNameInput: string) => {
   const usersRef = collection(db, 'users');
-  const q = query(usersRef, where('displayName', '==', displayNameInput));
-  const querySnapshot = await getDocs(q);
-  if (querySnapshot.empty) {
-    return true;
-  }
-  return false;
+  const queryResults = query(
+    usersRef,
+    where('displayName', '==', displayNameInput),
+  );
+  const docSnapshot = await getDocs(queryResults);
+  return docSnapshot.empty;
 };
 
 export type Updates = {
@@ -82,6 +87,62 @@ export const updateUserDocumentFormAuth = async (
   updateDoc(userDocRef, updates);
 
   userDocRef = doc(db, 'users', userAuth.userUid);
-  const snapshot = await getDoc(userDocRef);
-  return snapshot;
+  return getDoc(userDocRef);
+};
+
+// UPLOAD CATEGORIES
+export const addCollectionAndDocumentsAsBatch = async (
+  collectionName: string,
+  documentName: string,
+  jsonToAdd: string,
+) => {
+  const batch = writeBatch(db);
+  const docRef = doc(db, collectionName, documentName);
+
+  batch.set(docRef, { data: jsonToAdd });
+  await batch.commit();
+  console.log('done');
+};
+
+// GET
+export const getRecipesDocument = async (
+  collectionName: string,
+  documentName: string,
+) => {
+  const docRef = doc(db, collectionName, documentName);
+  return getDoc(docRef);
+};
+
+// UPDATE OR CREATE FAVOURITES
+export const updateFavouritesCollection = async (
+  collectionName: string,
+  documentName: string,
+  objectsToAdd: RecipeItem,
+) => {
+  const recipeDocRef = doc(db, collectionName, documentName);
+  const favouritesSnapshot = await getDoc(recipeDocRef);
+
+  if (favouritesSnapshot.exists()) {
+    await updateDoc(recipeDocRef, { [objectsToAdd.id]: objectsToAdd });
+  } else {
+    await setDoc(recipeDocRef, {
+      [objectsToAdd.id]: objectsToAdd,
+    });
+  }
+
+  return getDoc(recipeDocRef);
+};
+
+// REMOVE RECIPE FROM FAVOURITES
+export const removeRecipeFromDoc = async (
+  collectionName: string,
+  documentName: string,
+  objectsToAdd: RecipeItem,
+) => {
+  const recipeDocRef = doc(db, collectionName, documentName);
+  await updateDoc(recipeDocRef, {
+    [objectsToAdd.id]: deleteField(),
+  });
+
+  return getDoc(recipeDocRef);
 };

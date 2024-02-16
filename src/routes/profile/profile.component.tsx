@@ -1,17 +1,17 @@
-import { useEffect, useState, useContext, ChangeEvent } from 'react';
+import { ChangeEvent, useContext, useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { UserContext } from '../../context/user.context';
+import { UserContext } from 'context/user.context';
 
-import { uploadUserImage, getUserImage } from '../../utils/firebase/storage';
+import { uploadUserImage, getUserImage } from 'utils/firebase/storage';
 
-import { resetPassword } from '../../utils/firebase/auth';
+import { resetPassword } from 'utils/firebase/auth';
 
-import ProfileDescriptionEditor from '../../components/profile-descritpion-editor/profile-description-editor.component';
-import ReauthPrompt from '../../components/reauth-prompt/reauth-prompt.component';
+import ProfileDescriptionEditor from 'components/profile-descritpion-editor/profile-description-editor.component';
+import ReauthPrompt from 'components/reauth-prompt/reauth-prompt.component';
 
-import { ReactComponent as CameraIcon } from '../../assets/icons/SVG/camera.svg';
-import { ReactComponent as PencilIcon } from '../../assets/icons/SVG/create.svg';
+import { ReactComponent as CameraIcon } from 'assets/icons/SVG/camera.svg';
+import { ReactComponent as PencilIcon } from 'assets/icons/SVG/create.svg';
 import './profile.styles.scss';
 
 const Profile = () => {
@@ -63,9 +63,9 @@ const Profile = () => {
           <div className="photo">
             <div className="box">
               <img
-                src={currentUser?.userPhotoUrl}
                 alt="Photo"
                 className="preview"
+                src={currentUser?.userPhotoUrl}
               />
               <div className="btn">
                 <input type="file" onChange={handlePhotoChange} />
@@ -78,8 +78,8 @@ const Profile = () => {
             <div className="preview">
               <div className="text">
                 <button
-                  onClick={() => setShowInputFields(true)}
                   className="btn"
+                  onClick={() => setShowInputFields(true)}
                 >
                   <PencilIcon className="btn-pencil" />
                 </button>
@@ -106,8 +106,8 @@ const Profile = () => {
                 Change password
               </span>
               <span
-                onClick={() => setReauthModal(!reauthModal)}
                 className="span"
+                onClick={() => setReauthModal(!reauthModal)}
               >
                 Delete account
               </span>

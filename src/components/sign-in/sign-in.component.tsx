@@ -23,9 +23,9 @@ const SignIn: React.FC<SignInParams> = ({
   setPasswordReset,
 }) => {
   const {
-    register,
-    handleSubmit,
     formState: { errors },
+    handleSubmit,
+    register,
   } = useForm<FormValues>({
     defaultValues: {
       email: '',
@@ -64,10 +64,10 @@ const SignIn: React.FC<SignInParams> = ({
       <form className="form" onSubmit={handleSubmit(onSubmit)}>
         <div className="field">
           <input
-            type="email"
-            placeholder="Email"
             {...register('email', { required: 'Email is required' })}
             className="input"
+            placeholder="Email"
+            type="email"
           ></input>
           {errors.email && (
             <p style={{ color: 'rgb(252, 51, 51)', fontWeight: '600' }}>
@@ -81,10 +81,10 @@ const SignIn: React.FC<SignInParams> = ({
 
         <div className="field">
           <input
-            type="password"
-            placeholder="Password"
             {...register('password', { required: 'Password is required' })}
             className="input"
+            placeholder="Password"
+            type="password"
           ></input>
           {errors.password && (
             <p style={{ color: 'rgb(252, 51, 51)', fontWeight: '600' }}>
@@ -110,9 +110,9 @@ const SignIn: React.FC<SignInParams> = ({
 
       <span className="span-1">or</span>
       <button
+        className="btn btn-google"
         onClick={signInWithGoogle}
         type="button"
-        className="btn btn-google"
       >
         Sign in with Google
       </button>

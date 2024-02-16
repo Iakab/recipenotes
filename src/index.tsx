@@ -1,11 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { UserProvider } from './context/user.context';
 
-import './index.css';
+import { BrowserRouter } from 'react-router-dom';
+import { FavouritesProvider } from 'context/favourites.context';
+import { UserProvider } from './context/user.context';
+import { RecipesProvider } from './context/recipes.context';
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import './index.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -13,9 +16,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <UserProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <FavouritesProvider>
+        <RecipesProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </RecipesProvider>
+      </FavouritesProvider>
     </UserProvider>
   </React.StrictMode>,
 );

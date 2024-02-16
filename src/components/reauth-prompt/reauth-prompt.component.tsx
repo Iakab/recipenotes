@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 
-import { deleteAccount } from '../../utils/firebase/auth';
+import { deleteAccount } from 'utils/firebase/auth';
 
 import './reauth-prompt.styles.scss';
 
@@ -13,9 +13,9 @@ type FieldValue = {
 };
 const ReauthPrompt: React.FC<ReauthProps> = ({ setReauthModal }) => {
   const {
-    register,
-    handleSubmit,
     formState: { errors },
+    handleSubmit,
+    register,
   } = useForm<FieldValue>({
     defaultValues: {
       password: '',
@@ -39,10 +39,10 @@ const ReauthPrompt: React.FC<ReauthProps> = ({ setReauthModal }) => {
         <div className="password">
           <label htmlFor="reauth">Password:</label>
           <input
-            id="reauth"
-            className="input"
-            type="password"
             {...register('password', { required: 'Password is required!' })}
+            className="input"
+            id="reauth"
+            type="password"
           />
           {errors.password && (
             <p style={{ color: 'rgb(252, 51, 51)', fontWeight: '600' }}>

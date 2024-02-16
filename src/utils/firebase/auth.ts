@@ -1,17 +1,17 @@
 import {
-  getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup,
-  sendPasswordResetEmail,
   deleteUser,
-  reauthenticateWithCredential,
   EmailAuthProvider,
-  User,
+  getAuth,
+  GoogleAuthProvider,
   NextOrObserver,
+  onAuthStateChanged,
+  reauthenticateWithCredential,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  User,
 } from 'firebase/auth';
 
 import { deleteDoc, doc } from 'firebase/firestore';
@@ -65,27 +65,34 @@ export const resetPassword = (email: string) => {
 
 //  Delete user
 export const deleteAccount = (password: string) => {
-  const { currentUser } = auth;
-  if (!currentUser) return;
-  const { email } = currentUser;
-  if (!email) return;
-  const userImageRef = ref(storage, `images/${currentUser.uid}`);
+  // TODO: Review currentUser and email types
 
-  const userCredentials = EmailAuthProvider.credential(email, password);
+    const { currentUser } = auth;
+    const { email } = currentUser || {};
+    
+    if (!currentUser || !email) return;
 
-  try {
-    reauthenticateWithCredential(currentUser, userCredentials).then(() => {
-      deleteDoc(doc(db, 'users', currentUser.uid));
-      deleteObject(userImageRef).catch((error) => {
-        console.log((error as Error).message);
+    const userImageRef = ref(storage, `images/${currentUser.uid}`);
+
+    const userCredentials = EmailAuthProvider.credential(
+      email,
+      password,
+    );
+
+    try {
+      reauthenticateWithCredential(currentUser, userCredentials).then(() => {
+        deleteDoc(doc(db, 'users', currentUser.uid));
+        deleteObject(userImageRef).catch((error) => {
+          console.log((error as Error).message);
+        });
+        deleteUser(currentUser).then(() => {
+          alert('Account successfully deleted');
+        });
       });
-      deleteUser(currentUser).then(() => {
-        alert('Account successfully deleted');
-      });
-    });
-  } catch (error) {
-    console.log(error);
-  }
+    } catch (error) {
+      console.log(error);
+    }
+  
 };
 
 //  Auth listener
