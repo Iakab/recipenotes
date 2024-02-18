@@ -1,7 +1,8 @@
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { useCategories } from 'context/recipes.context';
-import { getRecipes } from 'utils/api/api';
+import { SearchContext } from 'context/search.context';
+
 import { ReactComponent as SearchIcon } from 'assets/icons/SVG/search.svg';
 
 import './search-bar.styles.scss';
@@ -11,7 +12,8 @@ type SearchTag = {
 };
 
 const SearchBar = () => {
-  const { setRecipes } = useCategories();
+  const { setSearchTag } = useContext(SearchContext);
+
   const {
     formState: { errors },
     handleSubmit,
@@ -23,8 +25,7 @@ const SearchBar = () => {
   });
 
   const onSubmit = async (data: SearchTag) => {
-    const newRecipes = await getRecipes(data.searchTag);
-    setRecipes(newRecipes);
+    setSearchTag(data.searchTag);
   };
 
   return (

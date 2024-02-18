@@ -105,13 +105,8 @@ export const addCollectionAndDocumentsAsBatch = async (
 };
 
 // GET
-export const getRecipesDocument = async (
-  collectionName: string,
-  documentName: string,
-) => {
-  const docRef = doc(db, collectionName, documentName);
-  return getDoc(docRef);
-};
+export const getCategoriesDocument = async (collectionName: string) =>
+  getDocs(collection(db, collectionName));
 
 // UPDATE OR CREATE FAVOURITES
 export const updateFavouritesCollection = async (

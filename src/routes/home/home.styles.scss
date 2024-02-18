@@ -10,20 +10,16 @@
 
   position: relative;
 
-
-  .content {
+  .body {
+    position: relative;
+    width: 100%;
     height: fit-content;
+    padding: 2rem 1rem;
 
-    .title {
-    }
-    .body {
-      width: 100%;
-      padding: 2rem 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: space-around;
-    }
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-around;
   }
 }
 

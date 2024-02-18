@@ -1,0 +1,14 @@
+.content {
+  height: fit-content;
+
+  .title {
+  }
+  .body {
+    width: 100%;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-around;
+  }
+}
