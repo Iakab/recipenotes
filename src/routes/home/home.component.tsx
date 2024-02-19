@@ -1,5 +1,6 @@
-import { useCategories } from 'context/categories.context';
+import { useMemo } from 'react';
 
+import { useCategories } from 'context/categories.context';
 import { useSearchItems } from 'context/search.context';
 
 import Category from 'components/category/category';
@@ -17,16 +18,18 @@ const Home = () => {
     return <Loading type="spin" color="#000" className="loading" />;
   }
 
+  const category = useMemo(
+    () =>
+      Object.entries(categories).map((item) => (
+        <Category key={item[0]} category={item} />
+      )),
+    [categories],
+  );
+
   return (
     <div className="home">
       <div className="body">
-        {searchItems ? (
-          <SearchItems searchItems={searchItems} />
-        ) : (
-          Object.entries(categories).map((category) => (
-            <Category key={category[0]} category={category} />
-          ))
-        )}
+        {searchItems ? <SearchItems items={searchItems} /> : category}
       </div>
     </div>
   );

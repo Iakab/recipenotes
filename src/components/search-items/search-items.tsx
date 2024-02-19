@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import Item from 'components/item/item.component';
 import PreviewItem from 'components/preview-item/preview-item.component';
@@ -7,21 +7,27 @@ import { RecipeItem } from 'utils/api/api.types';
 import './search-items.scss';
 
 type SearchItemsProps = {
-  searchItems: any;
+  items: any;
 };
 
-const SearchItems: React.FC<SearchItemsProps> = ({ searchItems }) => {
+const SearchItems: React.FC<SearchItemsProps> = ({ items }) => {
   const [targetRecipe, setTargetRecipe] = useState<RecipeItem>();
-  console.log(searchItems);
+  console.log(items);
   const handlePreview = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
     const { id } = event.currentTarget;
 
-    setTargetRecipe(
-      searchItems?.find((item: RecipeItem) => item.id === Number(id)),
-    );
+    setTargetRecipe(items?.find((item: RecipeItem) => item.id === Number(id)));
   };
+
+  const item = useMemo(
+    () =>
+      items?.map((recipe: RecipeItem) => (
+        <Item handlePreview={handlePreview} key={recipe.id} recipe={recipe} />
+      )),
+    [items],
+  );
 
   return (
     <div>
@@ -30,15 +36,7 @@ const SearchItems: React.FC<SearchItemsProps> = ({ searchItems }) => {
       )}
       <div className="content">
         <h2 className="title">HOME page</h2>
-        <div className="body">
-          {searchItems?.map((recipe: RecipeItem) => (
-            <Item
-              handlePreview={handlePreview}
-              key={recipe.id}
-              recipe={recipe}
-            />
-          ))}
-        </div>
+        <div className="body">{item}</div>
       </div>
     </div>
   );
