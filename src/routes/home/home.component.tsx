@@ -1,42 +1,35 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 
-import { useCategories } from 'context/recipes.context';
+import { useCategories } from 'context/categories.context';
+import { useSearchItems } from 'context/search.context';
 
-import Item from 'components/item/item.component';
-import PreviewItem from 'components/preview-item/preview-item.component';
-import { RecipeItem } from 'utils/api/api.types';
+import Category from 'components/category/category';
+import SearchItems from 'components/search-items/search-items';
+
+import Loading from 'react-loading';
+
 import './home.styles.scss';
 
 const Home = () => {
-  const { recipes } = useCategories();
-  const [targetRecipe, setTargetRecipe] = useState<RecipeItem>();
+  const searchItems = useSearchItems();
+  const categories = useCategories();
 
-  const handlePreview = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {
-    const { id } = event.currentTarget;
+  if (!categories) {
+    return <Loading type="spin" color="#000" className="loading" />;
+  }
 
-    setTargetRecipe(
-      recipes?.find((item: RecipeItem) => item.id === Number(id)),
-    );
-  };
+  const category = useMemo(
+    () =>
+      Object.entries(categories).map((item) => (
+        <Category key={item[0]} category={item} />
+      )),
+    [categories],
+  );
 
   return (
     <div className="home">
-      {targetRecipe && (
-        <PreviewItem recipe={targetRecipe} setTargetRecipe={setTargetRecipe} />
-      )}
-      <div className="content">
-        <h2 className="title">HOME page</h2>
-        <div className="body">
-          {recipes?.map((recipe: RecipeItem) => (
-            <Item
-              handlePreview={handlePreview}
-              key={recipe.id}
-              recipe={recipe}
-            />
-          ))}
-        </div>
+      <div className="body">
+        {searchItems ? <SearchItems items={searchItems} /> : category}
       </div>
     </div>
   );

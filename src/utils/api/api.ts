@@ -53,7 +53,7 @@ export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
 export const getRecipes = async (searchTag: string) => {
 
   // try {
-  const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes&q=${searchTag}`;
+  const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=3&tags=under_30_minutes&q=${searchTag}`;
 
   const options = {
     method: 'GET',

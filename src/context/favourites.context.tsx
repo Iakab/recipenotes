@@ -1,13 +1,6 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
 
 import {
-  getRecipesDocument,
   removeRecipeFromDoc,
   updateFavouritesCollection,
 } from 'utils/firebase/db';
@@ -56,18 +49,18 @@ export const FavouritesProvider = ({ children }: PropsWithChildren) => {
   };
 
   // DEFAULT
-  useEffect(() => {
-    if (!favouriteRecipes && !userIsLoading) {
-      const getFavouritesDoc = async () => {
-        const favouritesSnapshot = await getRecipesDocument(
-          collectionName,
-          currentUser?.userUid,
-        );
-        setDataFromSnapshot(favouritesSnapshot);
-      };
-      getFavouritesDoc();
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   if (!favouriteRecipes && !userIsLoading) {
+  //     const getFavouritesDoc = async () => {
+  //       const favouritesSnapshot = await getRecipesDocument(
+  //         collectionName,
+  //         currentUser?.userUid,
+  //       );
+  //       setDataFromSnapshot(favouritesSnapshot);
+  //     };
+  //     getFavouritesDoc();
+  //   }
+  // }, [currentUser]);
 
   // ADD OR REMOVE
   const updateFavourites = async (item: RecipeItem) => {
