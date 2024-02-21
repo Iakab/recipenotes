@@ -104,9 +104,18 @@ export const addCollectionAndDocumentsAsBatch = async (
   console.log('done');
 };
 
-// GET
+// GET All DOCS FROM COLLECTION
 export const getCategoriesDocument = async (collectionName: string) =>
   getDocs(collection(db, collectionName));
+
+// Get DOC
+export const getRecipesDocument = (
+  collectionName: string,
+  documentName: string,
+) => {
+  const docRef = doc(db, collectionName, documentName);
+  return getDoc(docRef);
+};
 
 // UPDATE OR CREATE FAVOURITES
 export const updateFavouritesCollection = async (
@@ -116,6 +125,8 @@ export const updateFavouritesCollection = async (
 ) => {
   const recipeDocRef = doc(db, collectionName, documentName);
   const favouritesSnapshot = await getDoc(recipeDocRef);
+
+  console.log({ [objectsToAdd.id]: objectsToAdd });
 
   if (favouritesSnapshot.exists()) {
     await updateDoc(recipeDocRef, { [objectsToAdd.id]: objectsToAdd });

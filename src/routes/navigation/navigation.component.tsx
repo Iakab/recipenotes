@@ -26,7 +26,7 @@ const Navigation = () => {
       {userIsLoading ? (
         <Loading type="spin" color="#000" className="loading" />
       ) : (
-        <div className="">
+        <div className="page-content">
           <NavigationBar currentUser={currentUser} />
           <Outlet />
           <Footer />

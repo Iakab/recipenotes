@@ -1,25 +1,38 @@
 @import 'abstracts/variables';
 
 .home {
+  width: 100%;
   height: fit-content;
-  background-color: $light-grey-1;
-  margin: 0 3rem;
-  background-color: rgb(225, 226, 226);
+  color: $light-grey-1;
+  // margin: 0 3rem;
+
+  // background-color: $light-grey-1;
+  background-color: $black-background;
 
   display: flex;
+  gap: 2rem;
+  justify-content: center;
 
-  position: relative;
+  .menu {
+    flex: 0 1 auto;
+    width: 22rem;
 
-  .body {
-    position: relative;
-    width: 100%;
+    background-color: rgb(0, 0, 20);
+  }
+
+  .categories {
+    flex: 1 1 auto;
+    width: 80%;
     height: fit-content;
-    padding: 2rem 1rem;
 
+    margin-top: 3rem;
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
     justify-content: space-around;
+
+    h2 {
+      font-size: 1.6rem;
+    }
   }
 }
 

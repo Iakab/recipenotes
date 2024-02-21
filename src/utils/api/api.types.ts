@@ -32,7 +32,6 @@ type TipsSummary = {
   header: string;
 };
 
-
 type UserRatings = {
   count_negative: number;
   count_positive: number;
@@ -42,7 +41,7 @@ type UserRatings = {
 type Credit = {
   name: string;
   type: string;
-}
+};
 type Credits = Credit;
 
 type Renditions = {

@@ -25,6 +25,7 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
   const { updateFavourites, isItemFavourite, favouriteRecipes } =
     useContext(FavourtiesContext);
 
+  console.log(recipe);
   const {
     description,
     instructions,

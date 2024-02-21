@@ -1,3 +1,4 @@
+import SearchItems from 'components/search-items/search-items';
 import {
   createContext,
   PropsWithChildren,
@@ -11,27 +12,43 @@ import { getRecipes } from 'utils/api/api';
 import { Recipes } from 'utils/api/api.types';
 
 type SearchContextProps = {
-  searchResult: Recipes | undefined;
+  searchItems: Recipes | undefined;
   setSearchTag: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setSearchItems: React.Dispatch<React.SetStateAction<Recipes | undefined>>;
+  isLoading: boolean;
 };
 
 export const SearchContext = createContext<SearchContextProps>({
-  searchResult: undefined,
+  searchItems: undefined,
   setSearchTag: () => {},
+  setSearchItems: () => {},
+  isLoading: false,
 });
-
 export const SearchProvider = ({ children }: PropsWithChildren) => {
   const [searchTag, setSearchTag] = useState<string>();
-  const [searchResult, setSearchResult] = useState<Recipes>();
+  const [searchItems, setSearchItems] = useState<Recipes>();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (searchTag) {
-      getRecipes(searchTag).then((result) => setSearchResult(result));
+      setIsLoading(true);
+      const setRecipes = async () => {
+        const result = await getRecipes(searchTag);
+        setSearchItems(result);
+      };
+      setRecipes();
     }
   }, [searchTag]);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [searchItems]);
+
   const value = {
-    searchResult,
+    searchItems,
     setSearchTag,
+    setSearchItems,
+    isLoading,
   };
 
   return (
@@ -40,7 +57,7 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
 };
 
 export const useSearchItems = () => {
-  const { searchResult } = useContext(SearchContext);
+  const { searchItems, isLoading } = useContext(SearchContext);
 
-  return searchResult;
+  return { searchItems, isLoading };
 };

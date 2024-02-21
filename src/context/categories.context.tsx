@@ -63,6 +63,12 @@ export const CategoriesProvider = ({ children }: PropsWithChildren<{}>) => {
     setCategories,
   };
 
+  // useEffect(() => {
+  //   if(categories) {
+  //     console.log(categories)
+  //   }
+  // },[categories])
+
   return (
     <CategoriesContext.Provider value={value}>
       {children}

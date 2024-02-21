@@ -3,18 +3,18 @@ import { useMemo } from 'react';
 import { useCategories } from 'context/categories.context';
 import { useSearchItems } from 'context/search.context';
 
-import Category from 'components/category/category';
 import SearchItems from 'components/search-items/search-items';
+import Category from 'components/category/category';
 
 import Loading from 'react-loading';
 
 import './home.styles.scss';
 
 const Home = () => {
-  const searchItems = useSearchItems();
+  const { searchItems, isLoading } = useSearchItems();
   const categories = useCategories();
 
-  if (!categories) {
+  if (!categories || isLoading) {
     return <Loading type="spin" color="#000" className="loading" />;
   }
 
@@ -28,9 +28,17 @@ const Home = () => {
 
   return (
     <div className="home">
-      <div className="body">
-        {searchItems ? <SearchItems items={searchItems} /> : category}
+      <div className="menu">
+        <p>Menu</p>
       </div>
+      {searchItems ? (
+        <SearchItems items={searchItems} />
+      ) : (
+        <div className="categories">
+          <h2>DISCOVER NEW RECIPES</h2>
+          {category}
+        </div>
+      )}
     </div>
   );
 };

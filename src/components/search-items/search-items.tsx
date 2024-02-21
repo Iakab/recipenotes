@@ -2,17 +2,17 @@ import { useState, useMemo } from 'react';
 
 import Item from 'components/item/item.component';
 import PreviewItem from 'components/preview-item/preview-item.component';
-import { RecipeItem } from 'utils/api/api.types';
+import { RecipeItem, Recipes } from 'utils/api/api.types';
 
 import './search-items.scss';
 
 type SearchItemsProps = {
-  items: any;
+  items: Recipes;
 };
 
 const SearchItems: React.FC<SearchItemsProps> = ({ items }) => {
   const [targetRecipe, setTargetRecipe] = useState<RecipeItem>();
-  console.log(items);
+
   const handlePreview = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
