@@ -19,9 +19,12 @@ type CategoriesContextType = {
   >;
 };
 
-type CategoriesCollection = {
-  [key: string]: Recipes;
+export type CategoryType = {
+  categoryName: string;
+  recipes: Recipes;
 };
+
+type CategoriesCollection = CategoryType[];
 
 export const CategoriesContext = createContext<CategoriesContextType>({
   categories: undefined,
@@ -46,10 +49,13 @@ export const CategoriesProvider = ({ children }: PropsWithChildren<{}>) => {
       const fetchData = async () => {
         const response = await getCategoriesDocument('categories');
 
-        const categoriesCollection: CategoriesCollection = {};
+        const categoriesCollection: CategoriesCollection = [];
         response.forEach((category) => {
           const categoryId: string = category.id;
-          categoriesCollection[categoryId] = JSON.parse(category.data().data);
+          categoriesCollection.push({
+            categoryName: categoryId,
+            recipes: JSON.parse(category.data().data),
+          });
         });
 
         setCategories(categoriesCollection);
@@ -62,12 +68,6 @@ export const CategoriesProvider = ({ children }: PropsWithChildren<{}>) => {
     categories,
     setCategories,
   };
-
-  // useEffect(() => {
-  //   if(categories) {
-  //     console.log(categories)
-  //   }
-  // },[categories])
 
   return (
     <CategoriesContext.Provider value={value}>

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useCategories } from 'context/categories.context';
+import { useCategories, CategoryType } from 'context/categories.context';
 import { useSearchItems } from 'context/search.context';
 
 import SearchItems from 'components/search-items/search-items';
@@ -20,9 +20,10 @@ const Home = () => {
 
   const category = useMemo(
     () =>
-      Object.entries(categories).map((item) => (
-        <Category key={item[0]} category={item} />
+      categories.map((item: CategoryType, index: number) => (
+        <Category key={index} category={item} />
       )),
+
     [categories],
   );
 
