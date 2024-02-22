@@ -5,10 +5,13 @@ import { useSearchItems } from 'context/search.context';
 
 import SearchItems from 'components/search-items/search-items';
 import Category from 'components/category/category';
+import HomeMenu from 'components/home-menu/home-menu';
 
 import Loading from 'react-loading';
 
 import './home.styles.scss';
+
+// import { getRecipes } from 'utils/api/api';
 
 const Home = () => {
   const { searchItems, isLoading } = useSearchItems();
@@ -29,9 +32,7 @@ const Home = () => {
 
   return (
     <div className="home">
-      <div className="menu">
-        <p>Menu</p>
-      </div>
+      <HomeMenu />
       {searchItems ? (
         <SearchItems items={searchItems} />
       ) : (

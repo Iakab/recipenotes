@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 
-import { getRecipes } from 'utils/api/api';
+import { getRecipes, SearchOptions } from 'utils/api/api';
 
 import { Recipes } from 'utils/api/api.types';
 
@@ -33,7 +33,10 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
     if (searchTag) {
       setIsLoading(true);
       const setRecipes = async () => {
-        const result = await getRecipes(searchTag);
+        const searchOptions: SearchOptions = {};
+        searchOptions.nameOrIngredients = searchTag;
+
+        const result = await getRecipes(searchOptions);
         setSearchItems(result);
       };
       setRecipes();

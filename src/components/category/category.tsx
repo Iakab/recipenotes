@@ -37,7 +37,7 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
     const { id } = event.currentTarget;
 
     setTargetRecipe(
-      recipes?.find((item: RecipeItem) => item.id === Number(id)),
+      recipes?.find((item: RecipeItem) => Number(item.id) === Number(id)),
     );
   };
 

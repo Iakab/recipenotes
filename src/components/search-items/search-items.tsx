@@ -18,7 +18,9 @@ const SearchItems: React.FC<SearchItemsProps> = ({ items }) => {
   ) => {
     const { id } = event.currentTarget;
 
-    setTargetRecipe(items?.find((item: RecipeItem) => item.id === Number(id)));
+    setTargetRecipe(
+      items?.find((item: RecipeItem) => Number(item.id) === Number(id)),
+    );
   };
 
   const item = useMemo(

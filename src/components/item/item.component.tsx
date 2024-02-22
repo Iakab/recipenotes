@@ -10,7 +10,7 @@ type ItemProps = {
 const Item: React.FC<ItemProps> = ({ recipe, handlePreview }) => {
   const { name, thumbnail_url: thumbnailUrl, description, id } = recipe;
   return (
-    <div className="item" id={id.toString()} onClick={handlePreview}>
+    <div className="item" id={id} onClick={handlePreview}>
       <div className="image">
         <img src={thumbnailUrl} className="photo" />
         {/* <div className="description">

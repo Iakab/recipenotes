@@ -103,7 +103,7 @@ export type RecipeItem = {
   country: string;
   credits: Credits[];
   description: string;
-  id: number;
+  id: string;
   instructions: Instructions[];
   name: string;
   nutrition: Nutrition[];

@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { Recipes, RecipeItem } from './api.types';
 
 export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
@@ -49,25 +51,42 @@ export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
   return recipes;
 };
 
-// Work in progress(ignore)
-export const getRecipes = async (searchTag?: string) => {
-  const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=2&country=US`;
-  // &q=${searchTag}
+export type SearchOptions = {
+  startingIndex?: string;
+  numberOfItems?: string;
+  countryShorthand?: string;
+  details?: string;
+  nameOrIngredients?: string;
+};
+
+export const getRecipes = async (searchOptions: SearchOptions) => {
+  const {
+    startingIndex,
+    numberOfItems,
+    countryShorthand,
+    details,
+    nameOrIngredients,
+  } = searchOptions;
+
   const options = {
     method: 'GET',
+    url: 'https://tasty.p.rapidapi.com/recipes/list',
+    params: {
+      from: startingIndex || '0',
+      size: numberOfItems || '2',
+      country: countryShorthand,
+      tags: details,
+      q: nameOrIngredients,
+    },
     headers: {
       'X-RapidAPI-Key': 'f733879bf8msh039fecc6e50e11dp19ea08jsned9b4f14fcba',
       'X-RapidAPI-Host': 'tasty.p.rapidapi.com',
     },
   };
 
-  const response = await fetch(url, options);
-  const data = await response.json();
-
-  const unalteredRecipes = data.results;
-
+  const response = await axios.request(options);
+  const unalteredRecipes = response.data.results;
   const recipes = reduceRecipesSize(unalteredRecipes);
-
   console.log(recipes);
   return recipes;
 };
