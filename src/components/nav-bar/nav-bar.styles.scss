@@ -3,8 +3,8 @@
 .nav {
   color: $light-grey-1;
   height: 4rem;
-  margin: 0 3rem;
-  background-color: $dark-grey-2;
+  // margin: 0 3rem;
+  background-color: $dark-grey-1;
   box-shadow: 0 0.5rem 2rem rgba($black, 0.4);
 
   display: flex;
@@ -77,13 +77,14 @@
     }
 
     .user {
-      flex: 1 1 17rem;
+      flex: 0 1 17rem;
       margin-right: 0.5rem;
       padding: 0.3rem 0;
       height: 100%;
       position: relative;
 
       .btn_user {
+        color: $white-grey-1;
         font-size: 2rem;
         font-family: 600;
         margin: 0 auto;
