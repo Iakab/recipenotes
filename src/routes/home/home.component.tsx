@@ -5,6 +5,7 @@ import { useSearchItems } from 'context/search.context';
 
 import SearchItems from 'components/search-items/search-items';
 import Category from 'components/category/category';
+
 import HomeMenu from 'components/home-menu/home-menu';
 
 import Loading from 'react-loading';

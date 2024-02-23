@@ -37,6 +37,7 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
         searchOptions.nameOrIngredients = searchTag;
 
         const result = await getRecipes(searchOptions);
+
         setSearchItems(result);
       };
       setRecipes();

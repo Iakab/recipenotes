@@ -80,6 +80,7 @@ export const getRecipes = async (searchOptions: SearchOptions) => {
     },
     headers: {
       'X-RapidAPI-Key': 'f733879bf8msh039fecc6e50e11dp19ea08jsned9b4f14fcba',
+
       'X-RapidAPI-Host': 'tasty.p.rapidapi.com',
     },
   };
@@ -103,6 +104,7 @@ export const getSuggestions = async (searchTag: string) => {
 
   const response = await fetch(url, options);
   const data = await response.json();
+
   return data.results;
 };
 
