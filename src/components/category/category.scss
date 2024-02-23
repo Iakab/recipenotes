@@ -24,11 +24,6 @@
     justify-content: center;
     align-items: center;
 
-
-    // .slick-arrow {
-    //   // z-index: 0;
-    // }
-
     .slick-next {
       top: 45%;
       right: -0.7rem;
@@ -51,41 +46,4 @@
       }
     }
   }
-
-  // .preview {
-  //   display: flex;
-
-  //   .btn {
-  //     height: 25rem;
-  //   }
-  //   .items {
-  //     height: 25rem;
-  //     // overflow-y: auto;
-
-  //     // -ms-overflow-style: none;
-  //     // scrollbar-width: none;
-
-  //     // &::-webkit-scrollbar{
-  //     //   display: none;
-  //     // }
-
-  //     display: flex;
-  //     justify-content: space-around;
-  //     gap: 1.5rem;
-
-  //     overflow-x: auto;
-  //     // white-space: nowrap;
-  //     transition: all 1s ease-in-out;
-  //   }
-  // }
 }
-
-// .arrow {
-//   position: absolute;
-//   top:0;
-//   left: 0;
-//   background-color: red;
-//   fill: red;
-//   color: red;
-//   display: block;
-// }

@@ -1,87 +1,80 @@
-import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
+import { useContext } from 'react';
+
+import { SearchContext } from 'context/search.context';
+
+import { cuisines, ingredients, meals, occasion, time } from 'utils/constants';
+
+import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
 
 import './home-menu.scss';
 
 const HomeMenu = () => {
-  const ingredients = [
-    'Chicken',
-    'Pork',
-    'Fish',
-    'Beef',
-    'Pasta',
-    'Vegetables',
-    'Salad',
-    'Rice',
-    'Potatoes',
-    'Seafood',
-  ];
-  const occasion = [
-    'Easter',
-    'Thanksgiving',
-    'Christmas',
-    'Lent',
-    'Summer',
-    'Cold season',
-  ];
+  const { setSelectedCategory } = useContext(SearchContext);
 
-  const cuisines = [
-    'Mexican',
-    'Italian',
-    'Chinese',
-    'Indian',
-    'Japanese',
-    'German',
-    'French',
-    'Romanian',
-    'Greek',
-    'Spanish',
-  ];
-
-  const meals = [
-    'Breakfast & Brunch',
-    'Lunch',
-    'Dinner',
-    'Appetizers',
-    'Side dish',
-    'Soups',
-    'Pasta',
-    'Drinks',
-    'Desserts',
-    'Diabetic',
-  ];
-
-  const time = ['Under 15 minutes', 'Under 30 minutes', 'Under 1 hour'];
+  const handleSelect = (category: string | { ingredients: string }) => {
+    setSelectedCategory(category);
+  };
 
   return (
     <div className="menu">
       <Menu
         menuButton={<MenuButton className="btn-menu">Ingredients</MenuButton>}
       >
-        {ingredients.map((item) => (
-          <MenuItem className="dropDown">{item}</MenuItem>
+        {ingredients.map((item, index) => (
+          <MenuItem
+            className="dropDown"
+            key={index}
+            onClick={() => handleSelect({ ingredients: item })}
+          >
+            {item}
+          </MenuItem>
         ))}
       </Menu>
       <Menu menuButton={<MenuButton className="btn-menu">Occasion</MenuButton>}>
-        {occasion.map((item) => (
-          <MenuItem className="dropDown">{item}</MenuItem>
+        {occasion.map((item, index) => (
+          <MenuItem
+            className="dropDown"
+            key={index}
+            onClick={() => handleSelect(item)}
+          >
+            {item}
+          </MenuItem>
         ))}
       </Menu>
       <Menu menuButton={<MenuButton className="btn-menu">Cuisines</MenuButton>}>
-        {cuisines.map((item) => (
-          <MenuItem className="dropDown">{item}</MenuItem>
+        {cuisines.map((item, index) => (
+          <MenuItem
+            className="dropDown"
+            key={index}
+            onClick={() => handleSelect(item)}
+          >
+            {item}
+          </MenuItem>
         ))}
       </Menu>
       <Menu menuButton={<MenuButton className="btn-menu">Meals</MenuButton>}>
-        {meals.map((item) => (
-          <MenuItem className="dropDown">{item}</MenuItem>
+        {meals.map((item, index) => (
+          <MenuItem
+            className="dropDown"
+            key={index}
+            onClick={() => handleSelect(item)}
+          >
+            {item}
+          </MenuItem>
         ))}
       </Menu>
       <Menu
         className="menu-dropdown"
         menuButton={<MenuButton className="btn-menu">Time</MenuButton>}
       >
-        {time.map((item) => (
-          <MenuItem className="dropDown">{item}</MenuItem>
+        {time.map((item, index) => (
+          <MenuItem
+            className="dropDown"
+            key={index}
+            onClick={() => handleSelect(item)}
+          >
+            {item}
+          </MenuItem>
         ))}
       </Menu>
     </div>

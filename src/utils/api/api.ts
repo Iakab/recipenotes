@@ -15,7 +15,6 @@ export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
         video_url: videoUrl,
         country,
         credits,
-        id,
         nutrition,
         prep_time_minuntes: prepTime,
         tags,
@@ -25,6 +24,9 @@ export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
         video_id: videoId,
         yields,
       } = recipe;
+
+      let { id } = recipe;
+      id = id.toString();
 
       return {
         description,
@@ -52,31 +54,25 @@ export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
 };
 
 export type SearchOptions = {
-  startingIndex?: string;
-  numberOfItems?: string;
   countryShorthand?: string;
   details?: string;
   nameOrIngredients?: string;
+  numberOfItems?: string;
+  startingIndex?: string;
 };
 
 export const getRecipes = async (searchOptions: SearchOptions) => {
-  const {
-    startingIndex,
-    numberOfItems,
-    countryShorthand,
-    details,
-    nameOrIngredients,
-  } = searchOptions;
+  const { details, nameOrIngredients, numberOfItems, startingIndex } =
+    searchOptions;
 
   const options = {
     method: 'GET',
     url: 'https://tasty.p.rapidapi.com/recipes/list',
     params: {
       from: startingIndex || '0',
-      size: numberOfItems || '2',
-      country: countryShorthand,
-      tags: details,
       q: nameOrIngredients,
+      size: numberOfItems || '2',
+      tags: details,
     },
     headers: {
       'X-RapidAPI-Key': 'f733879bf8msh039fecc6e50e11dp19ea08jsned9b4f14fcba',
@@ -84,12 +80,15 @@ export const getRecipes = async (searchOptions: SearchOptions) => {
       'X-RapidAPI-Host': 'tasty.p.rapidapi.com',
     },
   };
-
-  const response = await axios.request(options);
-  const unalteredRecipes = response.data.results;
-  const recipes = reduceRecipesSize(unalteredRecipes);
-  console.log(recipes);
-  return recipes;
+  try {
+    const response = await axios.request(options);
+    const unalteredRecipes = response.data.results;
+    const recipes = reduceRecipesSize(unalteredRecipes);
+    console.log(recipes);
+    return recipes;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const getSuggestions = async (searchTag: string) => {
@@ -101,13 +100,15 @@ export const getSuggestions = async (searchTag: string) => {
       'X-RapidAPI-Host': 'tasty.p.rapidapi.com',
     },
   };
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
 
-  const response = await fetch(url, options);
-  const data = await response.json();
-
-  return data.results;
+    return data.results;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 // Fineas recipeNotes
 // 'X-RapidAPI-Key': 'a454844a4dmsh793dc8da81d5815p14b3efjsn51d4bbe9afe0',
-//       'X-RapidAPI-Host': 'tasty.p.rapidapi.com',

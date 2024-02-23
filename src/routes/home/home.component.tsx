@@ -1,30 +1,21 @@
 import { useMemo } from 'react';
 
-import { useCategories, CategoryType } from 'context/categories.context';
+import { CategoryType, useCategories } from 'context/categories.context';
 import { useSearchItems } from 'context/search.context';
 
-import SearchItems from 'components/search-items/search-items';
 import Category from 'components/category/category';
-
 import HomeMenu from 'components/home-menu/home-menu';
-
-import Loading from 'react-loading';
+import SearchItems from 'components/search-items/search-items';
 
 import './home.styles.scss';
 
-// import { getRecipes } from 'utils/api/api';
-
 const Home = () => {
-  const { searchItems, isLoading } = useSearchItems();
+  const { searchItems } = useSearchItems();
   const categories = useCategories();
-
-  if (!categories || isLoading) {
-    return <Loading type="spin" color="#000" className="loading" />;
-  }
 
   const category = useMemo(
     () =>
-      categories.map((item: CategoryType, index: number) => (
+      categories?.map((item: CategoryType, index: number) => (
         <Category key={index} category={item} />
       )),
 

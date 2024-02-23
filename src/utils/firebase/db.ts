@@ -126,8 +126,6 @@ export const updateFavouritesCollection = async (
   const recipeDocRef = doc(db, collectionName, documentName);
   const favouritesSnapshot = await getDoc(recipeDocRef);
 
-  console.log({ [objectsToAdd.id]: objectsToAdd });
-
   if (favouritesSnapshot.exists()) {
     await updateDoc(recipeDocRef, { [objectsToAdd.id]: objectsToAdd });
   } else {
