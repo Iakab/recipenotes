@@ -1,26 +1,23 @@
 import { useMemo } from 'react';
 
-import { useCategories, CategoryType } from 'context/categories.context';
-import { useSearchItems } from 'context/search.context';
+import { CategoryType, useCategories } from 'context/categories.context';
+import { useSearchedItems } from 'context/search.context';
 
-import SearchItems from 'components/search-items/search-items';
 import Category from 'components/category/category';
+import HomeMenu from 'components/home-menu/home-menu';
+import SearchItems from 'components/search-items/search-items';
 
 import Loading from 'react-loading';
 
 import './home.styles.scss';
 
 const Home = () => {
-  const { searchItems, isLoading } = useSearchItems();
+  const { searchedItems, isLoading } = useSearchedItems();
   const categories = useCategories();
-
-  if (!categories || isLoading) {
-    return <Loading type="spin" color="#000" className="loading" />;
-  }
 
   const category = useMemo(
     () =>
-      categories.map((item: CategoryType, index: number) => (
+      categories?.map((item: CategoryType, index: number) => (
         <Category key={index} category={item} />
       )),
 
@@ -29,11 +26,10 @@ const Home = () => {
 
   return (
     <div className="home">
-      <div className="menu">
-        <p>Menu</p>
-      </div>
-      {searchItems ? (
-        <SearchItems items={searchItems} />
+      {isLoading && <Loading type="spin" color="#fff" className="loading" />}
+      <HomeMenu />
+      {searchedItems ? (
+        <SearchItems items={searchedItems} />
       ) : (
         <div className="categories">
           <h2>DISCOVER NEW RECIPES</h2>

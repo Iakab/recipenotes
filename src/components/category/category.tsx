@@ -26,9 +26,9 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
     className: 'slider',
     dots: true,
     infinite: false,
-    speed: 500,
-    slidesToShow: 3.9,
     slidesToScroll: 5,
+    slidesToShow: 3.9,
+    speed: 500,
   };
 
   const handlePreview = (
@@ -36,8 +36,9 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
   ) => {
     const { id } = event.currentTarget;
 
+    // TODO: Remove toString after rebuilding the categories from firestore
     setTargetRecipe(
-      recipes?.find((item: RecipeItem) => item.id === Number(id)),
+      recipes?.find((item: RecipeItem) => item.id.toString() === id),
     );
   };
 

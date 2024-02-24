@@ -19,7 +19,8 @@ type Suggesiton = {
 type Suggestions = Suggesiton[];
 
 const SearchBar = () => {
-  const { setSearchTag, setSearchItems } = useContext(SearchContext);
+  const { setSearchTag, setSearchedItems, setIsLoading } =
+    useContext(SearchContext);
   const [initialInput, setInitialInput] = useState<string>('');
   const [suggestions, setSuggestions] = useState<Suggestions>();
 
@@ -34,7 +35,9 @@ const SearchBar = () => {
   });
 
   const onSubmit = async (data: SearchTag) => {
+    setIsLoading(true);
     setSearchTag(data.searchTag);
+    setInitialInput('');
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +46,7 @@ const SearchBar = () => {
 
   useEffect(() => {
     if (!initialInput) {
-      setSearchItems(undefined);
+      setSearchedItems(undefined);
     }
     if (initialInput) {
       const fetchSuggestions = async () => {

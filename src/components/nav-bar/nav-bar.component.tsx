@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { DocumentData } from 'firebase/firestore';
 
 import { FavourtiesContext } from 'context/favourites.context';
+import { SearchContext } from 'context/search.context';
 
 import logoIcon from 'assets/img/logo-icon.png';
 import { ReactComponent as HeartIcon } from 'assets/icons/SVG/heart.svg';
@@ -20,6 +21,7 @@ type NavBar = {
 const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const { favouriteRecipes } = useContext(FavourtiesContext);
+  const { setSearchedItems } = useContext(SearchContext);
   const userMenu = useRef<null | HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -44,6 +46,7 @@ const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
 
   const returnHome = () => {
     navigate('/');
+    setSearchedItems(undefined);
   };
 
   const handleFavourites = () => {

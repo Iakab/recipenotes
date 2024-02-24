@@ -11,7 +11,7 @@ const ItemsSlider: React.FC<ItemSliderProps> = ({ recipe, handlePreview }) => {
   const { name, thumbnail_url: thumbnailUrl, id } = recipe;
 
   return (
-    <div className="item1" id={id.toString()} onClick={handlePreview}>
+    <div className="item1" id={id} onClick={handlePreview}>
       <img src={thumbnailUrl} className="image1" />
 
       <span className="name1">{name}</span>
