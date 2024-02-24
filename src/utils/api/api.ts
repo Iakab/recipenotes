@@ -6,46 +6,45 @@ export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
   const recipes: Recipes = unalteredRecipes.map(
     (recipe: RecipeItem): RecipeItem => {
       const {
+        country,
+        credits,
         description,
         instructions,
         name,
-        original_video_url: originalVideoUrl,
-        sections,
-        thumbnail_url: thumbnail,
-        video_url: videoUrl,
-        country,
-        credits,
         nutrition,
+        original_video_url: originalVideoUrl,
         prep_time_minuntes: prepTime,
+        sections,
         tags,
+        thumbnail_url: thumbnail,
         tips_summary: tipsSummary,
         total_time_tier: totalTimeTier,
         user_ratings: UserRatings,
         video_id: videoId,
+        video_url: videoUrl,
         yields,
       } = recipe;
 
-      let { id } = recipe;
-      id = id.toString();
+      const id = recipe.id.toString();
 
       return {
-        description,
-        instructions,
-        name,
-        original_video_url: originalVideoUrl,
-        sections,
-        thumbnail_url: thumbnail,
-        video_url: videoUrl,
         country,
         credits,
+        description,
         id,
+        instructions,
+        name,
         nutrition,
+        original_video_url: originalVideoUrl,
         prep_time_minuntes: prepTime,
+        sections,
         tags,
+        thumbnail_url: thumbnail,
         tips_summary: tipsSummary,
         total_time_tier: totalTimeTier,
         user_ratings: UserRatings,
         video_id: videoId,
+        video_url: videoUrl,
         yields,
       };
     },
@@ -57,11 +56,13 @@ export type SearchOptions = {
   countryShorthand?: string;
   details?: string;
   nameOrIngredients?: string;
-  numberOfItems?: string;
-  startingIndex?: string;
+  numberOfItems?: number;
+  startingIndex?: number;
 };
 
-export const getRecipes = async (searchOptions: SearchOptions) => {
+export const getRecipes = async (
+  searchOptions: SearchOptions,
+): Promise<Recipes> => {
   const { details, nameOrIngredients, numberOfItems, startingIndex } =
     searchOptions;
 
@@ -69,9 +70,9 @@ export const getRecipes = async (searchOptions: SearchOptions) => {
     method: 'GET',
     url: 'https://tasty.p.rapidapi.com/recipes/list',
     params: {
-      from: startingIndex || '0',
+      from: startingIndex || 0,
       q: nameOrIngredients,
-      size: numberOfItems || '2',
+      size: numberOfItems || 2,
       tags: details,
     },
     headers: {
@@ -87,7 +88,7 @@ export const getRecipes = async (searchOptions: SearchOptions) => {
     console.log(recipes);
     return recipes;
   } catch (error) {
-    console.error(error);
+    throw new Error((error as Error).message);
   }
 };
 
@@ -106,7 +107,7 @@ export const getSuggestions = async (searchTag: string) => {
 
     return data.results;
   } catch (error) {
-    console.error(error);
+    throw new Error((error as Error).message);
   }
 };
 

@@ -11,7 +11,7 @@
   top: 4rem;
   right: 0;
   list-style-type: none;
-  background-color: $dark-grey-1;
+  background-color: $dark-grey-3;
   animation: moveInDown 0.2s ease-out;
   z-index: 2;
   & > * {
@@ -19,7 +19,7 @@
       margin-top: 1rem;
     }
 
-    background-color: $white-grey-1;
+    background-color: $light-grey-1;
 
     &:hover {
       background-color: $light-grey-3;

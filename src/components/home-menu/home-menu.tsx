@@ -8,11 +8,17 @@ import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
 
 import './home-menu.scss';
 
-const HomeMenu = () => {
-  const { setSelectedCategory } = useContext(SearchContext);
+export type SelectedCategory = {
+  options: string;
+  category: string;
+};
 
-  const handleSelect = (category: string | { ingredients: string }) => {
-    setSelectedCategory(category);
+const HomeMenu = () => {
+  const { setSelectedCategory, setIsLoading } = useContext(SearchContext);
+
+  const handleSelect = (selectedInput: SelectedCategory) => {
+    setIsLoading(true);
+    setSelectedCategory(selectedInput);
   };
 
   return (
@@ -24,7 +30,9 @@ const HomeMenu = () => {
           <MenuItem
             className="dropDown"
             key={index}
-            onClick={() => handleSelect({ ingredients: item })}
+            onClick={() =>
+              handleSelect({ options: 'nameOrIngredients', category: item })
+            }
           >
             {item}
           </MenuItem>
@@ -35,7 +43,7 @@ const HomeMenu = () => {
           <MenuItem
             className="dropDown"
             key={index}
-            onClick={() => handleSelect(item)}
+            onClick={() => handleSelect({ options: 'tags', category: item })}
           >
             {item}
           </MenuItem>
@@ -46,7 +54,7 @@ const HomeMenu = () => {
           <MenuItem
             className="dropDown"
             key={index}
-            onClick={() => handleSelect(item)}
+            onClick={() => handleSelect({ options: 'tags', category: item })}
           >
             {item}
           </MenuItem>
@@ -57,7 +65,7 @@ const HomeMenu = () => {
           <MenuItem
             className="dropDown"
             key={index}
-            onClick={() => handleSelect(item)}
+            onClick={() => handleSelect({ options: 'tags', category: item })}
           >
             {item}
           </MenuItem>
@@ -71,7 +79,7 @@ const HomeMenu = () => {
           <MenuItem
             className="dropDown"
             key={index}
-            onClick={() => handleSelect(item)}
+            onClick={() => handleSelect({ options: 'tags', category: item })}
           >
             {item}
           </MenuItem>

@@ -6,8 +6,6 @@ import PreviewItem from 'components/preview-item/preview-item.component';
 import { SearchContext } from 'context/search.context';
 import { RecipeItem, Recipes } from 'utils/api/api.types';
 
-import Loading from 'react-loading';
-
 import './search-items.scss';
 
 type SearchItemsProps = {
@@ -16,7 +14,7 @@ type SearchItemsProps = {
 
 const SearchItems: React.FC<SearchItemsProps> = ({ items }) => {
   const [targetRecipe, setTargetRecipe] = useState<RecipeItem>();
-  const { isLoading, loadMoreItems, setIsLoading, setLoadMoreItems } =
+  const { loadMoreItems, setIsLoading, setLoadMoreItems } =
     useContext(SearchContext);
   const showMoreRef: React.MutableRefObject<any> = useRef(null);
 
@@ -52,10 +50,6 @@ const SearchItems: React.FC<SearchItemsProps> = ({ items }) => {
 
   return (
     <div className="search-items">
-      {isLoading && (
-        <Loading type="spin" color="#fff" className="loading-categories" />
-      )}
-
       {targetRecipe && (
         <PreviewItem recipe={targetRecipe} setTargetRecipe={setTargetRecipe} />
       )}

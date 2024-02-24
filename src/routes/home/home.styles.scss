@@ -5,11 +5,19 @@
   height: fit-content;
   color: $light-grey-1;
   background-color: $black-background;
+  position: relative;
 
   display: flex;
   flex-direction: column;
   gap: 2rem;
   justify-content: center;
+
+  .loading-categories {
+    position: fixed;
+    top: 40%;
+    left: 47.5%;
+    z-index: 10;
+  }
 
   .categories {
     width: 100%;

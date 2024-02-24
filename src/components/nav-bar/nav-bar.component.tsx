@@ -21,7 +21,7 @@ type NavBar = {
 const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const { favouriteRecipes } = useContext(FavourtiesContext);
-  const { setSearchItems } = useContext(SearchContext);
+  const { setSearchedItems } = useContext(SearchContext);
   const userMenu = useRef<null | HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -46,11 +46,11 @@ const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
 
   const returnHome = () => {
     navigate('/');
+    setSearchedItems(undefined);
   };
 
   const handleFavourites = () => {
     navigate('/favourites');
-    setSearchItems(undefined);
   };
 
   return (

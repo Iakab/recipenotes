@@ -6,9 +6,6 @@ export const cuisines = [
   'Japanese',
   'German',
   'French',
-  'Romanian',
-  'Greek',
-  'Spanish',
 ];
 
 export const ingredients = [
@@ -34,7 +31,6 @@ export const meals = [
   'Pasta',
   'Drinks',
   'Desserts',
-  'Diabetic',
 ];
 
 export const occasion = [

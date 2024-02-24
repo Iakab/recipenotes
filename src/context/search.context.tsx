@@ -9,29 +9,30 @@ import {
 import { getRecipes, SearchOptions } from 'utils/api/api';
 
 import { Recipes } from 'utils/api/api.types';
+import { SelectedCategory } from 'components/home-menu/home-menu';
 
 type SearchContextProps = {
   isLoading: boolean;
   loadMoreItems: boolean;
-  searchItems: Recipes | undefined;
-  selectedCategory: string | { ingredients: string } | undefined;
+  searchedItems: Recipes | undefined;
+  selectedCategory: SelectedCategory | undefined;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setLoadMoreItems: React.Dispatch<React.SetStateAction<boolean>>;
-  setSearchItems: React.Dispatch<React.SetStateAction<Recipes | undefined>>;
+  setSearchedItems: React.Dispatch<React.SetStateAction<Recipes | undefined>>;
   setSearchTag: React.Dispatch<React.SetStateAction<string | undefined>>;
   setSelectedCategory: React.Dispatch<
-    React.SetStateAction<string | { ingredients: string } | undefined>
+    React.SetStateAction<SelectedCategory | undefined>
   >;
 };
 
 export const SearchContext = createContext<SearchContextProps>({
   isLoading: false,
   loadMoreItems: false,
-  searchItems: undefined,
+  searchedItems: undefined,
   selectedCategory: undefined,
   setIsLoading: () => {},
   setLoadMoreItems: () => {},
-  setSearchItems: () => {},
+  setSearchedItems: () => {},
   setSearchTag: () => {},
   setSelectedCategory: () => {},
 });
@@ -42,42 +43,45 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
   let searchOptions: SearchOptions = {};
   const [previousSearchOptions, setPreviousSearchOptions] =
     useState<SearchOptions>(searchOptions);
-  const [searchItems, setSearchItems] = useState<Recipes>();
+  const [searchedItems, setSearchedItems] = useState<Recipes>();
   const [searchTag, setSearchTag] = useState<string>();
-  const [selectedCategory, setSelectedCategory] = useState<
-    string | { ingredients: string }
-  >();
+  const [selectedCategory, setSelectedCategory] = useState<SelectedCategory>();
 
   useEffect(() => {
+    // Search
     if (searchTag) {
-      setIsLoading(true);
+      // setIsLoading(true);
       const setRecipes = async () => {
         searchOptions.nameOrIngredients = searchTag;
-        setPreviousSearchOptions(searchOptions);
-        const result = await getRecipes(searchOptions);
 
-        setSearchItems(result);
+        setPreviousSearchOptions(searchOptions);
+
+        setSearchedItems(await getRecipes(searchOptions));
       };
       setRecipes();
     }
   }, [searchTag]);
 
+  // Fetch selected Category
   useEffect(() => {
     if (selectedCategory) {
       setIsLoading(true);
-      if (typeof selectedCategory === 'object') {
+
+      if (selectedCategory.options === 'nameOrIngredients') {
         const getData = async () => {
           searchOptions.nameOrIngredients =
-            selectedCategory.ingredients.toLowerCase();
+            selectedCategory.category.toLowerCase();
+
           setPreviousSearchOptions(searchOptions);
-          setSearchItems(await getRecipes(searchOptions));
+          setSearchedItems(await getRecipes(searchOptions));
         };
         getData();
       } else {
         const getData = async () => {
-          searchOptions.details = selectedCategory.toLowerCase() as string;
+          searchOptions.details = selectedCategory.category.toLowerCase();
+
           setPreviousSearchOptions(searchOptions);
-          setSearchItems(await getRecipes(searchOptions));
+          setSearchedItems(await getRecipes(searchOptions));
         };
         getData();
       }
@@ -85,29 +89,33 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
   }, [selectedCategory]);
 
   // TODO: Increment the index according to the number of fetched items;
+  // Load more items
   useEffect(() => {
     if (loadMoreItems) {
-      setIsLoading(true);
+      // setIsLoading(true);
       const getData = async () => {
         searchOptions = previousSearchOptions;
 
         if (previousSearchOptions.startingIndex) {
-          searchOptions.startingIndex = (
-            Number(previousSearchOptions.startingIndex) + 2
-          ).toString();
+          searchOptions.startingIndex = previousSearchOptions.startingIndex + 2;
 
           const newItems = await getRecipes(searchOptions);
-          if (searchItems && newItems) {
-            const newRecipesCollection: Recipes = [...searchItems, ...newItems];
-            setSearchItems(newRecipesCollection);
-          }
+
+          const newRecipesCollection: Recipes = [
+            ...(searchedItems as Recipes),
+            ...newItems,
+          ];
+          setSearchedItems(newRecipesCollection);
         } else {
-          searchOptions.startingIndex = '2';
+          searchOptions.startingIndex = 2;
+
           const newItems = await getRecipes(searchOptions);
-          if (searchItems && newItems) {
-            const newRecipesCollection: Recipes = [...searchItems, ...newItems];
-            setSearchItems(newRecipesCollection);
-          }
+
+          const newRecipesCollection: Recipes = [
+            ...(searchedItems as Recipes),
+            ...newItems,
+          ];
+          setSearchedItems(newRecipesCollection);
         }
         setLoadMoreItems(false);
       };
@@ -116,19 +124,20 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
   }, [loadMoreItems]);
 
   useEffect(() => {
-    if (searchItems && !loadMoreItems) {
+    if (searchedItems && !loadMoreItems) {
       setIsLoading(false);
+      setSearchTag(undefined);
     }
-  }, [searchItems, loadMoreItems]);
+  }, [searchedItems, loadMoreItems]);
 
   const value = {
     isLoading,
     loadMoreItems,
-    searchItems,
+    searchedItems,
     selectedCategory,
     setIsLoading,
     setLoadMoreItems,
-    setSearchItems,
+    setSearchedItems,
     setSearchTag,
     setSelectedCategory,
   };
@@ -138,8 +147,8 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-export const useSearchItems = () => {
-  const { searchItems, isLoading } = useContext(SearchContext);
+export const useSearchedItems = () => {
+  const { searchedItems, isLoading } = useContext(SearchContext);
 
-  return { searchItems, isLoading };
+  return { searchedItems, isLoading };
 };
