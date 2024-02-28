@@ -2,6 +2,7 @@ import { useState, useRef, useContext, useEffect } from 'react';
 
 import ReactPlayer from 'react-player';
 import { FavourtiesContext } from 'context/favourites.context';
+import { StorageContext } from 'context/storage.context';
 
 import { RecipeItem, Component, Instruction } from 'utils/api/api.types';
 
@@ -24,6 +25,7 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
   const [addedToFavorites, setAddedToFavorites] = useState<RecipeItem>();
   const { updateFavourites, isItemFavourite, favouriteRecipes } =
     useContext(FavourtiesContext);
+  const { uploadNewRecipe } = useContext(StorageContext);
 
   const {
     description,
@@ -33,6 +35,8 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
     sections,
     thumbnail_url: thumbnail,
     video_url: videoUrl,
+    updated_at: updatedAt,
+    approved_at: approvedAt,
   } = recipe;
 
   const { components } = sections[0];
@@ -56,6 +60,10 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
     setAddedToFavorites(itemIsFavourite);
   }, [favouriteRecipes]);
 
+  const handleAddToStorage = () => {
+    uploadNewRecipe(recipe);
+  };
+
   return (
     <div className="overlay" onClick={exitPreview}>
       <CloseIcon
@@ -75,6 +83,7 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
             />
           )}
         </div>
+        <button onClick={handleAddToStorage}>Store recipe</button>
 
         <h2 className="title">{name}</h2>
         <h4 className="description">{description}</h4>

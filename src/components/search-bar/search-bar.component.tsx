@@ -58,7 +58,6 @@ const SearchBar = () => {
 
   useEffect(() => {
     if (suggestions && !initialInput) {
-      console.log(suggestions);
       setSuggestions(undefined);
     }
   }, [suggestions, initialInput]);
@@ -72,18 +71,18 @@ const SearchBar = () => {
   return (
     <div className="search">
       <form onSubmit={handleSubmit(onSubmit)} className="search-bar">
+        <button id="btn-icon">
+          <SearchIcon className="icon" />
+        </button>
+
         <input
           {...register('searchTag')}
           className="input"
           value={initialInput}
           onChange={handleChange}
-          placeholder="food or main ingredient"
+          placeholder="Food or main ingredient..."
           type="text"
         />
-
-        <button id="btn-icon">
-          <SearchIcon className="icon" />
-        </button>
 
         {suggestions && (
           <div className="suggestions">

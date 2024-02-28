@@ -4,6 +4,7 @@ import {
   SetStateAction,
   useEffect,
   useState,
+  useContext,
 } from 'react';
 
 import { DocumentData } from 'firebase/firestore';
@@ -77,4 +78,10 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+};
+
+export const useUserContext = () => {
+  const { currentUser, userIsLoading } = useContext(UserContext);
+
+  return { currentUser, userIsLoading };
 };

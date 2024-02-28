@@ -60,7 +60,7 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
         <PreviewItem recipe={targetRecipe} setTargetRecipe={setTargetRecipe} />
       )}
       <div className="title">
-        <h2>{categoryName.toUpperCase()}</h2>
+        <h3>{categoryName.toUpperCase()}</h3>
       </div>
       <Slider {...settings}>{item}</Slider>
     </div>
