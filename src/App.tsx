@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 
-
+import Storage from 'routes/storage/storage';
 import Authentication from './routes/authentication/authentication.component';
 import Favourites from './routes/favourites/favourites.component';
 import Home from './routes/home/home.component';
@@ -15,6 +15,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/favourites" element={<Favourites />} />
+        <Route path="/storage" element={<Storage />} />
       </Route>
     </Routes>
   );

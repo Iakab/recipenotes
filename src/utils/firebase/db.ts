@@ -104,8 +104,12 @@ export const addCollectionAndDocumentsAsBatch = async (
   console.log('done');
 };
 
-// GET
-export const getRecipesDocument = async (
+// GET All DOCS FROM COLLECTION
+export const getCategoriesDocument = async (collectionName: string) =>
+  getDocs(collection(db, collectionName));
+
+// Get DOC
+export const getRecipesDocument = (
   collectionName: string,
   documentName: string,
 ) => {
@@ -113,8 +117,8 @@ export const getRecipesDocument = async (
   return getDoc(docRef);
 };
 
-// UPDATE OR CREATE FAVOURITES
-export const updateFavouritesCollection = async (
+// UPDATE OR CREATE
+export const updateCollection = async (
   collectionName: string,
   documentName: string,
   objectsToAdd: RecipeItem,

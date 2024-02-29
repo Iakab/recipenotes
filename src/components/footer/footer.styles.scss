@@ -1,9 +1,14 @@
 @import 'abstracts/variables';
 
 .footer {
+  color: $dark-grey-4;
   height: 8rem;
-  width: 100%;
-  background-image: linear-gradient(to top, $light-grey-1, #abb2b9);
+  background-image: linear-gradient(
+    to top,
+    $grey-collection-3,
+    $grey-collection-2
+  );
+  // margin: 0 3rem;
 
   display: flex;
   justify-content: stretch;
@@ -12,12 +17,13 @@
   .details {
     flex: 1 1 auto;
     font-size: 1.4rem;
-    border-top: 1px solid $black;
+    border-top: 1px solid $dark-grey-4;
 
     display: flex;
     justify-content: center;
 
     .option {
+      color: inherit;
       margin-left: -1rem;
       text-decoration: none;
       margin-right: 3rem;
@@ -34,7 +40,7 @@
 
   .credit {
     flex: 1 1 27rem;
-    border-top: 1px solid $black;
+    border-top: 1px solid $dark-grey-4;
     text-align: center;
   }
 }

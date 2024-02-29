@@ -2,14 +2,14 @@ import {
   createContext,
   PropsWithChildren,
   useContext,
-  useEffect,
   useState,
+  useEffect,
 } from 'react';
 
 import {
-  getRecipesDocument,
   removeRecipeFromDoc,
-  updateFavouritesCollection,
+  updateCollection,
+  getRecipesDocument,
 } from 'utils/firebase/db';
 
 import { DocumentData, DocumentSnapshot } from 'firebase/firestore';
@@ -74,7 +74,7 @@ export const FavouritesProvider = ({ children }: PropsWithChildren) => {
     const itemIsAlreadyAdded = isItemFavourite(item);
 
     if (!itemIsAlreadyAdded) {
-      const favouritesSnapshot = await updateFavouritesCollection(
+      const favouritesSnapshot = await updateCollection(
         collectionName,
         currentUser?.userUid,
         item,

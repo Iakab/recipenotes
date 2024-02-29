@@ -1,17 +1,29 @@
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { useCategories } from 'context/recipes.context';
-import { getRecipes } from 'utils/api/api';
+import { SearchContext } from 'context/search.context';
+
+import { getSuggestions } from 'utils/api/api';
+
 import { ReactComponent as SearchIcon } from 'assets/icons/SVG/search.svg';
 
 import './search-bar.styles.scss';
 
 type SearchTag = {
-  searchTag: string;
+  searchTag: string | undefined;
 };
 
+type Suggesiton = {
+  display: string;
+};
+type Suggestions = Suggesiton[];
+
 const SearchBar = () => {
-  const { setRecipes } = useCategories();
+  const { setSearchTag, setSearchedItems, setIsLoading } =
+    useContext(SearchContext);
+  const [initialInput, setInitialInput] = useState<string>('');
+  const [suggestions, setSuggestions] = useState<Suggestions>();
+
   const {
     formState: { errors },
     handleSubmit,
@@ -23,23 +35,73 @@ const SearchBar = () => {
   });
 
   const onSubmit = async (data: SearchTag) => {
-    const newRecipes = await getRecipes(data.searchTag);
-    setRecipes(newRecipes);
+    setIsLoading(true);
+    setSearchTag(data.searchTag);
+    setInitialInput('');
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInitialInput(event.target.value);
+  };
+
+  useEffect(() => {
+    if (!initialInput) {
+      setSearchedItems(undefined);
+    }
+    if (initialInput) {
+      const fetchSuggestions = async () => {
+        setSuggestions(await getSuggestions(initialInput));
+      };
+      fetchSuggestions();
+    }
+  }, [initialInput]);
+
+  useEffect(() => {
+    if (suggestions && !initialInput) {
+      setSuggestions(undefined);
+    }
+  }, [suggestions, initialInput]);
+
+  const handleSelectedSuggestion = (value: string) => {
+    setInitialInput(value);
+
+    onSubmit({ searchTag: value });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="search">
-      <input
-        {...register('searchTag')}
-        className="input"
-        placeholder="food or main ingredient"
-        type="text"
-      />
+    <div className="search">
+      <form onSubmit={handleSubmit(onSubmit)} className="search-bar">
+        <button id="btn-icon">
+          <SearchIcon className="icon" />
+        </button>
 
-      <button id="btn-icon">
-        <SearchIcon className="icon" />
-      </button>
-    </form>
+        <input
+          {...register('searchTag')}
+          className="input"
+          value={initialInput}
+          onChange={handleChange}
+          placeholder="Food or main ingredient..."
+          type="text"
+        />
+
+        {suggestions && (
+          <div className="suggestions">
+            <ul>
+              {suggestions
+                .slice(0, 5)
+                .map((suggestion: Suggesiton, index: number) => (
+                  <li
+                    key={index}
+                    onClick={() => handleSelectedSuggestion(suggestion.display)}
+                  >
+                    {suggestion.display}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        )}
+      </form>
+    </div>
   );
 };
 

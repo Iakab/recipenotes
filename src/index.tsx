@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom/client';
 
 import { BrowserRouter } from 'react-router-dom';
 import { FavouritesProvider } from 'context/favourites.context';
+import { SearchProvider } from 'context/search.context';
+import { StorageProvider } from 'context/storage.context';
+import { CategoriesProvider } from './context/categories.context';
 import { UserProvider } from './context/user.context';
-import { RecipesProvider } from './context/recipes.context';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -16,13 +18,17 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <UserProvider>
-      <FavouritesProvider>
-        <RecipesProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </RecipesProvider>
-      </FavouritesProvider>
+      <StorageProvider>
+        <FavouritesProvider>
+          <SearchProvider>
+            <CategoriesProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </CategoriesProvider>
+          </SearchProvider>
+        </FavouritesProvider>
+      </StorageProvider>
     </UserProvider>
   </React.StrictMode>,
 );

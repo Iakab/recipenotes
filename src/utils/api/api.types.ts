@@ -32,7 +32,6 @@ type TipsSummary = {
   header: string;
 };
 
-
 type UserRatings = {
   count_negative: number;
   count_positive: number;
@@ -42,7 +41,7 @@ type UserRatings = {
 type Credit = {
   name: string;
   type: string;
-}
+};
 type Credits = Credit;
 
 type Renditions = {
@@ -101,21 +100,23 @@ type Section = {
   position: number;
 };
 export type RecipeItem = {
+  // renditions: Renditions[];
+  approved_at: number;
   country: string;
   credits: Credits[];
   description: string;
-  id: number;
+  id: string;
   instructions: Instructions[];
   name: string;
   nutrition: Nutrition[];
   original_video_url: string;
   prep_time_minuntes: number;
-  // renditions: Renditions[];
   sections: Section[];
   tags: Tags[];
   thumbnail_url: string;
   tips_summary: TipsSummary[];
   total_time_tier: TotalTimeTier;
+  updated_at: number;
   user_ratings: UserRatings;
   video_id: number;
   video_url: string;
