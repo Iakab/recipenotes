@@ -100,6 +100,8 @@ type Section = {
   position: number;
 };
 export type RecipeItem = {
+  // renditions: Renditions[];
+  approved_at: number;
   country: string;
   credits: Credits[];
   description: string;
@@ -109,12 +111,12 @@ export type RecipeItem = {
   nutrition: Nutrition[];
   original_video_url: string;
   prep_time_minuntes: number;
-  // renditions: Renditions[];
   sections: Section[];
   tags: Tags[];
   thumbnail_url: string;
   tips_summary: TipsSummary[];
   total_time_tier: TotalTimeTier;
+  updated_at: number;
   user_ratings: UserRatings;
   video_id: number;
   video_url: string;

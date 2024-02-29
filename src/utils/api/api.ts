@@ -6,6 +6,7 @@ export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
   const recipes: Recipes = unalteredRecipes.map(
     (recipe: RecipeItem): RecipeItem => {
       const {
+        approved_at: approvedAt,
         country,
         credits,
         description,
@@ -19,6 +20,7 @@ export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
         thumbnail_url: thumbnail,
         tips_summary: tipsSummary,
         total_time_tier: totalTimeTier,
+        updated_at: updatedAt,
         user_ratings: UserRatings,
         video_id: videoId,
         video_url: videoUrl,
@@ -28,6 +30,7 @@ export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
       const id = recipe.id.toString();
 
       return {
+        approved_at: approvedAt,
         country,
         credits,
         description,
@@ -42,6 +45,7 @@ export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
         thumbnail_url: thumbnail,
         tips_summary: tipsSummary,
         total_time_tier: totalTimeTier,
+        updated_at: updatedAt,
         user_ratings: UserRatings,
         video_id: videoId,
         video_url: videoUrl,
@@ -74,6 +78,7 @@ export const getRecipes = async (
       q: nameOrIngredients,
       size: numberOfItems || 2,
       tags: details,
+      sort: 'approved_at:asc',
     },
     headers: {
       'X-RapidAPI-Key': 'f733879bf8msh039fecc6e50e11dp19ea08jsned9b4f14fcba',

@@ -117,8 +117,8 @@ export const getRecipesDocument = (
   return getDoc(docRef);
 };
 
-// UPDATE OR CREATE FAVOURITES
-export const updateFavouritesCollection = async (
+// UPDATE OR CREATE
+export const updateCollection = async (
   collectionName: string,
   documentName: string,
   objectsToAdd: RecipeItem,

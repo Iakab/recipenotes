@@ -8,7 +8,7 @@ import {
 
 import {
   removeRecipeFromDoc,
-  updateFavouritesCollection,
+  updateCollection,
   getRecipesDocument,
 } from 'utils/firebase/db';
 
@@ -74,7 +74,7 @@ export const FavouritesProvider = ({ children }: PropsWithChildren) => {
     const itemIsAlreadyAdded = isItemFavourite(item);
 
     if (!itemIsAlreadyAdded) {
-      const favouritesSnapshot = await updateFavouritesCollection(
+      const favouritesSnapshot = await updateCollection(
         collectionName,
         currentUser?.userUid,
         item,
