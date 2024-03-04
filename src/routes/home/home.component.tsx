@@ -21,7 +21,7 @@ import './home.styles.scss';
 const Home = () => {
   const { searchedItems, isLoading } = useSearchedItems();
   const categories = useCategories();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const category = useMemo(
     () =>
@@ -41,7 +41,7 @@ const Home = () => {
   };
 
   const handleNavigateToStorage = () => {
-    navigate('/storage');
+    // navigate('/storage');
   };
 
   return (

@@ -10,6 +10,7 @@ import { UserProvider } from './context/user.context';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+// import theme from './utils/material-ui/theme';
 import './index.css';
 
 const root = ReactDOM.createRoot(
@@ -17,6 +18,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
+    {/* <ThemeProvider theme={theme}> */}
     <UserProvider>
       <StorageProvider>
         <FavouritesProvider>
@@ -30,6 +32,7 @@ root.render(
         </FavouritesProvider>
       </StorageProvider>
     </UserProvider>
+    {/* </ThemeProvider> */}
   </React.StrictMode>,
 );
 
