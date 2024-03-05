@@ -10,7 +10,10 @@ import { RecipeItem, Recipes } from 'utils/api/api.types';
 import { useUserContext } from './user.context';
 
 type StorageContextType = {
-  removeItemFromStorage: (recipeToRemove: string) => Promise<void>;
+  removeItemFromStorage: (
+    recipeId?: string,
+    selectedIds?: string[],
+  ) => Promise<void>;
   storedRecipes: Recipes | undefined;
   uploadNewRecipe: (recipeToAdd: RecipeItem) => Promise<void>;
 };
@@ -35,6 +38,24 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
     return null;
   };
 
+  const uploadRecipes = async (newRecipesCollection: Recipes | undefined) => {
+    await addCollectionAndDocumentsAsBatch(
+      'storage',
+      currentUser?.userUid,
+      JSON.stringify(newRecipesCollection),
+    );
+    setStoredRecipes(await getData());
+  };
+
+  const addTimeStamp = (recipe: RecipeItem) => {
+    const recipeToAdd = recipe;
+
+    const timeStamp = Intl.DateTimeFormat('fr-FR').format(new Date());
+    recipeToAdd.lastEdit = timeStamp;
+
+    return recipeToAdd;
+  };
+
   const isUnique = (item: RecipeItem) =>
     !storedRecipes?.find(
       (savedRecipe: RecipeItem) => savedRecipe.id === item.id,
@@ -49,7 +70,9 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
     }
   }, [currentUser]);
 
-  const uploadNewRecipe = async (recipeToAdd: RecipeItem) => {
+  const uploadNewRecipe = async (recipe: RecipeItem) => {
+    const recipeToAdd = addTimeStamp(recipe);
+
     if (storedRecipes) {
       try {
         if (isUnique(recipeToAdd)) {
@@ -65,40 +88,31 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
         alert((error as Error).message);
       }
     } else {
-      await addCollectionAndDocumentsAsBatch(
-        'storage',
-        currentUser?.userUid,
-        JSON.stringify([recipeToAdd]),
-      );
+      uploadRecipes([recipeToAdd]);
     }
 
     setStoredRecipes(await getData());
   };
 
   // TODO: remove toString() after rebuilding the categories in firestore
-  const removeItemFromStorage = async (recipeId: string) => {
-    const newRecipesCollection: Recipes = [];
-    storedRecipes?.forEach((recipe: RecipeItem) => {
-      if (recipe.id.toString() === recipeId) {
-        return;
-      }
-      newRecipesCollection.push(recipe);
-    });
+  const removeItemFromStorage = async (
+    recipeId?: string,
+    selectedIds?: string[],
+  ) => {
+    if (recipeId) {
+      const newRecipesCollection = storedRecipes?.filter(
+        (recipe: RecipeItem) => recipe.id.toString() !== recipeId,
+      );
 
-    await addCollectionAndDocumentsAsBatch(
-      'storage',
-      currentUser?.userUid,
-      JSON.stringify(newRecipesCollection),
-    );
+      uploadRecipes(newRecipesCollection);
+    } else {
+      const newRecipesCollection = storedRecipes?.filter(
+        (recipe: RecipeItem) => !selectedIds?.includes(recipe.id.toString()),
+      );
 
-    setStoredRecipes(await getData());
-  };
-
-  useEffect(() => {
-    if (storedRecipes) {
-      console.log(storedRecipes);
+      uploadRecipes(newRecipesCollection);
     }
-  }, [storedRecipes]);
+  };
 
   const value = {
     removeItemFromStorage,

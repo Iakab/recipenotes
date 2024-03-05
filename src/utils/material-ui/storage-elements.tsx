@@ -6,58 +6,58 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 const storageColumns = (
-  handleDelete: (id: string) => string,
+  handleDelete: (id?: string) => string | undefined,
   handleEdit: (id: string) => string,
 ): GridColDef[] => [
   {
     field: 'photo',
-    headerName: 'Photo',
-    width: 80,
-    sortable: false,
     headerClassName: 'storage-header',
+    headerName: 'Photo',
     renderCell: (params) => (
       <Avatar sx={{ width: 45, height: 45 }} src={params.row.thumbnailUrl} />
     ),
+    sortable: false,
+    width: 80,
   },
   {
     field: 'name',
+    headerClassName: 'storage-header',
     headerName: 'Name',
     sortable: true,
-    headerClassName: 'storage-header',
-    width: 300,
+    width: 350,
   },
   {
     field: 'credit',
-    headerName: 'Author',
     headerClassName: 'storage-header',
-    width: 150,
+    headerName: 'Author',
+    width: 180,
   },
   {
     field: 'tagNames',
-    headerName: 'Tags',
     headerClassName: 'storage-header',
+    headerName: 'Tags',
     width: 350,
   },
   {
     field: 'lastEdit',
-    headerName: 'Last edited',
     headerClassName: 'storage-header',
+    headerName: 'Last edited',
     width: 150,
   },
   {
     field: 'id',
+    headerClassName: 'storage-header',
     headerName: 'ID',
     sortable: false,
-    headerClassName: 'storage-header',
     width: 80,
   },
   {
-    field: 'actions',
-    type: 'actions',
-    headerName: 'Actions',
-    width: 100,
-    headerClassName: 'storage-header',
     cellClassName: 'actions',
+    field: 'actions',
+    headerClassName: 'storage-header',
+    headerName: 'Actions',
+    type: 'actions',
+    width: 100,
     getActions: ({ id }) => [
       <GridActionsCellItem
         icon={<EditIcon />}

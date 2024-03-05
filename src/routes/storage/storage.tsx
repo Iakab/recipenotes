@@ -1,10 +1,16 @@
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 import { StorageContext } from 'context/storage.context';
 
-import { DataGrid, GridRowParams, GridToolbar } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridRowParams,
+  GridRowSelectionModel,
+  GridToolbar,
+} from '@mui/x-data-grid';
 
 import CustomNoRowsOverlay from 'utils/material-ui/no-content-overlay';
+import CustomFooter from 'utils/material-ui/custom-table-footer';
 
 import { Button, createTheme, ThemeProvider } from '@mui/material';
 import { Box, Stack } from '@mui/system';
@@ -14,18 +20,31 @@ import storageColumns from 'utils/material-ui/storage-elements';
 import './storage.scss';
 
 const Storage = () => {
+  const [selectedRecipesId, setSelectedRecipesId] = useState<string[]>();
   const { storedRecipes, removeItemFromStorage } = useContext(StorageContext);
 
-  const handleDelete = (id: string) => {
-    try {
-      removeItemFromStorage(id);
-    } catch (error) {
-      console.error(error);
+  const handleDelete = (id?: string) => {
+    if (id) {
+      try {
+        removeItemFromStorage(id);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.log(selectedRecipesId);
+      try {
+        if (selectedRecipesId) {
+          removeItemFromStorage('', selectedRecipesId);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
+
     return id;
   };
 
-  // handle edit after creating the component for creating new recipes
+  // TODO: handle edit after creating the component for creating new recipes
   const handleEdit = (id: string) => {
     console.log('edit', id);
     return id;
@@ -47,15 +66,24 @@ const Storage = () => {
   };
   type Rows = Row[];
 
+  // TODO: Remove to string after recreating the categories
   const rows: Rows = useMemo(() => {
     if (storedRecipes) {
       return storedRecipes.map((item) => {
-        const { credits, id, name, tags, thumbnail_url: thumbnailUrl } = item;
+        const {
+          credits,
+          lastEdit,
+          name,
+          tags,
+          thumbnail_url: thumbnailUrl,
+        } = item;
+        const id = item.id.toString();
         const credit = credits[0].name;
         const tagNames = tags.slice(0, 3).map((tag) => ` ${tag.display_name}`);
         return {
           credit,
           id,
+          lastEdit,
           name,
           tagNames,
           thumbnailUrl,
@@ -71,38 +99,42 @@ const Storage = () => {
     },
   });
 
+  const handleSelectionChange = (rowSelectionModel: GridRowSelectionModel) => {
+    setSelectedRecipesId(rowSelectionModel as string[] | undefined);
+  };
+
   return (
     <div className="storage">
       <ThemeProvider theme={theme}>
-        <Stack gap={2} height="80vh">
+        <Stack gap={2} height="100vh">
           <Box flexDirection="row">
             <h2>STORAGE</h2>
           </Box>
           <Button
-            variant="outlined"
             fullWidth={false}
             size="large"
             sx={{ width: '30%', margin: 'auto' }}
+            variant="outlined"
           >
             + Add new Recipe
           </Button>
 
           <DataGrid
+            checkboxSelection
+            columns={columns}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 5 } },
+            }}
+            onRowClick={handleRowClick}
+            onRowSelectionModelChange={handleSelectionChange}
+            pageSizeOptions={[5, 10]}
+            rowHeight={50}
+            rows={rows}
             slots={{
               toolbar: GridToolbar,
               noRowsOverlay: CustomNoRowsOverlay,
+              footer: () => CustomFooter({ selectedRecipesId, handleDelete }),
             }}
-            rows={rows}
-            rowHeight={50}
-            columns={columns}
-            onRowClick={handleRowClick}
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 5 },
-              },
-            }}
-            pageSizeOptions={[5, 10]}
-            checkboxSelection
           />
         </Stack>
       </ThemeProvider>
