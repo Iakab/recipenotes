@@ -6,7 +6,11 @@ import { StorageContext } from 'context/storage.context';
 
 import { RecipeItem, Component, Instruction } from 'utils/api/api.types';
 
-import { ReactComponent as CloseIcon } from 'assets/icons/SVG/cross.svg';
+import { Snackbar, Box, IconButton } from '@mui/material';
+
+import CloseIcon from '@mui/icons-material/Close';
+
+import { ReactComponent as CustomCloseIcon } from 'assets/icons/SVG/cross.svg';
 import { ReactComponent as HeartIconOutlined } from 'assets/icons/SVG/heart-outlined.svg';
 import { ReactComponent as HeartIcon } from 'assets/icons/SVG/heart.svg';
 
@@ -23,20 +27,22 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
 }) => {
   const closeIconRef = useRef<null | SVGAElement>(null);
   const [addedToFavorites, setAddedToFavorites] = useState<RecipeItem>();
+
+  const { displayMessage, setDisplayMessage } = useContext(StorageContext);
   const { updateFavourites, isItemFavourite, favouriteRecipes } =
     useContext(FavourtiesContext);
   const { uploadNewRecipe } = useContext(StorageContext);
 
   const {
+    approved_at: approvedAt,
     description,
     instructions,
     name,
     original_video_url: originalVideoUrl,
     sections,
     thumbnail_url: thumbnail,
-    video_url: videoUrl,
     updated_at: updatedAt,
-    approved_at: approvedAt,
+    video_url: videoUrl,
   } = recipe;
 
   const { components } = sections[0];
@@ -64,9 +70,30 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
     uploadNewRecipe(recipe);
   };
 
+  const handleCloseMessage = (
+    event: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setDisplayMessage(undefined);
+  };
+
+  const messageAction = (
+    <IconButton
+      aria-label="close"
+      color="inherit"
+      onClick={handleCloseMessage}
+      size="small"
+    >
+      <CloseIcon fontSize="small" />
+    </IconButton>
+  );
+
   return (
     <div className="overlay" onClick={exitPreview}>
-      <CloseIcon
+      <CustomCloseIcon
         className="icon-close"
         ref={closeIconRef}
         onClick={exitPreview}
@@ -84,6 +111,18 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
           )}
         </div>
         <button onClick={handleAddToStorage}>Store recipe</button>
+        {displayMessage && (
+          <Box sx={{ width: 500, bgcolor: 'red' }}>
+            <Snackbar
+              action={messageAction}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+              autoHideDuration={4000}
+              message={(displayMessage as Error).message}
+              onClose={handleCloseMessage}
+              open={true}
+            />
+          </Box>
+        )}
 
         <h2 className="title">{name}</h2>
         <h4 className="description">{description}</h4>

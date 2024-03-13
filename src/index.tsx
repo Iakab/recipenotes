@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+import { ThemeProvider } from '@mui/system';
 import { BrowserRouter } from 'react-router-dom';
 import { FavouritesProvider } from 'context/favourites.context';
 import { SearchProvider } from 'context/search.context';
@@ -10,7 +11,7 @@ import { UserProvider } from './context/user.context';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-// import theme from './utils/material-ui/theme';
+import theme from './utils/material-ui/theme';
 import './index.css';
 
 const root = ReactDOM.createRoot(
@@ -18,21 +19,21 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    {/* <ThemeProvider theme={theme}> */}
-    <UserProvider>
-      <StorageProvider>
-        <FavouritesProvider>
-          <SearchProvider>
-            <CategoriesProvider>
-              <BrowserRouter>
-                <App />
-              </BrowserRouter>
-            </CategoriesProvider>
-          </SearchProvider>
-        </FavouritesProvider>
-      </StorageProvider>
-    </UserProvider>
-    {/* </ThemeProvider> */}
+    <ThemeProvider theme={theme}>
+      <UserProvider>
+        <StorageProvider>
+          <FavouritesProvider>
+            <SearchProvider>
+              <CategoriesProvider>
+                <BrowserRouter>
+                  <App />
+                </BrowserRouter>
+              </CategoriesProvider>
+            </SearchProvider>
+          </FavouritesProvider>
+        </StorageProvider>
+      </UserProvider>
+    </ThemeProvider>
   </React.StrictMode>,
 );
 

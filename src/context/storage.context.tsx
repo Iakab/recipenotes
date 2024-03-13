@@ -10,21 +10,31 @@ import { RecipeItem, Recipes } from 'utils/api/api.types';
 import { useUserContext } from './user.context';
 
 type StorageContextType = {
+  displayMessage: Error | undefined;
+  isLoading: boolean;
   removeItemFromStorage: (
     recipeId?: string,
     selectedIds?: string[],
   ) => Promise<void>;
+  setDisplayMessage: React.Dispatch<React.SetStateAction<Error | undefined>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   storedRecipes: Recipes | undefined;
   uploadNewRecipe: (recipeToAdd: RecipeItem) => Promise<void>;
 };
 
 export const StorageContext = createContext<StorageContextType>({
+  displayMessage: undefined,
+  isLoading: true,
   removeItemFromStorage: async () => {},
+  setDisplayMessage: () => {},
+  setIsLoading: () => {},
   storedRecipes: undefined,
   uploadNewRecipe: async () => {},
 });
 
 export const StorageProvider = ({ children }: PropsWithChildren) => {
+  const [displayMessage, setDisplayMessage] = useState<Error>();
+  const [isLoading, setIsLoading] = useState(true);
   const [storedRecipes, setStoredRecipes] = useState<Recipes>();
   const { currentUser, userIsLoading } = useUserContext();
 
@@ -45,6 +55,7 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
       JSON.stringify(newRecipesCollection),
     );
     setStoredRecipes(await getData());
+    setIsLoading(false);
   };
 
   const addTimeStamp = (recipe: RecipeItem) => {
@@ -65,6 +76,7 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
     if (!storedRecipes && currentUser && !userIsLoading) {
       const fetchStoredData = async () => {
         setStoredRecipes(await getData());
+        setIsLoading(false);
       };
       fetchStoredData();
     }
@@ -85,13 +97,14 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
           throw new Error('Recipe is already saved in your storage');
         }
       } catch (error) {
-        alert((error as Error).message);
+        setDisplayMessage(error as Error);
       }
     } else {
       uploadRecipes([recipeToAdd]);
     }
 
     setStoredRecipes(await getData());
+    setIsLoading(false);
   };
 
   // TODO: remove toString() after rebuilding the categories in firestore
@@ -115,7 +128,11 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
   };
 
   const value = {
+    displayMessage,
+    isLoading,
     removeItemFromStorage,
+    setDisplayMessage,
+    setIsLoading,
     storedRecipes,
     uploadNewRecipe,
   };

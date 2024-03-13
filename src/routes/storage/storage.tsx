@@ -9,21 +9,21 @@ import {
   GridToolbar,
 } from '@mui/x-data-grid';
 
-import CustomNoRowsOverlay from 'utils/material-ui/no-content-overlay';
-import CustomFooter from 'utils/material-ui/custom-table-footer';
+import CustomNoRowsOverlay from 'components/storage-table/no-content-overlay';
+import CustomFooter from 'components/storage-table/custom-table-footer';
+import storageColumns from 'components/storage-table/storage-elements';
 
-import { Button, createTheme, ThemeProvider } from '@mui/material';
-import { Box, Stack } from '@mui/system';
-
-import storageColumns from 'utils/material-ui/storage-elements';
+import { Box, Button, LinearProgress, Stack } from '@mui/material';
 
 import './storage.scss';
 
 const Storage = () => {
-  const [selectedRecipesId, setSelectedRecipesId] = useState<string[]>();
-  const { storedRecipes, removeItemFromStorage } = useContext(StorageContext);
+  const [selectedRecipesId, setSelectedRecipesId] = useState<string[]>([]);
+  const { isLoading, removeItemFromStorage, setIsLoading, storedRecipes } =
+    useContext(StorageContext);
 
   const handleDelete = (id?: string) => {
+    setIsLoading(true);
     if (id) {
       try {
         removeItemFromStorage(id);
@@ -93,51 +93,45 @@ const Storage = () => {
     return [];
   }, [storedRecipes]);
 
-  const theme = createTheme({
-    typography: {
-      fontSize: 24,
-    },
-  });
-
   const handleSelectionChange = (rowSelectionModel: GridRowSelectionModel) => {
-    setSelectedRecipesId(rowSelectionModel as string[] | undefined);
+    setSelectedRecipesId(rowSelectionModel as string[]);
   };
 
   return (
     <div className="storage">
-      <ThemeProvider theme={theme}>
-        <Stack gap={2} height="100vh">
-          <Box flexDirection="row">
-            <h2>STORAGE</h2>
-          </Box>
-          <Button
-            fullWidth={false}
-            size="large"
-            sx={{ width: '30%', margin: 'auto' }}
-            variant="outlined"
-          >
-            + Add new Recipe
-          </Button>
+      <Stack gap={2} height="100vh">
+        <Box flexDirection="row">
+          <h2>STORAGE</h2>
+        </Box>
+        <Button
+          fullWidth={false}
+          size="large"
+          sx={{ width: '30%', margin: 'auto' }}
+          variant="outlined"
+        >
+          + Add new Recipe
+        </Button>
 
-          <DataGrid
-            checkboxSelection
-            columns={columns}
-            initialState={{
-              pagination: { paginationModel: { page: 0, pageSize: 5 } },
-            }}
-            onRowClick={handleRowClick}
-            onRowSelectionModelChange={handleSelectionChange}
-            pageSizeOptions={[5, 10]}
-            rowHeight={50}
-            rows={rows}
-            slots={{
-              toolbar: GridToolbar,
-              noRowsOverlay: CustomNoRowsOverlay,
-              footer: () => CustomFooter({ selectedRecipesId, handleDelete }),
-            }}
-          />
-        </Stack>
-      </ThemeProvider>
+        <DataGrid
+          checkboxSelection
+          columns={columns}
+          initialState={{
+            pagination: { paginationModel: { page: 0, pageSize: 5 } },
+          }}
+          onRowClick={handleRowClick}
+          onRowSelectionModelChange={handleSelectionChange}
+          pageSizeOptions={[5, 10]}
+          rowHeight={50}
+          rows={rows}
+          loading={isLoading}
+          slots={{
+            toolbar: GridToolbar,
+            noRowsOverlay: CustomNoRowsOverlay,
+            footer: () => CustomFooter({ selectedRecipesId, handleDelete }),
+            loadingOverlay: LinearProgress,
+          }}
+        />
+      </Stack>
     </div>
   );
 };
