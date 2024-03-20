@@ -3,12 +3,7 @@
 .footer {
   color: $dark-grey-4;
   height: 8rem;
-  background-image: linear-gradient(
-    to top,
-    $grey-collection-3,
-    $grey-collection-2
-  );
-  // margin: 0 3rem;
+  background-color: $grey-collection-3;
 
   display: flex;
   justify-content: stretch;
@@ -39,7 +34,8 @@
   }
 
   .credit {
-    flex: 1 1 27rem;
+    flex: 1 1 auto;
+    width: 27rem;
     border-top: 1px solid $dark-grey-4;
     text-align: center;
   }

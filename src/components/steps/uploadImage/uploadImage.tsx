@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 
 import { Typography } from '@mui/material';
 import { FileUploader } from 'react-drag-drop-files';
@@ -20,7 +20,7 @@ const UploadImage = () => {
   };
 
   return (
-    <Fragment>
+    <>
       <Typography variant="h4">Upload an image</Typography>
 
       <Container
@@ -45,7 +45,7 @@ const UploadImage = () => {
           <div style={{ width: '25rem', height: '25rem' }}></div>
         )}
       </Container>
-    </Fragment>
+    </>
   );
 };
 

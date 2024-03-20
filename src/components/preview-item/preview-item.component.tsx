@@ -6,9 +6,10 @@ import { StorageContext } from 'context/storage.context';
 
 import { RecipeItem, Component, Instruction } from 'utils/api/api.types';
 
-import { Snackbar, Box, IconButton } from '@mui/material';
+import { Snackbar, Box, IconButton, Container, Tooltip } from '@mui/material';
 
 import CloseIcon from '@mui/icons-material/Close';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 
 import { ReactComponent as CustomCloseIcon } from 'assets/icons/SVG/cross.svg';
 import { ReactComponent as HeartIconOutlined } from 'assets/icons/SVG/heart-outlined.svg';
@@ -102,15 +103,25 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
       <div className="preview">
         <div className="options">
           {addedToFavorites ? (
-            <HeartIcon onClick={handleAddToFavourites} className="icon-heart" />
+            <Tooltip title='Remove from Favourites'>
+
+              <HeartIcon onClick={handleAddToFavourites} className="icon-heart" />
+            </Tooltip>
           ) : (
+            <Tooltip title='Add to Favourites'>
             <HeartIconOutlined
               onClick={handleAddToFavourites}
               className="icon-heart"
             />
+            </Tooltip>
           )}
+          <Tooltip title="Add to Storage">
+            <IconButton onClick={handleAddToStorage}>
+              <LibraryAddIcon />
+            </IconButton>
+          </Tooltip>
         </div>
-        <button onClick={handleAddToStorage}>Store recipe</button>
+
         {displayMessage && (
           <Box sx={{ width: 500, bgcolor: 'red' }}>
             <Snackbar

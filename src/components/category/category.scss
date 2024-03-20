@@ -4,7 +4,7 @@
   // color: $light-grey-1;
   width: 100%;
 
-  border-top: 2px solid $dark-grey-1;
+  border-top: 2px solid $grey-collection-1;
   padding-bottom: 4rem;
   display: flex;
   flex-direction: column;
@@ -47,4 +47,9 @@
       }
     }
   }
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: $grey-collection-2;
 }

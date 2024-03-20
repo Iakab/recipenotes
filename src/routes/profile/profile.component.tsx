@@ -117,9 +117,7 @@ const Profile = () => {
           )}
         </div>
         {reauthModal && <ReauthPrompt setReauthModal={setReauthModal} />}
-        <div className="activity">
-          <h3>activity</h3>
-        </div>
+        <div className="activity">{/* <h3>activity</h3> */}</div>
       </div>
     </div>
   );

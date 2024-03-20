@@ -19,7 +19,7 @@ const Navigation = () => {
     if (!userIsLoading && !currentUser) {
       navigate('/auth');
     }
-  }, [currentUser]);
+  }, [currentUser, userIsLoading]);
 
   return (
     <div className="navigation">

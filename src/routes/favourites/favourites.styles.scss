@@ -1,8 +1,10 @@
 .favourites {
-  margin: 3rem;
-
+  margin-top: 3rem;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: stretch;
+  // align-items: center;
+
   gap: 2rem;
 }

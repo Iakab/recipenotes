@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import { CategoryType, useCategories } from 'context/categories.context';
 import { useSearchedItems } from 'context/search.context';
@@ -13,15 +13,14 @@ import Loading from 'react-loading';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArchiveIcon from '@mui/icons-material/Archive';
-import { Stack } from '@mui/system';
-import Paper from '@mui/material/Paper';
+import { Container, Stack, Paper } from '@mui/material';
 
 import './home.styles.scss';
 
 const Home = () => {
   const { searchedItems, isLoading } = useSearchedItems();
   const categories = useCategories();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const category = useMemo(
     () =>
@@ -36,12 +35,12 @@ const Home = () => {
     width: 170,
     height: 'fit-content',
     padding: 1,
-    bgcolor: '#b4b4b8',
+    bgcolor: '#e3e1d9',
     fontSize: 19,
   };
 
   const handleNavigateToStorage = () => {
-    // navigate('/storage');
+    navigate('/storage');
   };
 
   return (
@@ -52,15 +51,20 @@ const Home = () => {
         <SearchItems items={searchedItems} />
       ) : (
         <div className="content">
-          <div className="header">
+          <Container className="header">
             <div className="text">
               <h2>Organize all your recipes in one place</h2>
 
-              <Stack
-                direction="row"
-                justifyContent={'center'}
-                alignItems={'center'}
-                spacing={3}
+              <Container
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-around',
+                  alignItems: 'center',
+                  gap: '3px',
+                }}
+                // justifyContent={'center'}
+                // alignItems={'center'}
+                // spacing={3}
               >
                 <Paper elevation={2} square={false} sx={paperStyle}>
                   &nbsp; Search through a large variety of recipes and find an
@@ -78,7 +82,7 @@ const Home = () => {
                 <Paper elevation={2} square={false} sx={paperStyle}>
                   &nbsp; Customize it to your taste and store it in your storage
                 </Paper>
-              </Stack>
+              </Container>
 
               <span>OR</span>
               <Stack
@@ -94,11 +98,11 @@ const Home = () => {
                     width: 350,
                     height: 'fit-content',
                     padding: 1,
-                    bgcolor: '#b4b4b8',
+                    bgcolor: '#e3e1d9',
+                    textAlign: 'center',
                   }}
                 >
-                  &nbsp; Upload any recipe that you wish to store in your
-                  storage
+                  Upload any recipe that you wish to store in your storage
                 </Paper>
               </Stack>
             </div>
@@ -108,7 +112,7 @@ const Home = () => {
                 <ArchiveIcon sx={{ fontSize: 50 }} />
               </div>
             </div>
-          </div>
+          </Container>
           <div className="categories">
             <h2>DISCOVER NEW RECIPES</h2>
             {category}

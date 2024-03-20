@@ -1,10 +1,7 @@
 @import 'abstracts/variables';
 @import 'abstracts/mixins';
 .profile {
-  background-color: $light-grey-1;
-  margin: 0 3rem;
-  position: relative;
-
+  flex: 1 1 auto;
   .header {
     width: 100%;
     padding-left: 5rem;
@@ -13,14 +10,13 @@
   .body {
     display: flex;
     flex-direction: row;
+    height: 100%;
 
     .details {
       color: $blue-grey-3;
       width: 40%;
 
       padding: 3rem 5rem 5rem;
-
-      background-color: $light-grey-3;
 
       & > * {
         margin-top: 2.5rem;
@@ -103,6 +99,7 @@
       }
 
       .text {
+        font-size: 2.1rem;
         width: fit-content;
         max-width: 42rem;
         height: fit-content;
@@ -115,10 +112,6 @@
 
         & > *:not(:last-child) {
           margin-bottom: 2rem;
-        }
-
-        .label {
-          font-weight: 600;
         }
 
         .content {
@@ -156,12 +149,12 @@
 
         .name {
           .username {
-            font-size: 1.8rem;
+            // font-size: 1.8rem;
             margin-right: 12rem;
             display: block;
           }
           .input {
-            font-size: 1.8rem;
+            // font-size: 1.8rem;
             font-weight: 600;
             color: $blue-grey-3;
             width: 50%;
@@ -183,19 +176,17 @@
         }
 
         .label {
-          font-size: 1.4rem;
-          font-weight: 600;
           margin-bottom: 3px;
           display: block;
         }
 
         .bio {
-          font-size: 1.3rem;
-          font-weight: 600;
+          // font-size: 1.3rem;
+          // font-weight: 600;
 
           .content {
+            font-size: 1.6rem;
             padding: 1rem;
-            border: 4px double $black;
             max-height: 30rem;
             overflow-y: auto;
             word-wrap: break-word;
@@ -237,7 +228,7 @@
       }
 
       .span {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         font-weight: 600;
         width: fit-content;
         display: block;
@@ -245,7 +236,7 @@
         cursor: pointer;
         transition: transform 0.2s;
 
-        margin-bottom: -1rem;
+        margin-top: 0.5rem;
 
         &:hover {
           color: $blue-grey-1;

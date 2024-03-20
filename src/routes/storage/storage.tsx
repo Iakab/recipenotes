@@ -1,5 +1,5 @@
 import { useContext, useMemo, useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import { StorageContext } from 'context/storage.context';
 
 import {
@@ -21,6 +21,7 @@ const Storage = () => {
   const [selectedRecipesId, setSelectedRecipesId] = useState<string[]>([]);
   const { isLoading, removeItemFromStorage, setIsLoading, storedRecipes } =
     useContext(StorageContext);
+  const navigate = useNavigate();
 
   const handleDelete = (id?: string) => {
     setIsLoading(true);
@@ -97,6 +98,10 @@ const Storage = () => {
     setSelectedRecipesId(rowSelectionModel as string[]);
   };
 
+  const handleNavigateToUpload = () => {
+    navigate('/upload')
+  }
+
   return (
     <div className="storage">
       <Stack gap={2} height="100vh">
@@ -108,6 +113,7 @@ const Storage = () => {
           size="large"
           sx={{ width: '30%', margin: 'auto' }}
           variant="outlined"
+          onClick={handleNavigateToUpload}
         >
           + Add new Recipe
         </Button>
