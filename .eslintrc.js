@@ -30,5 +30,6 @@ module.exports = {
     'eqeqeq': 1,
     'import/prefer-default-export': 1,
     'no-unused-vars': 1,
+    'no-plusplus': 0,
   },
 };

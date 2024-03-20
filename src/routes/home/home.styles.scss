@@ -4,7 +4,6 @@
   width: 100%;
   height: fit-content;
   color: $dark-grey-3;
-  background-color: $grey-collection-4;
   position: relative;
 
   display: flex;
@@ -27,18 +26,16 @@
 
     .header {
       width: 100%;
+      max-width: 100%;
       height: 65vh;
+      padding: 0;
       padding-left: 5rem;
       margin-top: -2rem;
-      background-image: linear-gradient(
-        to right bottom,
-        $grey-collection-4,
-        $grey-collection-2
-      );
+      background-color: $grey-collection-5;
       display: flex;
 
       .text {
-        width: 75%;
+        flex: 1 1 auto;
         height: 100%;
 
         display: flex;
@@ -67,9 +64,10 @@
         }
       }
       .image {
+        flex: 0 1 auto;
+        width: 23vw;
         font-size: 1.8rem;
         font-weight: 900;
-        width: 25%;
         background-image: url('../../assets/img/notebook.jpg');
         background-size: cover;
         background-position: center;
@@ -80,6 +78,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        transition: all .2s;
 
         & p {
           margin-top: -3rem;

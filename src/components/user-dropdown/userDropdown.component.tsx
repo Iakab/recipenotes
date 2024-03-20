@@ -9,7 +9,7 @@ const UserDropdown = () => {
     <div className="dropdown">
       <h3>{currentUser?.displayName}</h3>
 
-      <ul className="list">
+      <ul className="list-user">
         <li>
           <a href="/profile/" className="link">
             Profile

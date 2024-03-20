@@ -4,8 +4,8 @@
   color: $dark-grey-3;
   height: 4.5rem;
   // margin: 0 3rem;
-  background-color: $grey-collection-4;
-  box-shadow: 0 0.5rem 2rem rgba($black, 0.4);
+  background-color: $grey-collection-3;
+  // box-shadow: 0 0.5rem 2rem rgba($black, 0.4);
 
   display: flex;
 
@@ -56,7 +56,7 @@
       z-index: 3;
 
       &:hover {
-        background-color: $dark-grey-1;
+        background-color: $grey-collection-2;
       }
 
       .heart-icon {
@@ -103,7 +103,7 @@
         transition: all 0.2s;
 
         &:hover {
-          background-color: $dark-grey-1;
+          background-color: $grey-collection-2;
         }
 
         .icon-box {

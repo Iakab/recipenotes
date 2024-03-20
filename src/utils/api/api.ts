@@ -89,6 +89,7 @@ export const getRecipes = async (
   try {
     const response = await axios.request(options);
     const unalteredRecipes = response.data.results;
+    console.log(unalteredRecipes);
     const recipes = reduceRecipesSize(unalteredRecipes);
     console.log(recipes);
     return recipes;

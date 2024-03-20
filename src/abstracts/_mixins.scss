@@ -17,16 +17,16 @@
   color: $blue-grey-3;
   padding: 0.3rem 1.3rem;
 
-  border-radius: 50px;
+  border-radius: 6px;
 
   border: 1.5px solid $dark-grey-1;
-  box-shadow: 0 1rem 2rem rgba($black, 0.2);
   transition: all 0.1s;
-
+  
   &:hover {
     transform: scale(1.07);
     cursor: pointer;
     background-color: $light-grey-1;
+    box-shadow: 0 0 1rem rgba($black, 0.2);
 
     &:focus {
       transform: scale(0.98);

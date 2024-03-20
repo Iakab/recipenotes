@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { SearchContext } from 'context/search.context';
 
-import { cuisines, ingredients, meals, occasion, time } from 'utils/constants';
+import { cuisines, ingredients, meals, occasions, time } from 'utils/constants';
 
 import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
 
@@ -39,7 +39,7 @@ const HomeMenu = () => {
         ))}
       </Menu>
       <Menu menuButton={<MenuButton className="btn-menu">Occasion</MenuButton>}>
-        {occasion.map((item, index) => (
+        {occasions.map((item, index) => (
           <MenuItem
             className="dropDown"
             key={index}
