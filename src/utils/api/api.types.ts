@@ -107,6 +107,7 @@ export type RecipeItem = {
   description: string;
   id: string;
   instructions: Instructions[];
+  lastEdit?: string;
   name: string;
   nutrition: Nutrition[];
   original_video_url: string;
