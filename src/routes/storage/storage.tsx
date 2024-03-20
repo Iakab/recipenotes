@@ -11,7 +11,7 @@ import {
 
 import CustomNoRowsOverlay from 'components/storage-table/no-content-overlay';
 import CustomFooter from 'components/storage-table/custom-table-footer';
-import storageColumns from 'components/storage-table/storage-elements';
+import StorageColumns from 'components/storage-table/storage-elements';
 
 import { Box, Button, LinearProgress, Stack } from '@mui/material';
 
@@ -56,7 +56,7 @@ const Storage = () => {
     console.log(event);
   };
 
-  const columns = storageColumns(handleDelete, handleEdit);
+  const columns = StorageColumns(handleDelete, handleEdit);
 
   type Row = {
     credit: string;
