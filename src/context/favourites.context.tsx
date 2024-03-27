@@ -2,14 +2,14 @@ import {
   createContext,
   PropsWithChildren,
   useContext,
-  useState,
   useEffect,
+  useState,
 } from 'react';
 
 import {
+  getRecipesDocument,
   removeRecipeFromDoc,
   updateCollection,
-  getRecipesDocument,
 } from 'utils/firebase/db';
 
 import { DocumentData, DocumentSnapshot } from 'firebase/firestore';

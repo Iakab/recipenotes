@@ -10,15 +10,25 @@ import HomeMenu from 'components/home-menu/home-menu';
 import SearchItems from 'components/search-items/search-items';
 
 import Loading from 'react-loading';
+import notebook from 'assets/img/notebook.png';
 
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ArchiveIcon from '@mui/icons-material/Archive';
-import { Container, Stack, Paper } from '@mui/material';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Container,
+  Typography,
+} from '@mui/material';
 
 import './home.styles.scss';
 
 const Home = () => {
-  const { searchedItems, isLoading } = useSearchedItems();
+  const { isLoading, searchedItems } = useSearchedItems();
   const categories = useCategories();
   const navigate = useNavigate();
 
@@ -31,16 +41,12 @@ const Home = () => {
     [categories],
   );
 
-  const paperStyle = {
-    width: 170,
-    height: 'fit-content',
-    padding: 1,
-    bgcolor: '#e3e1d9',
-    fontSize: 19,
-  };
-
   const handleNavigateToStorage = () => {
     navigate('/storage');
+  };
+
+  const handleNavigateToUpload = () => {
+    navigate('/upload');
   };
 
   return (
@@ -51,72 +57,125 @@ const Home = () => {
         <SearchItems items={searchedItems} />
       ) : (
         <div className="content">
-          <Container className="header">
-            <div className="text">
-              <h2>Organize all your recipes in one place</h2>
+          <Typography variant="h4">DISCOVER NEW RECIPES</Typography>
+          {category}
 
-              <Container
+          <Container
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              bgcolor: '#f8f6f4',
+            }}
+            style={{ maxWidth: '100%' }}
+          >
+            <Typography variant="h4" sx={{ mb: '3rem', mt: '2rem' }}>
+              Organize all your recipes in one place
+            </Typography>
+
+            <Container
+              sx={{
+                width: '100%',
+                gap: '2rem',
+                mb: '4rem',
+                display: 'flex',
+                justifyContent: 'space-around',
+                flexWrap: 'wrap',
+              }}
+              style={{ maxWidth: '100%' }}
+            >
+              <Card
                 sx={{
+                  maxWidth: '30rem',
                   display: 'flex',
-                  justifyContent: 'space-around',
-                  alignItems: 'center',
-                  gap: '3px',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
                 }}
-                // justifyContent={'center'}
-                // alignItems={'center'}
-                // spacing={3}
               >
-                <Paper elevation={2} square={false} sx={paperStyle}>
-                  &nbsp; Search through a large variety of recipes and find an
-                  appealing recipe
-                </Paper>
-                <ArrowForwardIcon sx={{ fontSize: 35 }} />
-                <Paper elevation={2} square={false} sx={paperStyle}>
-                  Add it to wishlist
-                </Paper>
-                <ArrowForwardIcon sx={{ fontSize: 35 }} />
-                <Paper elevation={2} square={false} sx={paperStyle}>
-                  Prepare the recipe
-                </Paper>
-                <ArrowForwardIcon sx={{ fontSize: 35 }} />
-                <Paper elevation={2} square={false} sx={paperStyle}>
-                  &nbsp; Customize it to your taste and store it in your storage
-                </Paper>
-              </Container>
+                <CardContent>
+                  <Typography variant="h6" sx={{ mb: '2.5rem' }}>
+                    ADD TO STORAGE
+                  </Typography>
 
-              <span>OR</span>
-              <Stack
-                direction="row"
-                justifyContent={'center'}
-                alignItems={'center'}
+                  <Typography variant="body1">
+                    <ArrowRightIcon fontSize="small" sx={{ mb: '-.3rem' }} />
+                    Search through a large variety of recipes and find an
+                    appealing recipe
+                  </Typography>
+
+                  <Typography variant="body1">
+                    <ArrowRightIcon fontSize="small" sx={{ mb: '-.3rem' }} />
+                    Add it to wishlist
+                  </Typography>
+                  <Typography variant="body1">
+                    <ArrowRightIcon fontSize="small" sx={{ mb: '-.3rem' }} />
+                    Prepare the recipe
+                  </Typography>
+                  <Typography variant="body1">
+                    <ArrowRightIcon fontSize="small" sx={{ mb: '-.3rem' }} />
+                    Customize it to your taste and store it in your storage
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button type="button" href="#">
+                    Discover new Recipes
+                  </Button>
+                </CardActions>
+              </Card>
+
+              <Card
+                sx={{
+                  maxWidth: '30rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                }}
               >
-                <Paper
-                  elevation={2}
-                  square={false}
-                  sx={{
-                    fontSize: 19,
-                    width: 350,
-                    height: 'fit-content',
-                    padding: 1,
-                    bgcolor: '#e3e1d9',
-                    textAlign: 'center',
-                  }}
-                >
-                  Upload any recipe that you wish to store in your storage
-                </Paper>
-              </Stack>
-            </div>
-            <div className="image" onClick={handleNavigateToStorage}>
-              <p>VISIT YOUR STORED RECIPES</p>
-              <div className="archive-icon">
-                <ArchiveIcon sx={{ fontSize: 50 }} />
-              </div>
-            </div>
+                <CardContent>
+                  <Typography variant="h6" sx={{ mb: '2.5rem' }}>
+                    UPLOAD NEW RECIPES
+                  </Typography>
+
+                  <Typography variant="body1">
+                    <ArrowRightIcon fontSize="small" sx={{ mb: '-.3rem' }} />
+                    Follow the steps from the upload page
+                  </Typography>
+                  <Typography variant="body1">
+                    <ArrowRightIcon fontSize="small" sx={{ mb: '-.3rem' }} />
+                    Save any recipe that you wish to store in your storage
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button onClick={handleNavigateToUpload}>
+                    Upload Recipe
+                  </Button>
+                </CardActions>
+              </Card>
+
+              <Card sx={{ maxWidth: '30rem' }}>
+                <CardActionArea onClick={handleNavigateToStorage}>
+                  <CardMedia
+                    alt="notebook"
+                    component="img"
+                    height="200"
+                    image={notebook}
+                    sx={{ objectFit: 'cover', objectPosition: 'center' }}
+                  />
+
+                  <CardContent>
+                    <Typography variant="h6">VISIT STORAGE</Typography>
+
+                    <Typography variant="body1">
+                      <ArrowRightIcon fontSize="small" sx={{ mb: '-.3rem' }} />
+                      Visit all your saved and upload recipes
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Container>
           </Container>
-          <div className="categories">
-            <h2>DISCOVER NEW RECIPES</h2>
-            {category}
-          </div>
         </div>
       )}
     </div>

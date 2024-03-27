@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
 import { DocumentData } from 'firebase/firestore';
@@ -19,9 +20,12 @@ type NavBar = {
 };
 
 const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
+  const [displayOptions, setDisplayOptions] = useState(true);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+
   const { favouriteRecipes } = useContext(FavourtiesContext);
   const { setSearchedItems } = useContext(SearchContext);
+
   const navigate = useNavigate();
   const userMenu = useRef<null | HTMLInputElement>(null);
 
@@ -69,23 +73,33 @@ const NavigationBar: React.FC<NavBar> = ({ currentUser }) => {
 
       {currentUser && (
         <div className="main">
-          <SearchBar />
+          <SearchBar setDisplayOptions={setDisplayOptions} />
 
-          <div className="favorites" onClick={handleFavourites}>
-            <HeartIcon className="heart-icon" />
+          {displayOptions && (
+            <>
+              <div className="favorites" onClick={handleFavourites}>
+                <HeartIcon className="heart-icon" />
 
-            <span className="items-num">{favouriteRecipes?.length || 0}</span>
-          </div>
-          <div className="user" ref={userMenu}>
-            <button id="user_btn" onClick={toggleUserMenu} className="btn_user">
-              <div className="icon-box">
-                <img src={currentUser.userPhotoUrl} className="photo" />
+                <span className="items-num">
+                  {favouriteRecipes?.length || 0}
+                </span>
               </div>
-              {userInitials.map((initial: string) => `${initial}.`)}
-            </button>
+              <div className="user" ref={userMenu}>
+                <button
+                  id="user_btn"
+                  onClick={toggleUserMenu}
+                  className="btn_user"
+                >
+                  <div className="icon-box">
+                    <img src={currentUser.userPhotoUrl} className="photo" />
+                  </div>
+                  {userInitials.map((initial: string) => `${initial}.`)}
+                </button>
 
-            {isUserDropdownOpen && <UserDropdown />}
-          </div>
+                {isUserDropdownOpen && <UserDropdown />}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

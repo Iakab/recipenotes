@@ -1,63 +1,68 @@
-import { ReactComponent as ThumbsUpIcon } from 'assets/icons/SVG/thumbs-up.svg';
-import { ReactComponent as ThumbsDownIcon } from 'assets/icons/SVG/thumbs-down.svg';
+import { useContext } from 'react';
+
+import { FavourtiesContext } from 'context/favourites.context';
+import { StorageContext } from 'context/storage.context';
 
 import { RecipeItem } from 'utils/api/api.types';
-import './item-list.scss';
+
+import {
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  IconButton,
+  Typography,
+} from '@mui/material';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 
 type ItemListProps = {
+  handlePreview: any;
   recipe: RecipeItem;
 };
 
-const ItemList: React.FC<ItemListProps> = ({ recipe }) => {
-  const {
-    credits,
-    description,
-    name,
-    sections,
-    thumbnail_url: thumbnail,
-    total_time_tier: timeTier,
-    user_ratings: authorRatings,
-  } = recipe;
+const ItemList: React.FC<ItemListProps> = ({ recipe, handlePreview }) => {
+  const { uploadNewRecipe } = useContext(StorageContext);
+  const { updateFavourites } = useContext(FavourtiesContext);
 
-  const { components } = sections[0];
-  const { count_negative: negativeRatings, count_positive: positiveRatings } =
-    authorRatings;
+  const { description, name, thumbnail_url: thumbnail } = recipe;
 
-  const totalRatings = negativeRatings + positiveRatings;
+  const handleDelete = () => {
+    updateFavourites(recipe);
+  };
+
+  const handleAddToStorage = () => {
+    uploadNewRecipe(recipe);
+  };
 
   return (
-    <div className="item-list">
-      <div className="photo-container">
-        <img src={thumbnail} alt="photo" className="photo" />
-      </div>
-      <div className="details">
-        <div className="title">
-          <h3 className="name">{name}</h3>
-          <p>{timeTier.display_tier}</p>
-        </div>
-        <h4 className="description">{description}</h4>
-        <div className="ingredients">
-          {components.map((item) => (
-            <p key={item.id}>&bull; {item.raw_text}</p>
-          ))}
-        </div>
-        <button className="btn">START COOKING &rarr;</button>
-      </div>
-      <div className="author">
-        <h4 className="name">{credits[0].name}</h4>
-        <p>Ratings: ({totalRatings})</p>
-        <div className="reviews">
-          <div>
-            <ThumbsUpIcon />
-            <h5>{positiveRatings}</h5>
-          </div>
-          <div>
-            <ThumbsDownIcon />
-            <h5>{negativeRatings}</h5>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Card
+      sx={{
+        display: 'flex',
+        flex: '1 1 auto',
+        flexDirection: 'column',
+        maxWidth: '32rem',
+      }}
+    >
+      <CardActionArea onClick={handlePreview} id={recipe.id}>
+        <CardHeader title={name} />
+        <CardMedia component="img" height="200" image={thumbnail} alt={name} />
+        <CardContent sx={{ flex: '1 1 auto' }}>
+          <Typography variant="body1">{description}</Typography>
+        </CardContent>
+      </CardActionArea>
+      <CardActions sx={{ alignSelf: 'flex-end' }}>
+        <IconButton onClick={handleDelete}>
+          <DeleteIcon />
+        </IconButton>
+        <IconButton onClick={handleAddToStorage}>
+          <LibraryAddIcon />
+        </IconButton>
+      </CardActions>
+    </Card>
   );
 };
 

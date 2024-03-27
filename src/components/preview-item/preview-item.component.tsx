@@ -1,19 +1,19 @@
-import { useState, useRef, useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
-import ReactPlayer from 'react-player';
 import { FavourtiesContext } from 'context/favourites.context';
 import { StorageContext } from 'context/storage.context';
 
+import ReactPlayer from 'react-player';
+
 import { RecipeItem, Component, Instruction } from 'utils/api/api.types';
 
-import { Snackbar, Box, IconButton, Container, Tooltip } from '@mui/material';
-
-import CloseIcon from '@mui/icons-material/Close';
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 
 import { ReactComponent as CustomCloseIcon } from 'assets/icons/SVG/cross.svg';
-import { ReactComponent as HeartIconOutlined } from 'assets/icons/SVG/heart-outlined.svg';
 import { ReactComponent as HeartIcon } from 'assets/icons/SVG/heart.svg';
+import { ReactComponent as HeartIconOutlined } from 'assets/icons/SVG/heart-outlined.svg';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 
 import './preview-item.styles.scss';
 
@@ -29,34 +29,22 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
   const closeIconRef = useRef<null | SVGAElement>(null);
   const [addedToFavorites, setAddedToFavorites] = useState<RecipeItem>();
 
-  const { displayMessage, setDisplayMessage } = useContext(StorageContext);
   const { updateFavourites, isItemFavourite, favouriteRecipes } =
     useContext(FavourtiesContext);
   const { uploadNewRecipe } = useContext(StorageContext);
+  const isMaxTabPortSize = useMediaQuery('(max-width: 900px)');
 
   const {
-    approved_at: approvedAt,
     description,
     instructions,
     name,
     original_video_url: originalVideoUrl,
     sections,
     thumbnail_url: thumbnail,
-    updated_at: updatedAt,
     video_url: videoUrl,
   } = recipe;
 
   const { components } = sections[0];
-
-  type ExitPreview = React.MouseEvent<HTMLDivElement | SVGAElement, MouseEvent>;
-  const exitPreview = (event: ExitPreview) => {
-    if (
-      event.target === event.currentTarget ||
-      closeIconRef.current?.contains(event.target as Node)
-    ) {
-      setTargetRecipe(undefined);
-    }
-  };
 
   const handleAddToFavourites = async () => {
     updateFavourites(recipe);
@@ -71,48 +59,58 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
     uploadNewRecipe(recipe);
   };
 
-  const handleCloseMessage = (
-    event: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
-    if (reason === 'clickaway') {
-      return;
+  type ExitPreview = React.MouseEvent<HTMLDivElement, MouseEvent>;
+
+  const exitPreview = (event: ExitPreview) => {
+    if (event.target === event.currentTarget) {
+      setTargetRecipe(undefined);
     }
-    setDisplayMessage(undefined);
   };
 
-  const messageAction = (
-    <IconButton
-      aria-label="close"
-      color="inherit"
-      onClick={handleCloseMessage}
-      size="small"
-    >
-      <CloseIcon fontSize="small" />
-    </IconButton>
-  );
-
+  const closePreview = () => {
+    setTargetRecipe(undefined);
+  };
   return (
     <div className="overlay" onClick={exitPreview}>
-      <CustomCloseIcon
-        className="icon-close"
-        ref={closeIconRef}
-        onClick={exitPreview}
-      />
+      {!isMaxTabPortSize && (
+        <CustomCloseIcon
+          className="icon-close"
+          ref={closeIconRef}
+          onClick={closePreview}
+        />
+      )}
 
       <div className="preview">
         <div className="options">
-          {addedToFavorites ? (
-            <Tooltip title='Remove from Favourites'>
+          {isMaxTabPortSize ? (
+            <IconButton
+              onClick={closePreview}
+              sx={{
+                padding: 0,
+                justifyContent: 'flex-start',
+                marginLeft: '0',
+              }}
+            >
+              <ArrowBackIcon fontSize="large" sx={{ marginLeft: 0 }} />
+            </IconButton>
+          ) : (
+            <div></div>
+          )}
+          <div style={{ flex: '1 1 auto' }}></div>
 
-              <HeartIcon onClick={handleAddToFavourites} className="icon-heart" />
+          {addedToFavorites ? (
+            <Tooltip title="Remove from Favourites">
+              <HeartIcon
+                onClick={handleAddToFavourites}
+                className="icon-heart"
+              />
             </Tooltip>
           ) : (
-            <Tooltip title='Add to Favourites'>
-            <HeartIconOutlined
-              onClick={handleAddToFavourites}
-              className="icon-heart"
-            />
+            <Tooltip title="Add to Favourites">
+              <HeartIconOutlined
+                onClick={handleAddToFavourites}
+                className="icon-heart"
+              />
             </Tooltip>
           )}
           <Tooltip title="Add to Storage">
@@ -121,19 +119,6 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
             </IconButton>
           </Tooltip>
         </div>
-
-        {displayMessage && (
-          <Box sx={{ width: 500, bgcolor: 'red' }}>
-            <Snackbar
-              action={messageAction}
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-              autoHideDuration={4000}
-              message={(displayMessage as Error).message}
-              onClose={handleCloseMessage}
-              open={true}
-            />
-          </Box>
-        )}
 
         <h2 className="title">{name}</h2>
         <h4 className="description">{description}</h4>
@@ -161,6 +146,8 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
               controls
               url={originalVideoUrl}
               volume={0.5}
+              width={'100%'}
+              height={'100%'}
             />
           </div>
         )}

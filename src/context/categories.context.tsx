@@ -6,10 +6,8 @@ import {
   useState,
 } from 'react';
 
-import {
-  // addCollectionAndDocumentsAsBatch,
-  getCategoriesDocument,
-} from 'utils/firebase/db';
+import { getCategoriesDocument } from 'utils/firebase/db';
+
 import { Recipes } from 'utils/api/api.types';
 
 type CategoriesContextType = {

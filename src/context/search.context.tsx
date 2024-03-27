@@ -38,9 +38,9 @@ export const SearchContext = createContext<SearchContextProps>({
 });
 
 export const SearchProvider = ({ children }: PropsWithChildren) => {
+  let searchOptions: SearchOptions = {};
   const [isLoading, setIsLoading] = useState(false);
   const [loadMoreItems, setLoadMoreItems] = useState<boolean>(false);
-  let searchOptions: SearchOptions = {};
   const [previousSearchOptions, setPreviousSearchOptions] =
     useState<SearchOptions>(searchOptions);
   const [searchedItems, setSearchedItems] = useState<Recipes>();
@@ -50,7 +50,6 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     // Search
     if (searchTag) {
-      // setIsLoading(true);
       const setRecipes = async () => {
         searchOptions.nameOrIngredients = searchTag;
 

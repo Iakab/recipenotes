@@ -3,8 +3,9 @@
 @import 'abstracts/mixins';
 
 .auth {
-  // margin: 0 3rem;
-  // box-shadow: 0 1rem 2rem rgba($black, 0.4);
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 
   .header {
     height: 13rem;
@@ -20,6 +21,10 @@
     flex-direction: column;
     justify-content: center;
 
+    @include respond(phone) {
+      height: 10rem;
+    }
+
     .heading-primary {
       font-size: 5.3rem;
       font-weight: 800;
@@ -32,105 +37,103 @@
       display: block;
 
       animation: moveInRight 1s ease-out;
+
+      @include respond(tab-port) {
+        font-size: 4rem;
+      }
+      @include respond(phone) {
+        font-size: 3rem;
+        margin-left: -3rem;
+      }
     }
 
     .heading-secondary {
       font-size: 2.3rem;
       letter-spacing: 0.5rem;
       margin-right: -15rem;
-  
+
       opacity: 1;
       animation: moveInLeft 1s ease-out;
       animation-delay: 0.5s;
       animation-fill-mode: backwards;
+
+      @include respond(tab-port) {
+        font-size: 1.8rem;
+      }
+
+      @include respond(phone) {
+        font-size: 1.3rem;
+        margin-right: -3rem;
+      }
     }
   }
 
   .body {
-    height: 87vh;
+    flex: 1 1 auto;
     background-image: url(../../assets/img/auth.compressed-90.png);
     background-size: cover;
     background-position: top;
     position: relative;
 
-    .main {
-      height: 100%;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+
+    @include respond(phone) {
+      flex-direction: column;
+      justify-content: space-between;
+
+      max-width: 100vw;
+    }
+
+    .app-description {
+      font-size: 2.5rem;
+      color: $blue-grey-3;
+      flex: 0 1 auto;
+      margin-left: 5rem;
+      padding: 2rem;
+      width: 50%;
+
       display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
 
-      .app-description {
-        font-size: 2.5rem;
-        color: $blue-grey-3;
-        flex: 0 1 auto;
-        margin-left: 5rem;
-        padding: 2rem;
-        width: 50%;
-        height: 100%;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-
-        & > * {
-          margin-bottom: 2rem;
-          background-image: linear-gradient(to right, #fae5d3, #aeb6bf);
-          opacity: 0.9;
-          padding: .5rem;
-        }
+      @include respond(tab-port) {
+        font-size: 1.8rem;
+        width: 35%;
+        margin-left: 2.5rem;
+      }
+      @include respond(phone) {
+        display: none;
+        height: 0;
       }
 
-      .form-container {
-        flex: 0 1 auto;
-        width: 50%;
-        height: 100%;
-        background-color: rgba($light-grey-1, 0.7);
-        clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      & > * {
+        margin-bottom: 2rem;
+        background-image: linear-gradient(to right, #fae5d3, #aeb6bf);
+        opacity: 0.9;
+        padding: 0.5rem;
       }
     }
-    .body-secondary {
-      height: 100%;
-      width: 100%;
 
-      background-color: rgba($white, 0.4);
-      position: relative;
+    .form-container {
+      flex: 1 1 auto;
+      width: 50%;
 
-      .form {
-        font-size: 1.6rem;
-        width: 40rem;
-        height: 25rem;
+      background-color: rgba($light-grey-1, 0.7);
+      clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
 
-        position: absolute;
-        top: 10rem;
-        right: 45rem;
-        padding: 3rem 4rem;
-        border: 5px groove $blue-grey-2;
-        box-shadow: 0 0.5rem 1.5rem rgba($black, 0.5);
-        background-color: $light-grey-1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-        & > :first-child {
-          margin-bottom: 2rem;
-        }
+      @include respond(phone) {
+        width: 100%;
+        height: 100%;
 
-        .input {
-          font-size: inherit;
-          font-family: inherit;
-          font-weight: 600;
-          padding: 2px;
-          display: block;
-          width: 22rem;
-        }
-
-        .btn {
-          font-size: 1.5rem;
-          font-weight: inherit;
-          font-family: inherit;
-          padding: 2px;
-          margin-top: 1.5rem;
-        }
+        order: -1;
+        clip-path: none;
       }
     }
   }

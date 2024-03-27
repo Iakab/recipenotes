@@ -1,9 +1,9 @@
-@import '../../abstracts/variables';
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
 
 .menu {
   width: 100%;
   height: 5rem;
-  font-size: 1.4rem;
   padding: 1rem;
   background-color: $grey-collection-4;
 
@@ -11,6 +11,10 @@
   justify-content: space-around;
   align-items: center;
   z-index: 1;
+
+  @include respond(phone) {
+    padding: 0;
+  }
 
   .btn-menu {
     flex: 1 1 auto;
@@ -23,19 +27,46 @@
     background-color: transparent;
     cursor: pointer;
 
+    @include respond(phone) {
+      font-size: 1.2rem;
+    }
+
     &:hover {
       background-color: $grey-collection-3;
     }
   }
-  .dropDown {
+  .dropDown-item {
     font-size: 1.6rem;
+    min-width: 20rem;
     letter-spacing: 0.5px;
     line-height: 3rem;
-    width: 18vw;
     padding: 0.5rem 2rem;
     z-index: 100;
     list-style: none;
-    background-color: $grey-collection-3;
+
+    @include respond(tab-land) {
+      min-width: 17.5rem;
+      font-size: 1.5rem;
+      padding: 0 1rem;
+      margin-bottom: 1.5rem;
+      line-height: 2.5rem;
+    }
+
+    @include respond(tab-port) {
+      min-width: 15rem;
+      font-size: 1.5rem;
+      padding: 0 1rem;
+      margin-bottom: 1.5rem;
+      line-height: 2rem;
+    }
+
+    @include respond(phone) {
+      min-width: fit-content;
+      font-size: 1.5rem;
+      padding: 0 1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5rem;
+    }
 
     &:hover {
       text-decoration: underline;
@@ -43,4 +74,9 @@
       cursor: pointer;
     }
   }
+}
+
+.szh-menu {
+  background-color: $grey-collection-3;
+  width: fit-content;
 }

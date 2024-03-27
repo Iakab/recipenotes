@@ -11,7 +11,10 @@
   top: 4rem;
   right: 0;
 
-  background-color: $grey-collection-2;
+  background-color: $grey-collection-4;
+  border: 2px solid $grey-collection-2;
+  border-radius: 2px;
+
   animation: moveInDown 0.2s ease-out;
   z-index: 2;
 
@@ -23,14 +26,14 @@
   .list-user {
     list-style-type: none;
     & > * {
+      background-color: $grey-collection-3;
+
       &:not(:first-child) {
         margin-top: 1rem;
       }
 
-      background-color: $grey-collection-3;
-
       &:hover {
-        background-color: $grey-collection-4;
+        background-color: $grey-collection-2;
       }
     }
 

@@ -32,7 +32,6 @@ const Storage = () => {
         console.error(error);
       }
     } else {
-      console.log(selectedRecipesId);
       try {
         if (selectedRecipesId) {
           removeItemFromStorage('', selectedRecipesId);
@@ -99,8 +98,8 @@ const Storage = () => {
   };
 
   const handleNavigateToUpload = () => {
-    navigate('/upload')
-  }
+    navigate('/upload');
+  };
 
   return (
     <div className="storage">

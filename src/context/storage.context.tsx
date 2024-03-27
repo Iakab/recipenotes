@@ -36,6 +36,7 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
   const [displayMessage, setDisplayMessage] = useState<Error>();
   const [isLoading, setIsLoading] = useState(true);
   const [storedRecipes, setStoredRecipes] = useState<Recipes>();
+
   const { currentUser, userIsLoading } = useUserContext();
 
   const getData = async () => {

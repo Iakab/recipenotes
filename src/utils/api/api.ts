@@ -108,6 +108,7 @@ export const getSuggestions = async (searchTag: string) => {
     },
   };
   try {
+    console.log('api call initiated');
     const response = await fetch(url, options);
     const data = await response.json();
 

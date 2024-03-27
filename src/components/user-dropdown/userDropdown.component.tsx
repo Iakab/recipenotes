@@ -1,5 +1,7 @@
 import { signOutUser } from 'utils/firebase/auth';
+
 import { useUserContext } from 'context/user.context';
+
 import './userDropdown.styles.scss';
 
 const UserDropdown = () => {

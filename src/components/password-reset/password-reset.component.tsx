@@ -49,8 +49,9 @@ const PasswordReset: React.FC<SetPasswordReset> = ({ setPasswordReset }) => {
         </button>
         <h3>Request password reset</h3>
 
-        <h4>Your email:</h4>
+        <label htmlFor="passwordReset">Your email:</label>
         <input
+          id="passwordReset"
           {...register('email', { required: true })}
           className="input"
           type="email"

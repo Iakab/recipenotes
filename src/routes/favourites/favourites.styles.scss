@@ -1,11 +1,14 @@
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
 .favourites {
   flex: 1 1 auto;
-  margin-top: 3rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
-  // align-items: center;
-
-  gap: 2rem;
+  background-color: $grey-collection-6;
+  margin-bottom: 3rem;
+  position: relative;
+}
+.favourites:has(.overlay) {
+  height: 110vh;
+  overflow: hidden;
+  margin-bottom: 0;
 }

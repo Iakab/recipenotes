@@ -90,14 +90,14 @@ const Profile = () => {
                   <h3 className="username">{currentUser?.displayName}</h3>
                 </div>
 
-                <div className="bio">
+                <>
                   <label className="label">Bio:</label>
                   {currentUser?.userBio && (
                     <div className="content">
                       <p>{currentUser?.userBio}</p>
                     </div>
                   )}
-                </div>
+                </>
               </div>
               <span
                 onClick={() => resetPassword(currentUser?.email)}

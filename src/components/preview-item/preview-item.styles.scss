@@ -1,4 +1,6 @@
 @import 'abstracts/variables';
+@import 'abstracts/mixins';
+
 .overlay {
   color: black;
   width: 100%;
@@ -19,12 +21,9 @@
     width: 6rem;
     height: 6rem;
     padding: 0.8rem;
-    // margin: 2rem;
     position: absolute;
     top: 2rem;
     right: 2rem;
-
-
 
     fill: $grey-collection-2;
     border-radius: 100%;
@@ -41,7 +40,7 @@
     font-size: 1.6rem;
     width: 78%;
     height: 100vh;
-    margin-top: 3.5rem;    
+    margin-top: 3.5rem;
     align-self: center;
     margin-left: auto;
     margin-right: auto;
@@ -58,25 +57,27 @@
     gap: 2rem;
     transition: all 0.2s;
 
+    @include respond(tab-port) {
+      width: 100%;
+      margin: 0;
+      margin-top: 0;
+      height: 100%;
+    }
+
     .options {
       width: 100%;
-      margin-right: -5rem;
       height: 3rem;
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
       align-items: center;
       gap: 1rem;
       cursor: pointer;
-
 
       .icon-heart {
         width: 3rem;
         height: 3rem;
         fill: red;
       }
-    }
-
-    .title {
     }
 
     .description {
@@ -88,27 +89,44 @@
       display: flex;
       justify-content: space-around;
 
-      .ingredients {
+      @include respond(phone) {
+        flex-direction: column;
       }
 
       .image {
         width: 30rem;
         height: 30rem;
+
+        @include respond(phone) {
+          width: 50vw;
+          height: 50vw;
+          order: -1;
+          align-self: center;
+          margin-bottom: 2rem;
+        }
       }
     }
 
     .instructions {
       display: flex;
       flex-direction: column;
+      margin-top: 2rem;
     }
 
     .player-container {
       display: block;
+      width: 80rem;
+      height: 45rem;
 
-      .videoPlayer {
-        display: block;
-
-        flex: 1 1 auto;
+      @include respond(big-desktop) {
+        width: 50vw;
+        height: 55rem;
+      }
+      @include respond(tab-land) {
+        width: 65vw;
+      }
+      @include respond(tab-port) {
+        width: 85vw;
       }
     }
   }

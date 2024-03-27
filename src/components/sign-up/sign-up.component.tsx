@@ -1,4 +1,3 @@
-import { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { AuthError, AuthErrorCodes } from 'firebase/auth';

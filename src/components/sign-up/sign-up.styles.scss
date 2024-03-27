@@ -3,13 +3,20 @@
 @import 'abstracts/mixins';
 
 .sign-up {
-  margin-left: 10rem;
   flex: 0 1 auto;
+  margin: 2rem 0 2rem 10rem;
+
+  animation: moveInLeft 1s cubic-bezier(0.71, -0.07, 0.37, 0.73);
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  animation: moveInLeft 1s cubic-bezier(0.71, -0.07, 0.37, 0.73);
+
+  @include respond(phone) {
+    margin: 0;
+    margin-top: -5rem;
+  }
 
   .form-title {
     font-size: 2.5rem;
@@ -19,52 +26,7 @@
   }
 
   .form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    .field {
-      margin-bottom: 1rem;
-
-      .input {
-        @include input-field;
-
-        &:focus {
-          transform: scale(1.05);
-          border: solid 3px $dark-grey-1;
-          outline: none;
-        }
-
-        &:focus:invalid {
-          border: solid 3px #d18787;
-        }
-
-        &::-webkit-input-placeholder {
-          color: $blue-grey-1;
-        }
-      }
-
-      .label {
-        font-size: 1.5rem;
-
-        font-weight: 600;
-        color: $blue-grey-1;
-        margin-left: 1rem;
-        display: block;
-        opacity: 1;
-        visibility: visible;
-        transition: all 0.3s;
-        transform: translateY(0);
-        order: -1;
-      }
-
-      .input:placeholder-shown + .label {
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(3rem);
-      }
-    }
+    @include form;
   }
 
   .btn {

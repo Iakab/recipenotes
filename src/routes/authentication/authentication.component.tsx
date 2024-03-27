@@ -31,25 +31,24 @@ const Authentication = () => {
         </h1>
       </div>
       <div className="body">
-        <div className="main">
-          <div className="app-description">
-            <h3>&#8250; Access to over 365,000 recipes!</h3>
-            <h3>&#8250; Share your own recipes!</h3>
-            <h3>&#8250; Save and customize your favourite recipes!</h3>
-          </div>
-
-          <div className="form-container">
-            <div className="background" />
-            {displaySignIn ? (
-              <SignIn
-                setDisplaySignIn={setDisplaySignIn}
-                setPasswordReset={setPasswordReset}
-              />
-            ) : (
-              <SignUp setDisplaySignIn={setDisplaySignIn} />
-            )}
-          </div>
+        <div className="app-description">
+          <h3>&#8250; Access to over 365,000 recipes!</h3>
+          <h3>&#8250; Share your own recipes!</h3>
+          <h3>&#8250; Save and customize your favourite recipes!</h3>
         </div>
+
+        <div className="form-container">
+          <div className="background" />
+          {displaySignIn ? (
+            <SignIn
+              setDisplaySignIn={setDisplaySignIn}
+              setPasswordReset={setPasswordReset}
+            />
+          ) : (
+            <SignUp setDisplaySignIn={setDisplaySignIn} />
+          )}
+        </div>
+
         {passwordReset && <PasswordReset setPasswordReset={setPasswordReset} />}
       </div>
       <Outlet />
