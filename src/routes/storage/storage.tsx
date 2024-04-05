@@ -66,18 +66,18 @@ const Storage = () => {
   };
   type Rows = Row[];
 
-  // TODO: Remove to string after recreating the categories
   const rows: Rows = useMemo(() => {
     if (storedRecipes) {
       return storedRecipes.map((item) => {
         const {
           credits,
+          id,
           lastEdit,
           name,
           tags,
           thumbnail_url: thumbnailUrl,
         } = item;
-        const id = item.id.toString();
+
         const credit = credits[0].name;
         const tagNames = tags.slice(0, 3).map((tag) => ` ${tag.display_name}`);
         return {

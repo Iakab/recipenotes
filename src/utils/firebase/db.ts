@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  orderBy,
   query,
   setDoc,
   updateDoc,
@@ -28,32 +29,33 @@ export const db = getFirestore(app);
 //  Add user's credentials to db or return the snapshot
 export const createUserDocumentFormAuth = async (
   userAuth: User,
-  additionalInformation = {},
+  additionalInformation?: { displayName: string },
 ): Promise<void | DocumentSnapshot<DocumentData>> => {
   const userDocRef = doc(db, 'users', userAuth.uid);
   const userSnapshot = await getDoc(userDocRef);
 
   if (!userSnapshot.exists()) {
-    const { displayName, email } = userAuth;
+    const { email } = userAuth;
+    const { displayName } = additionalInformation || userAuth;
+
     const userUid = userAuth.uid;
 
     const userBio = '';
 
     //  get photo from Google or set the default icon
     const userPhotoUrl =
-      userAuth.photoURL ??
+      userAuth.photoURL ||
       (await getDownloadURL(ref(storage, 'images/defaultUserIcon.png')));
 
     try {
       await setDoc(userDocRef, {
-        ...additionalInformation,
         displayName,
         email,
         userBio,
         userPhotoUrl,
         userUid,
       });
-      await createUserDocumentFormAuth(userAuth);
+      return await createUserDocumentFormAuth(userAuth, additionalInformation);
     } catch (e) {
       console.error('Error adding document: ', e);
     }
@@ -105,16 +107,26 @@ export const addCollectionAndDocumentsAsBatch = async (
 };
 
 // GET All DOCS FROM COLLECTION
-export const getCategoriesDocument = async (collectionName: string) =>
-  getDocs(collection(db, collectionName));
+export const getCategoriesDocument = async () => {
+  const categoriesRef = collection(db, 'categories');
+  const queryResults = query(categoriesRef, orderBy('data'));
+
+  return getDocs(queryResults);
+};
+// getDocs(collection(db, collectionName));
 
 // Get DOC
-export const getRecipesDocument = (
+export const getRecipesDocument = async (
   collectionName: string,
   documentName: string,
 ) => {
   const docRef = doc(db, collectionName, documentName);
-  return getDoc(docRef);
+  const recipesSnapshot = await getDoc(docRef);
+  
+  if (recipesSnapshot.exists()) {
+    return recipesSnapshot;
+  }
+  return undefined;
 };
 
 // UPDATE OR CREATE

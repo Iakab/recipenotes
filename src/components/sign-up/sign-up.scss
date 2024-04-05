@@ -1,0 +1,62 @@
+@import 'abstracts/animations';
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
+.sign-up {
+  flex: 0 1 auto;
+  margin: 2rem 0 2rem 10rem;
+
+  animation: moveInLeft 1s cubic-bezier(0.71, -0.07, 0.37, 0.73);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  @include respond(phone) {
+    margin: 0;
+    margin-top: -5rem;
+  }
+
+  .form-title {
+    font-size: 2.5rem;
+    color: $blue-grey-2;
+    align-self: flex-start;
+    cursor: default;
+  }
+
+  .form {
+    @include form;
+  }
+
+  .btn {
+    @include btn-submit;
+  }
+
+  .path {
+    margin: 3rem auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .btn-text {
+      font-size: 1.3rem;
+      font-weight: 400;
+      padding: 0.3rem;
+
+      border: none;
+      border-bottom: 1px solid $black;
+      background-color: transparent;
+      cursor: pointer;
+
+      &:hover {
+        transform: scaleX(1.1);
+      }
+    }
+  }
+  .span {
+    font-size: 1.3rem;
+    font-weight: 400;
+    cursor: default;
+  }
+}

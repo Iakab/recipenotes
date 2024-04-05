@@ -27,7 +27,7 @@ googleProvider.setCustomParameters({
 });
 
 //  Authentication(for Sign-up)
-export const createAuthUserWithEmailAndPassword = async (
+export const createAuthUserWithEmailAndPassword = (
   email: string,
   password: string,
 ) =>
@@ -59,7 +59,7 @@ export const resetPassword = (email: string) => {
       alert('Password reset email sent!');
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -90,5 +90,6 @@ export const deleteAccount = (password: string) => {
 };
 
 //  Auth listener
-export const onAuthStateChangedListener = (callback: NextOrObserver<User>) =>
+export const onAuthStateChangedListener = (callback: NextOrObserver<User>) => {
   onAuthStateChanged(auth, callback);
+};

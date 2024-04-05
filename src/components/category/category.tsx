@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { RecipeItem } from 'utils/api/api.types';
 
 import ItemsSlider from 'components/items-slider/items-slider';
-import PreviewItem from 'components/preview-item/preview-item.component';
+import PreviewItem from 'components/preview-item/preview-item';
 
 import { CategoryType } from 'context/categories.context';
 
@@ -70,10 +70,7 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
   ) => {
     const { id } = event.currentTarget;
 
-    // TODO: Remove toString after rebuilding the categories from firestore
-    setTargetRecipe(
-      recipes?.find((item: RecipeItem) => item.id.toString() === id),
-    );
+    setTargetRecipe(recipes?.find((item: RecipeItem) => item.id === id));
   };
 
   const item = useMemo(

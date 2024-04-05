@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import Item from 'components/item/item.component';
-import PreviewItem from 'components/preview-item/preview-item.component';
+import Item from 'components/item/item';
+import PreviewItem from 'components/preview-item/preview-item';
 
 import { SearchContext } from 'context/search.context';
 
