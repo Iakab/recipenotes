@@ -60,15 +60,15 @@ export type SearchOptions = {
   countryShorthand?: string;
   details?: string;
   nameOrIngredients?: string;
-  numberOfItems?: number;
   startingIndex?: number;
 };
+
+export const numberOfFetchedItems = 20;
 
 export const getRecipes = async (
   searchOptions: SearchOptions,
 ): Promise<Recipes> => {
-  const { details, nameOrIngredients, numberOfItems, startingIndex } =
-    searchOptions;
+  const { details, nameOrIngredients, startingIndex } = searchOptions;
 
   const options = {
     method: 'GET',
@@ -76,9 +76,9 @@ export const getRecipes = async (
     params: {
       from: startingIndex || 0,
       q: nameOrIngredients,
-      size: numberOfItems || 2,
+      size: numberOfFetchedItems,
       tags: details,
-      sort: 'approved_at:asc',
+      sort: '',
     },
     headers: {
       'X-RapidAPI-Key': 'f733879bf8msh039fecc6e50e11dp19ea08jsned9b4f14fcba',
@@ -89,10 +89,8 @@ export const getRecipes = async (
   try {
     const response = await axios.request(options);
     const unalteredRecipes = response.data.results;
-    console.log(unalteredRecipes);
-    const recipes = reduceRecipesSize(unalteredRecipes);
-    console.log(recipes);
-    return recipes;
+
+    return reduceRecipesSize(unalteredRecipes);
   } catch (error) {
     throw new Error((error as Error).message);
   }

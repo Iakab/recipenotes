@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 
-import { getRecipes, SearchOptions } from 'utils/api/api';
+import { getRecipes, SearchOptions, numberOfFetchedItems } from 'utils/api/api';
 
 import { Recipes } from 'utils/api/api.types';
 import { SelectedCategory } from 'components/home-menu/home-menu';
@@ -38,19 +38,18 @@ export const SearchContext = createContext<SearchContextProps>({
 });
 
 export const SearchProvider = ({ children }: PropsWithChildren) => {
+  let searchOptions: SearchOptions = {};
   const [isLoading, setIsLoading] = useState(false);
   const [loadMoreItems, setLoadMoreItems] = useState<boolean>(false);
-  let searchOptions: SearchOptions = {};
   const [previousSearchOptions, setPreviousSearchOptions] =
     useState<SearchOptions>(searchOptions);
   const [searchedItems, setSearchedItems] = useState<Recipes>();
   const [searchTag, setSearchTag] = useState<string>();
   const [selectedCategory, setSelectedCategory] = useState<SelectedCategory>();
 
+  // Search
   useEffect(() => {
-    // Search
     if (searchTag) {
-      // setIsLoading(true);
       const setRecipes = async () => {
         searchOptions.nameOrIngredients = searchTag;
 
@@ -88,16 +87,15 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
     }
   }, [selectedCategory]);
 
-  // TODO: Increment the index according to the number of fetched items;
   // Load more items
   useEffect(() => {
     if (loadMoreItems) {
-      // setIsLoading(true);
       const getData = async () => {
         searchOptions = previousSearchOptions;
 
         if (previousSearchOptions.startingIndex) {
-          searchOptions.startingIndex = previousSearchOptions.startingIndex + 2;
+          searchOptions.startingIndex =
+            previousSearchOptions.startingIndex + numberOfFetchedItems;
 
           const newItems = await getRecipes(searchOptions);
 

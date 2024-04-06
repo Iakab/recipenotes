@@ -27,7 +27,7 @@ googleProvider.setCustomParameters({
 });
 
 //  Authentication(for Sign-up)
-export const createAuthUserWithEmailAndPassword = async (
+export const createAuthUserWithEmailAndPassword = (
   email: string,
   password: string,
 ) =>
@@ -59,42 +59,37 @@ export const resetPassword = (email: string) => {
       alert('Password reset email sent!');
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
 //  Delete user
 export const deleteAccount = (password: string) => {
-  // TODO: Review currentUser and email types
+  const { currentUser } = auth;
+  const { email } = currentUser || {};
 
-    const { currentUser } = auth;
-    const { email } = currentUser || {};
-    
-    if (!currentUser || !email) return;
+  if (!currentUser || !email) return;
 
-    const userImageRef = ref(storage, `images/${currentUser.uid}`);
+  const userImageRef = ref(storage, `images/${currentUser.uid}`);
 
-    const userCredentials = EmailAuthProvider.credential(
-      email,
-      password,
-    );
+  const userCredentials = EmailAuthProvider.credential(email, password);
 
-    try {
-      reauthenticateWithCredential(currentUser, userCredentials).then(() => {
-        deleteDoc(doc(db, 'users', currentUser.uid));
-        deleteObject(userImageRef).catch((error) => {
-          console.log((error as Error).message);
-        });
-        deleteUser(currentUser).then(() => {
-          alert('Account successfully deleted');
-        });
+  try {
+    reauthenticateWithCredential(currentUser, userCredentials).then(() => {
+      deleteDoc(doc(db, 'users', currentUser.uid));
+      deleteObject(userImageRef).catch((error) => {
+        console.log((error as Error).message);
       });
-    } catch (error) {
-      console.log(error);
-    }
-  
+      deleteUser(currentUser).then(() => {
+        alert('Account successfully deleted');
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 //  Auth listener
-export const onAuthStateChangedListener = (callback: NextOrObserver<User>) =>
+export const onAuthStateChangedListener = (callback: NextOrObserver<User>) => {
   onAuthStateChanged(auth, callback);
+};

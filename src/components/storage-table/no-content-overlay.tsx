@@ -68,7 +68,7 @@ export default function CustomNoRowsOverlay() {
           </g>
         </g>
       </svg>
-      <Box sx={{ mt: 1 }}>No Recipes stored</Box>
+      <Box sx={{ mt: 1 }}>No Recipes saved</Box>
     </StyledGridOverlay>
   );
 }

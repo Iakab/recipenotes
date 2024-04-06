@@ -9,8 +9,8 @@ import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
 import './home-menu.scss';
 
 export type SelectedCategory = {
-  options: string;
   category: string;
+  options: string;
 };
 
 const HomeMenu = () => {
@@ -28,7 +28,7 @@ const HomeMenu = () => {
       >
         {ingredients.map((item, index) => (
           <MenuItem
-            className="dropDown"
+            className="dropDown-item"
             key={index}
             onClick={() =>
               handleSelect({ options: 'nameOrIngredients', category: item })
@@ -41,7 +41,7 @@ const HomeMenu = () => {
       <Menu menuButton={<MenuButton className="btn-menu">Occasion</MenuButton>}>
         {occasions.map((item, index) => (
           <MenuItem
-            className="dropDown"
+            className="dropDown-item"
             key={index}
             onClick={() => handleSelect({ options: 'tags', category: item })}
           >
@@ -52,7 +52,7 @@ const HomeMenu = () => {
       <Menu menuButton={<MenuButton className="btn-menu">Cuisines</MenuButton>}>
         {cuisines.map((item, index) => (
           <MenuItem
-            className="dropDown"
+            className="dropDown-item"
             key={index}
             onClick={() => handleSelect({ options: 'tags', category: item })}
           >
@@ -63,7 +63,7 @@ const HomeMenu = () => {
       <Menu menuButton={<MenuButton className="btn-menu">Meals</MenuButton>}>
         {meals.map((item, index) => (
           <MenuItem
-            className="dropDown"
+            className="dropDown-item"
             key={index}
             onClick={() => handleSelect({ options: 'tags', category: item })}
           >
@@ -72,12 +72,12 @@ const HomeMenu = () => {
         ))}
       </Menu>
       <Menu
-        className="menu-dropdown"
+        className="menu-dropdown-item"
         menuButton={<MenuButton className="btn-menu">Time</MenuButton>}
       >
         {time.map((item, index) => (
           <MenuItem
-            className="dropDown"
+            className="dropDown-item"
             key={index}
             onClick={() => handleSelect({ options: 'tags', category: item })}
           >

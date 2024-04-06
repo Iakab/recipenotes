@@ -1,3 +1,5 @@
+import notebook from 'assets/img/notebook.png';
+
 export const cuisines = [
   'Mexican',
   'Italian',
@@ -52,3 +54,40 @@ export const occasionsObj = [
 ];
 
 export const time = ['Under 15 minutes', 'Under 30 minutes', 'Under 1 hour'];
+
+export type Instruction = {
+  btnLabel?: string;
+  guidelines: string[];
+  image?: string;
+  title: string;
+  action: string;
+};
+
+export const instructions: Instruction[] = [
+  {
+    action: 'handleNavigateToTop',
+    btnLabel: 'Discover new recipes',
+    guidelines: [
+      'Search through a large variety of recipes and find an appealing recipe',
+      'Add it to wishlist',
+      'Prepare the recipe',
+      'Customize it to your taste and store it in your storage',
+    ],
+    title: 'ADD TO STORAGE',
+  },
+  {
+    action: 'handleNavigateToUpload',
+    btnLabel: 'Upload Recipe',
+    guidelines: [
+      'Follow the steps from the upload page',
+      'Save any recipe that you wish to store in your storage',
+    ],
+    title: 'UPLOAD NEW RECIPES',
+  },
+  {
+    action: 'handleNavigateToStorage',
+    guidelines: ['Visit all your saved and upload recipes'],
+    image: notebook,
+    title: 'VISIT STORAGE',
+  },
+];

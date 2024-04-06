@@ -22,7 +22,6 @@
     }
     .body {
       width: 100%;
-      padding: 2rem;
       display: flex;
       flex-wrap: wrap;
       gap: 1.5rem;
@@ -30,7 +29,7 @@
     }
 
     .btn {
-      color: $white-grey-1;
+      color: $blue-grey-1;
       font-size: 1.6rem;
       font-weight: 600;
       margin-bottom: 4rem;

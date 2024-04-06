@@ -2,14 +2,14 @@ import {
   createContext,
   PropsWithChildren,
   useContext,
-  useState,
   useEffect,
+  useState,
 } from 'react';
 
 import {
+  getRecipesDocument,
   removeRecipeFromDoc,
   updateCollection,
-  getRecipesDocument,
 } from 'utils/firebase/db';
 
 import { DocumentData, DocumentSnapshot } from 'firebase/firestore';
@@ -46,9 +46,11 @@ export const FavouritesProvider = ({ children }: PropsWithChildren) => {
     );
 
   const setDataFromSnapshot = (
-    favouritesSnapshot: DocumentSnapshot<DocumentData, DocumentData>,
+    favouritesSnapshot:
+      | DocumentSnapshot<DocumentData, DocumentData>
+      | undefined,
   ) => {
-    const data = favouritesSnapshot.data();
+    const data = favouritesSnapshot?.data();
 
     if (data) {
       setFavouriteRecipes(Object.values(data));
@@ -57,7 +59,7 @@ export const FavouritesProvider = ({ children }: PropsWithChildren) => {
 
   // DEFAULT
   useEffect(() => {
-    if (!favouriteRecipes && !userIsLoading) {
+    if (!favouriteRecipes && !userIsLoading && currentUser) {
       const getFavouritesDoc = async () => {
         const favouritesSnapshot = await getRecipesDocument(
           collectionName,

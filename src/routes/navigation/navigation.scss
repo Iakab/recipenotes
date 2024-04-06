@@ -1,0 +1,13 @@
+@import '../../abstracts/variables';
+
+.loading {
+  margin: 45vh 47vw;
+}
+
+.page-content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}

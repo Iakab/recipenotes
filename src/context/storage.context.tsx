@@ -36,12 +36,13 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
   const [displayMessage, setDisplayMessage] = useState<Error>();
   const [isLoading, setIsLoading] = useState(true);
   const [storedRecipes, setStoredRecipes] = useState<Recipes>();
+
   const { currentUser, userIsLoading } = useUserContext();
 
   const getData = async () => {
     const data = (
       await getRecipesDocument('storage', currentUser?.userUid)
-    ).data()?.data;
+    )?.data()?.data;
     if (data) {
       return JSON.parse(data);
     }
@@ -107,20 +108,19 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
     setIsLoading(false);
   };
 
-  // TODO: remove toString() after rebuilding the categories in firestore
   const removeItemFromStorage = async (
     recipeId?: string,
     selectedIds?: string[],
   ) => {
     if (recipeId) {
       const newRecipesCollection = storedRecipes?.filter(
-        (recipe: RecipeItem) => recipe.id.toString() !== recipeId,
+        (recipe: RecipeItem) => recipe.id !== recipeId,
       );
 
       uploadRecipes(newRecipesCollection);
     } else {
       const newRecipesCollection = storedRecipes?.filter(
-        (recipe: RecipeItem) => !selectedIds?.includes(recipe.id.toString()),
+        (recipe: RecipeItem) => !selectedIds?.includes(recipe.id),
       );
 
       uploadRecipes(newRecipesCollection);
