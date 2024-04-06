@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Instruction } from 'utils/constants';
@@ -47,6 +47,17 @@ const InstructionsCard: React.FC<InstructionsCardProps> = ({ details }) => {
     }
   }, [cardAction]);
 
+  const cardDescription = useMemo(
+    () =>
+      guidelines.map((guideline, index) => (
+        <Typography variant="body1" key={index}>
+          <ArrowRightIcon fontSize="small" sx={{ mb: '-.3rem' }} />
+          {guideline}
+        </Typography>
+      )),
+    [guidelines],
+  );
+
   return (
     <>
       {!image ? (
@@ -63,12 +74,7 @@ const InstructionsCard: React.FC<InstructionsCardProps> = ({ details }) => {
               {title}
             </Typography>
 
-            {guidelines.map((guideline, index) => (
-              <Typography variant="body1" key={index}>
-                <ArrowRightIcon fontSize="small" sx={{ mb: '-.3rem' }} />
-                {guideline}
-              </Typography>
-            ))}
+            {cardDescription}
           </CardContent>
           <CardActions>
             <Button onClick={() => setCardAction(action)}>{btnLabel}</Button>
@@ -88,12 +94,7 @@ const InstructionsCard: React.FC<InstructionsCardProps> = ({ details }) => {
             <CardContent>
               <Typography variant="h6">{title}</Typography>
 
-              {guidelines.map((guideline, index) => (
-                <Typography variant="body1" key={index}>
-                  <ArrowRightIcon fontSize="small" sx={{ mb: '-.3rem' }} />
-                  {guideline}
-                </Typography>
-              ))}
+              {cardDescription}
             </CardContent>
           </CardActionArea>
         </Card>
