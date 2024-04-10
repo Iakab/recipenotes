@@ -2,20 +2,14 @@ import {
   createContext,
   PropsWithChildren,
   useContext,
-  useState,
   useEffect,
+  useState,
 } from 'react';
 
 import {
-<<<<<<< Updated upstream
-  removeRecipeFromDoc,
-  updateCollection,
-  getRecipesDocument,
-=======
-  uploadRecipe,
   deleteRecipe,
   fetchSubcollection,
->>>>>>> Stashed changes
+  uploadRecipe,
 } from 'utils/firebase/db';
 
 import { RecipeItem, Recipes } from 'utils/api/api.types';
@@ -24,7 +18,7 @@ import { UserContext } from './user.context';
 
 export type FavourtiesContextType = {
   favouriteRecipes: Recipes | undefined;
-  isItemFavourite: (item: RecipeItem) => RecipeItem | undefined;
+  isItemFavourite: (item: RecipeItem) => boolean;
   setFavouriteRecipes: React.Dispatch<
     React.SetStateAction<Recipes | undefined>
   >;
@@ -33,7 +27,7 @@ export type FavourtiesContextType = {
 
 export const FavourtiesContext = createContext<FavourtiesContextType>({
   favouriteRecipes: undefined,
-  isItemFavourite: () => undefined,
+  isItemFavourite: () => false,
   setFavouriteRecipes: () => {},
   updateFavourites: async () => {},
 });
@@ -63,39 +57,16 @@ export const FavouritesProvider = ({ children }: PropsWithChildren) => {
     }
   }, [currentUser]);
 
-  const isItemFavourite = (item: RecipeItem) =>
-    favouriteRecipes?.find(
+  const isItemFavourite = (item: RecipeItem) => {
+    const isFavourite = favouriteRecipes?.find(
       (savedRecipe: RecipeItem) => savedRecipe.id === item.id,
     );
-
-<<<<<<< Updated upstream
-  const setDataFromSnapshot = (
-    favouritesSnapshot: DocumentSnapshot<DocumentData, DocumentData>,
-  ) => {
-    const data = favouritesSnapshot.data();
-
-    if (data) {
-      setFavouriteRecipes(Object.values(data));
+    if (isFavourite) {
+      return true;
     }
+    return false;
   };
 
-  // DEFAULT
-  useEffect(() => {
-    if (!favouriteRecipes && !userIsLoading) {
-      const getFavouritesDoc = async () => {
-        const favouritesSnapshot = await getRecipesDocument(
-          collectionName,
-          currentUser?.userUid,
-        );
-        setDataFromSnapshot(favouritesSnapshot);
-      };
-      getFavouritesDoc();
-    }
-  }, [currentUser]);
-
-  // ADD OR REMOVE
-=======
->>>>>>> Stashed changes
   const updateFavourites = async (item: RecipeItem) => {
     const itemIsAlreadyAdded = isItemFavourite(item);
 

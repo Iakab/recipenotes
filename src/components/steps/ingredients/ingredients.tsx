@@ -93,7 +93,7 @@ const Ingredients = () => {
         }}
         className="ingredients-step"
       >
-        <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        <form className="form-ingredient" onSubmit={handleSubmit(onSubmit)}>
           <TextField
             {...register('ingredient')}
             id="ingredient"

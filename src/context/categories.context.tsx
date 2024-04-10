@@ -7,16 +7,15 @@ import {
 } from 'react';
 
 import {
-  // addCollectionAndDocumentsAsBatch,
   getCategoriesDocument,
+  // addCollectionAndDocumentsAsBatch,
 } from 'utils/firebase/db';
+
 import { Recipes } from 'utils/api/api.types';
 
 type CategoriesContextType = {
   categories: CategoriesCollection | undefined;
-  setCategories: React.Dispatch<
-    React.SetStateAction<CategoriesCollection | undefined>
-  >;
+  // setNewCategories: React.Dispatch<React.SetStateAction<Recipes | undefined>>;
 };
 
 export type CategoryType = {
@@ -28,29 +27,31 @@ type CategoriesCollection = CategoryType[];
 
 export const CategoriesContext = createContext<CategoriesContextType>({
   categories: undefined,
-  setCategories: () => {},
+  // setNewCategories: () => {},
 });
 
 export const CategoriesProvider = ({ children }: PropsWithChildren<{}>) => {
   const [categories, setCategories] = useState<CategoriesCollection>();
 
   // FOR UPLOADING NEW CATEGORIES OF RECEPIES
-  // const categoriesJson = JSON.stringify(categories);
+  // const [newCategories, setNewCategories] = useState<Recipes>();
+
+  // const categoriesJson = JSON.stringify(newCategories);
 
   // useEffect(() => {
-  //   if(categories) {
-  //     console.log(categories)
-  //     addCollectionAndDocumentsAsBatch('categories', 'soup', categoriesJson)
+  //   if (newCategories) {
+  //     console.log(categories);
+  //     addCollectionAndDocumentsAsBatch('categories', 'Dinner', categoriesJson);
   //   }
-  // },[categories]);
+  // }, [newCategories]);
 
   useEffect(() => {
     if (!categories) {
       const fetchData = async () => {
-        const response = await getCategoriesDocument('categories');
-
+        const response = await getCategoriesDocument();
+        // console.log(response.docs);
         const categoriesCollection: CategoriesCollection = [];
-        response.forEach((category) => {
+        response.docs.forEach((category) => {
           const categoryId: string = category.id;
           categoriesCollection.push({
             categoryName: categoryId,
@@ -66,7 +67,7 @@ export const CategoriesProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const value = {
     categories,
-    setCategories,
+    // setNewCategories,
   };
 
   return (

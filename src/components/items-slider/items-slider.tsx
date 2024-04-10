@@ -1,20 +1,24 @@
-import './items-slider.scss';
+import { Typography } from '@mui/material';
+
 import { RecipeItem } from 'utils/api/api.types';
-// TODO: Set the type
+
+import './items-slider.scss';
 
 type ItemSliderProps = {
+  handlePreview: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   recipe: RecipeItem;
-  handlePreview: any;
 };
 
 const ItemsSlider: React.FC<ItemSliderProps> = ({ recipe, handlePreview }) => {
-  const { name, thumbnail_url: thumbnailUrl, id } = recipe;
+  const { id, name, thumbnail_url: thumbnailUrl } = recipe;
 
   return (
-    <div className="item1" id={id} onClick={handlePreview}>
-      <img src={thumbnailUrl} className="image1" />
+    <div className="slide-item" id={id} onClick={handlePreview}>
+      <img src={thumbnailUrl} className="image" />
 
-      <span className="name1">{name}</span>
+      <Typography variant="body1" className="name">
+        {name}
+      </Typography>
     </div>
   );
 };

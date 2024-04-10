@@ -100,7 +100,6 @@ type Section = {
   position: number;
 };
 export type RecipeItem = {
-  // renditions: Renditions[];
   approved_at: number;
   country: string;
   credits: Credits[];

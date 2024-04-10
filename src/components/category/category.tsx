@@ -3,14 +3,16 @@ import { useMemo, useState } from 'react';
 import { RecipeItem } from 'utils/api/api.types';
 
 import ItemsSlider from 'components/items-slider/items-slider';
-import PreviewItem from 'components/preview-item/preview-item.component';
+import PreviewItem from 'components/preview-item/preview-item';
 
 import { CategoryType } from 'context/categories.context';
 
 import Slider from 'react-slick';
 
-import 'slick-carousel/slick/slick.css';
+import { Typography } from '@mui/material';
+
 import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
 
 import './category.scss';
 
@@ -25,10 +27,42 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
   const settings = {
     className: 'slider',
     dots: true,
-    infinite: false,
+    infinite: true,
     slidesToScroll: 5,
-    slidesToShow: 3.9,
+    slidesToShow: 5,
     speed: 500,
+    responsive: [
+      {
+        breakpoint: 1800,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 4,
+        },
+      },
+      {
+        breakpoint: 900,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+        },
+      },
+      {
+        breakpoint: 900,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          arrows: false,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          arrows: false,
+        },
+      },
+    ],
   };
 
   const handlePreview = (
@@ -36,10 +70,7 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
   ) => {
     const { id } = event.currentTarget;
 
-    // TODO: Remove toString after rebuilding the categories from firestore
-    setTargetRecipe(
-      recipes?.find((item: RecipeItem) => item.id.toString() === id),
-    );
+    setTargetRecipe(recipes?.find((item: RecipeItem) => item.id === id));
   };
 
   const item = useMemo(
@@ -60,7 +91,7 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
         <PreviewItem recipe={targetRecipe} setTargetRecipe={setTargetRecipe} />
       )}
       <div className="title">
-        <h3>{categoryName.toUpperCase()}</h3>
+        <Typography variant="h6">{categoryName.toUpperCase()}</Typography>
       </div>
       <Slider {...settings}>{item}</Slider>
     </div>

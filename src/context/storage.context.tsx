@@ -1,9 +1,9 @@
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 
 import {
-  uploadRecipe,
-  fetchSubcollection,
   deleteRecipe,
+  fetchSubcollection,
+  uploadRecipe,
 } from 'utils/firebase/db';
 
 import { RecipeItem, Recipes } from 'utils/api/api.types';
@@ -34,31 +34,9 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
   const [displayMessage, setDisplayMessage] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [storedRecipes, setStoredRecipes] = useState<Recipes>();
+
   const { currentUser, userIsLoading } = useUserContext();
-<<<<<<< Updated upstream
-
-  const getData = async () => {
-    const data = (
-      await getRecipesDocument('storage', currentUser?.userUid)
-    ).data()?.data;
-    if (data) {
-      return JSON.parse(data);
-    }
-    return null;
-  };
-
-  const uploadRecipes = async (newRecipesCollection: Recipes | undefined) => {
-    await addCollectionAndDocumentsAsBatch(
-      'storage',
-      currentUser?.userUid,
-      JSON.stringify(newRecipesCollection),
-    );
-    setStoredRecipes(await getData());
-    setIsLoading(false);
-  };
-=======
   const collectionName = 'storage';
->>>>>>> Stashed changes
 
   const addTimeStamp = (recipe: RecipeItem) => {
     const recipeToAdd = recipe;
@@ -111,25 +89,6 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-<<<<<<< Updated upstream
-  // TODO: remove toString() after rebuilding the categories in firestore
-  const removeItemFromStorage = async (
-    recipeId?: string,
-    selectedIds?: string[],
-  ) => {
-    if (recipeId) {
-      const newRecipesCollection = storedRecipes?.filter(
-        (recipe: RecipeItem) => recipe.id.toString() !== recipeId,
-      );
-
-      uploadRecipes(newRecipesCollection);
-    } else {
-      const newRecipesCollection = storedRecipes?.filter(
-        (recipe: RecipeItem) => !selectedIds?.includes(recipe.id.toString()),
-      );
-
-      uploadRecipes(newRecipesCollection);
-=======
   const removeItemFromStorage = (recipeId?: string, selectedIds?: string[]) => {
     if (selectedIds) {
       selectedIds.forEach((id: string) => {
@@ -140,7 +99,6 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
     if (recipeId) {
       deleteRecipe(currentUser?.userUid, collectionName, recipeId);
       updateContext();
->>>>>>> Stashed changes
     }
   };
 

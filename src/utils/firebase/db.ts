@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  orderBy,
   query,
   setDoc,
   updateDoc,
@@ -27,20 +28,22 @@ export const db = getFirestore(app);
 //  Add user's credentials to db or return the snapshot
 export const createUserDocumentFormAuth = async (
   userAuth: User,
-  additionalInformation = {},
+  additionalInformation?: { displayName: string },
 ): Promise<void | DocumentSnapshot<DocumentData>> => {
   const userDocRef = doc(db, 'users', userAuth.uid);
   const userSnapshot = await getDoc(userDocRef);
 
   if (!userSnapshot.exists()) {
-    const { displayName, email } = userAuth;
+    const { email } = userAuth;
+    const { displayName } = additionalInformation || userAuth;
+
     const userUid = userAuth.uid;
 
     const userBio = '';
 
     //  get photo from Google or set the default icon
     const userPhotoUrl =
-      userAuth.photoURL ??
+      userAuth.photoURL ||
       (await getDownloadURL(ref(storage, 'images/defaultUserIcon.png')));
 
     try {
@@ -52,7 +55,7 @@ export const createUserDocumentFormAuth = async (
         userPhotoUrl,
         userUid,
       });
-      await createUserDocumentFormAuth(userAuth);
+      return await createUserDocumentFormAuth(userAuth, additionalInformation);
     } catch (e) {
       console.error('Error adding document: ', e);
     }
@@ -118,59 +121,11 @@ export const deleteRecipe = async (
   deleteDoc(path);
 };
 
-export const updateDocument = () => {};
-
 // GET All DOCS FROM COLLECTION
-<<<<<<< Updated upstream
-export const getCategoriesDocument = async (collectionName: string) =>
-  getDocs(collection(db, collectionName));
 
-// Get DOC
-export const getRecipesDocument = (
-  collectionName: string,
-  documentName: string,
-) => {
-  const docRef = doc(db, collectionName, documentName);
-  return getDoc(docRef);
-};
-
-// UPDATE OR CREATE
-export const updateCollection = async (
-  collectionName: string,
-  documentName: string,
-  objectsToAdd: RecipeItem,
-) => {
-  const recipeDocRef = doc(db, collectionName, documentName);
-  const favouritesSnapshot = await getDoc(recipeDocRef);
-
-  if (favouritesSnapshot.exists()) {
-    await updateDoc(recipeDocRef, { [objectsToAdd.id]: objectsToAdd });
-  } else {
-    await setDoc(recipeDocRef, {
-      [objectsToAdd.id]: objectsToAdd,
-    });
-  }
-
-  return getDoc(recipeDocRef);
-};
-
-// REMOVE RECIPE FROM FAVOURITES
-export const removeRecipeFromDoc = async (
-  collectionName: string,
-  documentName: string,
-  objectsToAdd: RecipeItem,
-) => {
-  const recipeDocRef = doc(db, collectionName, documentName);
-  await updateDoc(recipeDocRef, {
-    [objectsToAdd.id]: deleteField(),
-  });
-
-  return getDoc(recipeDocRef);
-=======
 export const getCategoriesDocument = async () => {
   const categoriesRef = collection(db, 'categories');
   const queryResults = query(categoriesRef, orderBy('data'));
 
   return getDocs(queryResults);
->>>>>>> Stashed changes
 };

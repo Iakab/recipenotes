@@ -1,0 +1,14 @@
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
+.favourites {
+  flex: 1 1 auto;
+  background-color: $grey-collection-6;
+  margin-bottom: 3rem;
+  position: relative;
+}
+.favourites:has(.overlay) {
+  height: 110vh;
+  overflow: hidden;
+  margin-bottom: 0;
+}
