@@ -5,52 +5,8 @@ import { Recipes, RecipeItem } from './api.types';
 export const reduceRecipesSize = (unalteredRecipes: Recipes): Recipes => {
   const recipes: Recipes = unalteredRecipes.map(
     (recipe: RecipeItem): RecipeItem => {
-      const {
-        approved_at: approvedAt,
-        country,
-        credits,
-        description,
-        instructions,
-        name,
-        nutrition,
-        original_video_url: originalVideoUrl,
-        prep_time_minuntes: prepTime,
-        sections,
-        tags,
-        thumbnail_url: thumbnail,
-        tips_summary: tipsSummary,
-        total_time_tier: totalTimeTier,
-        updated_at: updatedAt,
-        user_ratings: UserRatings,
-        video_id: videoId,
-        video_url: videoUrl,
-        yields,
-      } = recipe;
-
       const id = recipe.id.toString();
-
-      return {
-        approved_at: approvedAt,
-        country,
-        credits,
-        description,
-        id,
-        instructions,
-        name,
-        nutrition,
-        original_video_url: originalVideoUrl,
-        prep_time_minuntes: prepTime,
-        sections,
-        tags,
-        thumbnail_url: thumbnail,
-        tips_summary: tipsSummary,
-        total_time_tier: totalTimeTier,
-        updated_at: updatedAt,
-        user_ratings: UserRatings,
-        video_id: videoId,
-        video_url: videoUrl,
-        yields,
-      };
+      return { ...recipe, id };
     },
   );
   return recipes;

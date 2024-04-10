@@ -7,12 +7,16 @@ import {
 } from 'react';
 
 import {
+<<<<<<< Updated upstream
   removeRecipeFromDoc,
   updateCollection,
   getRecipesDocument,
+=======
+  uploadRecipe,
+  deleteRecipe,
+  fetchSubcollection,
+>>>>>>> Stashed changes
 } from 'utils/firebase/db';
-
-import { DocumentData, DocumentSnapshot } from 'firebase/firestore';
 
 import { RecipeItem, Recipes } from 'utils/api/api.types';
 
@@ -40,11 +44,31 @@ export const FavouritesProvider = ({ children }: PropsWithChildren) => {
 
   const collectionName = 'favourites';
 
+  // DEFAULT
+  const updateContext = async () => {
+    const data = (
+      await fetchSubcollection(currentUser?.userUid, collectionName)
+    ).docs;
+
+    const recipes = data.map((document) => document.data());
+
+    if (recipes) {
+      setFavouriteRecipes(recipes as Recipes);
+    }
+  };
+
+  useEffect(() => {
+    if (!userIsLoading && currentUser) {
+      updateContext();
+    }
+  }, [currentUser]);
+
   const isItemFavourite = (item: RecipeItem) =>
     favouriteRecipes?.find(
       (savedRecipe: RecipeItem) => savedRecipe.id === item.id,
     );
 
+<<<<<<< Updated upstream
   const setDataFromSnapshot = (
     favouritesSnapshot: DocumentSnapshot<DocumentData, DocumentData>,
   ) => {
@@ -70,26 +94,21 @@ export const FavouritesProvider = ({ children }: PropsWithChildren) => {
   }, [currentUser]);
 
   // ADD OR REMOVE
+=======
+>>>>>>> Stashed changes
   const updateFavourites = async (item: RecipeItem) => {
     const itemIsAlreadyAdded = isItemFavourite(item);
 
     if (!itemIsAlreadyAdded) {
-      const favouritesSnapshot = await updateCollection(
-        collectionName,
-        currentUser?.userUid,
-        item,
-      );
-      setDataFromSnapshot(favouritesSnapshot);
+      await uploadRecipe(currentUser?.userUid, collectionName, item);
+      updateContext();
     } else {
-      const favouritesSnapshot = await removeRecipeFromDoc(
-        collectionName,
-        currentUser?.userUid,
-        item,
-      );
-      setDataFromSnapshot(favouritesSnapshot);
+      await deleteRecipe(currentUser?.userUid, collectionName, item.id);
+      updateContext();
     }
   };
 
+  // ADD OR REMOVE
   const value = {
     favouriteRecipes,
     isItemFavourite,

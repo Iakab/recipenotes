@@ -1,8 +1,9 @@
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 
 import {
-  addCollectionAndDocumentsAsBatch,
-  getRecipesDocument,
+  uploadRecipe,
+  fetchSubcollection,
+  deleteRecipe,
 } from 'utils/firebase/db';
 
 import { RecipeItem, Recipes } from 'utils/api/api.types';
@@ -10,13 +11,10 @@ import { RecipeItem, Recipes } from 'utils/api/api.types';
 import { useUserContext } from './user.context';
 
 type StorageContextType = {
-  displayMessage: Error | undefined;
+  displayMessage: string | undefined;
   isLoading: boolean;
-  removeItemFromStorage: (
-    recipeId?: string,
-    selectedIds?: string[],
-  ) => Promise<void>;
-  setDisplayMessage: React.Dispatch<React.SetStateAction<Error | undefined>>;
+  removeItemFromStorage: (recipeId?: string, selectedIds?: string[]) => void;
+  setDisplayMessage: React.Dispatch<React.SetStateAction<string | undefined>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   storedRecipes: Recipes | undefined;
   uploadNewRecipe: (recipeToAdd: RecipeItem) => Promise<void>;
@@ -25,7 +23,7 @@ type StorageContextType = {
 export const StorageContext = createContext<StorageContextType>({
   displayMessage: undefined,
   isLoading: true,
-  removeItemFromStorage: async () => {},
+  removeItemFromStorage: () => {},
   setDisplayMessage: () => {},
   setIsLoading: () => {},
   storedRecipes: undefined,
@@ -33,10 +31,11 @@ export const StorageContext = createContext<StorageContextType>({
 });
 
 export const StorageProvider = ({ children }: PropsWithChildren) => {
-  const [displayMessage, setDisplayMessage] = useState<Error>();
+  const [displayMessage, setDisplayMessage] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [storedRecipes, setStoredRecipes] = useState<Recipes>();
   const { currentUser, userIsLoading } = useUserContext();
+<<<<<<< Updated upstream
 
   const getData = async () => {
     const data = (
@@ -57,6 +56,9 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
     setStoredRecipes(await getData());
     setIsLoading(false);
   };
+=======
+  const collectionName = 'storage';
+>>>>>>> Stashed changes
 
   const addTimeStamp = (recipe: RecipeItem) => {
     const recipeToAdd = recipe;
@@ -67,46 +69,49 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
     return recipeToAdd;
   };
 
-  const isUnique = (item: RecipeItem) =>
-    !storedRecipes?.find(
-      (savedRecipe: RecipeItem) => savedRecipe.id === item.id,
-    );
+  const updateContext = async () => {
+    const data = (
+      await fetchSubcollection(currentUser?.userUid, collectionName)
+    ).docs;
+
+    if (data) {
+      const recipes = data.map((document) => document.data());
+      setStoredRecipes(recipes as Recipes);
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (!storedRecipes && currentUser && !userIsLoading) {
-      const fetchStoredData = async () => {
-        setStoredRecipes(await getData());
-        setIsLoading(false);
-      };
-      fetchStoredData();
+    if (!userIsLoading && currentUser) {
+      updateContext();
     }
   }, [currentUser]);
 
-  const uploadNewRecipe = async (recipe: RecipeItem) => {
-    const recipeToAdd = addTimeStamp(recipe);
+  const isItemStored = (item: RecipeItem) =>
+    storedRecipes?.find(
+      (savedRecipe: RecipeItem) => savedRecipe.id === item.id,
+    );
 
-    if (storedRecipes) {
-      try {
-        if (isUnique(recipeToAdd)) {
-          await addCollectionAndDocumentsAsBatch(
-            'storage',
-            currentUser?.userUid,
-            JSON.stringify([...storedRecipes, recipeToAdd]),
-          );
-        } else {
-          throw new Error('Recipe is already saved in your storage');
-        }
-      } catch (error) {
-        setDisplayMessage(error as Error);
+  const uploadNewRecipe = async (item: RecipeItem) => {
+    const itemIsAlreadyAdded = isItemStored(item);
+
+    try {
+      if (!itemIsAlreadyAdded) {
+        const recipeToAdd = addTimeStamp(item);
+
+        await uploadRecipe(currentUser?.userUid, collectionName, recipeToAdd);
+        updateContext();
+        setDisplayMessage('Successfully stored');
+      } else {
+        setIsLoading(false);
+        throw new Error('Recipe already added');
       }
-    } else {
-      uploadRecipes([recipeToAdd]);
+    } catch (error) {
+      setDisplayMessage((error as Error).message);
     }
-
-    setStoredRecipes(await getData());
-    setIsLoading(false);
   };
 
+<<<<<<< Updated upstream
   // TODO: remove toString() after rebuilding the categories in firestore
   const removeItemFromStorage = async (
     recipeId?: string,
@@ -124,6 +129,18 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
       );
 
       uploadRecipes(newRecipesCollection);
+=======
+  const removeItemFromStorage = (recipeId?: string, selectedIds?: string[]) => {
+    if (selectedIds) {
+      selectedIds.forEach((id: string) => {
+        deleteRecipe(currentUser?.userUid, collectionName, id);
+        updateContext();
+      });
+    }
+    if (recipeId) {
+      deleteRecipe(currentUser?.userUid, collectionName, recipeId);
+      updateContext();
+>>>>>>> Stashed changes
     }
   };
 

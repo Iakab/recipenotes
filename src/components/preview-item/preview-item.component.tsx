@@ -6,14 +6,25 @@ import { StorageContext } from 'context/storage.context';
 
 import { RecipeItem, Component, Instruction } from 'utils/api/api.types';
 
-import { Snackbar, Box, IconButton, Container, Tooltip } from '@mui/material';
-
 import CloseIcon from '@mui/icons-material/Close';
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+
+import {
+  Checkbox,
+  IconButton,
+  Tooltip,
+  useMediaQuery,
+  Snackbar,
+  Box,
+  Container,
+} from '@mui/material';
 
 import { ReactComponent as CustomCloseIcon } from 'assets/icons/SVG/cross.svg';
-import { ReactComponent as HeartIconOutlined } from 'assets/icons/SVG/heart-outlined.svg';
-import { ReactComponent as HeartIcon } from 'assets/icons/SVG/heart.svg';
+
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 
 import './preview-item.styles.scss';
 
@@ -27,12 +38,13 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
   setTargetRecipe,
 }) => {
   const closeIconRef = useRef<null | SVGAElement>(null);
-  const [addedToFavorites, setAddedToFavorites] = useState<RecipeItem>();
+  const [addedToFavorites, setAddedToFavorites] = useState(false);
 
-  const { displayMessage, setDisplayMessage } = useContext(StorageContext);
+  // const { displayMessage, setDisplayMessage } = useContext(StorageContext);
   const { updateFavourites, isItemFavourite, favouriteRecipes } =
     useContext(FavourtiesContext);
   const { uploadNewRecipe } = useContext(StorageContext);
+  const isMaxTabPortSize = useMediaQuery('(max-width: 900px)');
 
   const {
     approved_at: approvedAt,
@@ -48,6 +60,24 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
 
   const { components } = sections[0];
 
+  const handleAddToFavourites = () => {
+    updateFavourites(recipe);
+  };
+
+  useEffect(() => {
+    const itemIsFavourite = isItemFavourite(recipe);
+
+    if (itemIsFavourite) {
+      setAddedToFavorites(true);
+    } else {
+      setAddedToFavorites(false);
+    }
+  }, [favouriteRecipes]);
+
+  const handleAddToStorage = () => {
+    uploadNewRecipe(recipe);
+  };
+
   type ExitPreview = React.MouseEvent<HTMLDivElement | SVGAElement, MouseEvent>;
   const exitPreview = (event: ExitPreview) => {
     if (
@@ -58,63 +88,67 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
     }
   };
 
-  const handleAddToFavourites = async () => {
-    updateFavourites(recipe);
+  // const handleCloseMessage = (
+  //   event: React.SyntheticEvent | Event,
+  //   reason?: string,
+  // ) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
+  //   setDisplayMessage(undefined);
+  // };
+
+  // const messageAction = (
+  //   <IconButton
+  //     aria-label="close"
+  //     color="inherit"
+  //     onClick={handleCloseMessage}
+  //     size="small"
+  //   >
+  //     <CloseIcon fontSize="small" />
+  //   </IconButton>
+  // );
+
+  const closePreview = () => {
+    setTargetRecipe(undefined);
   };
-
-  useEffect(() => {
-    const itemIsFavourite = isItemFavourite(recipe);
-    setAddedToFavorites(itemIsFavourite);
-  }, [favouriteRecipes]);
-
-  const handleAddToStorage = () => {
-    uploadNewRecipe(recipe);
-  };
-
-  const handleCloseMessage = (
-    event: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setDisplayMessage(undefined);
-  };
-
-  const messageAction = (
-    <IconButton
-      aria-label="close"
-      color="inherit"
-      onClick={handleCloseMessage}
-      size="small"
-    >
-      <CloseIcon fontSize="small" />
-    </IconButton>
-  );
 
   return (
     <div className="overlay" onClick={exitPreview}>
-      <CustomCloseIcon
-        className="icon-close"
-        ref={closeIconRef}
-        onClick={exitPreview}
-      />
+      {!isMaxTabPortSize && (
+        <CustomCloseIcon
+          className="icon-close"
+          ref={closeIconRef}
+          onClick={closePreview}
+        />
+      )}
 
       <div className="preview">
         <div className="options">
-          {addedToFavorites ? (
-            <Tooltip title='Remove from Favourites'>
-
-              <HeartIcon onClick={handleAddToFavourites} className="icon-heart" />
-            </Tooltip>
+          {isMaxTabPortSize ? (
+            <IconButton
+              onClick={closePreview}
+              sx={{
+                padding: 0,
+                justifyContent: 'flex-start',
+                marginLeft: '0',
+              }}
+            >
+              <ArrowBackIcon fontSize="large" sx={{ marginLeft: 0 }} />
+            </IconButton>
           ) : (
-            <Tooltip title='Add to Favourites'>
-            <HeartIconOutlined
-              onClick={handleAddToFavourites}
-              className="icon-heart"
-            />
-            </Tooltip>
+            <div></div>
           )}
+          <div style={{ flex: '1 1 auto' }}></div>
+
+          <Checkbox
+            className="icon-heart"
+            checked={addedToFavorites}
+            onClick={handleAddToFavourites}
+            icon={<FavoriteBorder />}
+            checkedIcon={<Favorite sx={{ fill: 'red' }} />}
+          />
+
           <Tooltip title="Add to Storage">
             <IconButton onClick={handleAddToStorage}>
               <LibraryAddIcon />
@@ -122,7 +156,7 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
           </Tooltip>
         </div>
 
-        {displayMessage && (
+        {/* {displayMessage && (
           <Box sx={{ width: 500, bgcolor: 'red' }}>
             <Snackbar
               action={messageAction}
@@ -133,7 +167,7 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
               open={true}
             />
           </Box>
-        )}
+        )} */}
 
         <h2 className="title">{name}</h2>
         <h4 className="description">{description}</h4>

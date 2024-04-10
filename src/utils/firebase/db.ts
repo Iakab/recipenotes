@@ -1,6 +1,6 @@
 import {
   collection,
-  deleteField,
+  deleteDoc,
   doc,
   DocumentData,
   DocumentSnapshot,
@@ -11,7 +11,6 @@ import {
   setDoc,
   updateDoc,
   where,
-  writeBatch,
 } from 'firebase/firestore';
 
 import { getDownloadURL, ref } from 'firebase/storage';
@@ -77,6 +76,7 @@ export type Updates = {
   userBio?: string;
   userPhotoUrl?: string;
 };
+
 //  Update doc
 export const updateUserDocumentFormAuth = async (
   userAuth: DocumentData,
@@ -90,21 +90,38 @@ export const updateUserDocumentFormAuth = async (
   return getDoc(userDocRef);
 };
 
-// UPLOAD CATEGORIES
-export const addCollectionAndDocumentsAsBatch = async (
-  collectionName: string,
-  documentName: string,
-  jsonToAdd: string,
-) => {
-  const batch = writeBatch(db);
-  const docRef = doc(db, collectionName, documentName);
-
-  batch.set(docRef, { data: jsonToAdd });
-  await batch.commit();
-  console.log('done');
+export const fetchSubcollection = (userUid: string, subcollection: string) => {
+  const path = collection(db, 'users', userUid, subcollection);
+  return getDocs(path);
 };
 
+export const uploadRecipe = async (
+  userUid: string,
+  subcollection: string,
+  recipe: RecipeItem,
+) => {
+  const favouritesRef = doc(db, 'users', userUid, subcollection, recipe.id);
+
+  try {
+    await setDoc(favouritesRef, { ...recipe });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const deleteRecipe = async (
+  userUid: string,
+  subcollection: string,
+  recipeId: string,
+) => {
+  const path = doc(db, 'users', userUid, subcollection, recipeId);
+  deleteDoc(path);
+};
+
+export const updateDocument = () => {};
+
 // GET All DOCS FROM COLLECTION
+<<<<<<< Updated upstream
 export const getCategoriesDocument = async (collectionName: string) =>
   getDocs(collection(db, collectionName));
 
@@ -149,4 +166,11 @@ export const removeRecipeFromDoc = async (
   });
 
   return getDoc(recipeDocRef);
+=======
+export const getCategoriesDocument = async () => {
+  const categoriesRef = collection(db, 'categories');
+  const queryResults = query(categoriesRef, orderBy('data'));
+
+  return getDocs(queryResults);
+>>>>>>> Stashed changes
 };
