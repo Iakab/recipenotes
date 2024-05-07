@@ -1,23 +1,87 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
-import { Typography } from '@mui/material';
+import { useUserContext } from 'context/user.context';
+import { StorageContext } from 'context/storage.context';
+
+import { Container, Typography } from '@mui/material';
+
 import { FileUploader } from 'react-drag-drop-files';
 
-import { Container } from '@mui/system';
+import { StepsProps } from '../nameAndDescription/nameAndDescription';
 
 import './uploadImage.scss';
 
 const fileTypes = ['JPG', 'PNG'];
 
-const UploadImage = () => {
-  const [file, setFile] = useState(null);
-  const [imgUrl, setImgUrl] = useState('');
+const UploadImage: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
+  const [file, setFile] = useState<File>();
+  const [imgUrl, setImgUrl] = useState<string>();
 
-  const handleImageUpload = (event: any) => {
-    setImgUrl(window.URL.createObjectURL(event));
+  const { currentUser } = useUserContext();
+  const {
+    imgToStore,
+    recipeToUpload,
+    setDisplayMessage,
+    setImgToStore,
+    setRecipeToUpload,
+  } = useContext(StorageContext);
+
+  const handleImageUpload = (event: File) => {
+    const url = URL.createObjectURL(event);
+    setImgUrl(url);
 
     setFile(event);
   };
+
+  useEffect(() => {
+    if (imgToStore) {
+      const url = URL.createObjectURL(imgToStore);
+      setImgUrl(url);
+    } else if (recipeToUpload?.thumbnail_url) {
+      setImgUrl(recipeToUpload.thumbnail_url);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (submitStep.initialized) {
+      try {
+        if (!file && !imgToStore) {
+          setSubmitStep({ ...submitStep, initialized: false });
+          throw new Error('Image required');
+        }
+
+        if (currentUser) {
+          const handleUpload = async () => {
+            try {
+              const recipeId = recipeToUpload?.id || Date.now().toString();
+
+              // TODO: create input for credit
+              const credits = [
+                { name: currentUser.displayName, type: 'internal' },
+              ];
+
+              if (file) {
+                setImgToStore(file);
+              }
+
+              setRecipeToUpload({
+                ...recipeToUpload,
+                id: recipeId,
+                credits,
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          };
+          handleUpload();
+        }
+
+        setSubmitStep({ initialized: false, submitted: true });
+      } catch (error) {
+        setDisplayMessage((error as Error).message);
+      }
+    }
+  }, [submitStep.initialized]);
 
   return (
     <>
@@ -32,11 +96,11 @@ const UploadImage = () => {
         }}
       >
         <FileUploader
+          classes="drag-and-drop"
           handleChange={handleImageUpload}
           name="recipePhoto"
-          types={fileTypes}
           required
-          classes="drag-and-drop"
+          types={fileTypes}
         />
 
         {imgUrl ? (

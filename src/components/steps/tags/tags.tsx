@@ -1,44 +1,42 @@
-import { Fragment, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
+
+import { StorageContext } from 'context/storage.context';
+
+import { Container, MenuItem, TextField, Typography } from '@mui/material';
+
+import { RecipeItemToUpload, Tag, TotalTimeTier } from 'utils/api/api.types';
 
 import {
-  Alert,
-  Autocomplete,
-  Box,
-  Button,
-  Chip,
-  Container,
-  MenuItem,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
-
-import { occasionsObj } from 'utils/constants';
+  difficultyOptions,
+  mealsOptions,
+  occasions,
+  timeOptions,
+} from 'utils/constants';
 
 import countries from 'i18n-iso-countries';
 import enLocale from 'i18n-iso-countries/langs/en.json';
+
+import { StepsProps } from '../nameAndDescription/nameAndDescription';
 
 const countriesOptions = () => {
   countries.registerLocale(enLocale);
   return countries.getNames('en', { select: 'official' });
 };
 
-const timeOptions = [
-  'Under 15 minutes',
-  'Under 30 minutes',
-  'Under 1 hour',
-  'Under 2 hour',
-  'Under 3 hour',
-  'More than 3 hours',
-];
-const difficultyOptions = ['Easy', 'Medium', 'Hard'];
-const mealsOptions = ['Breakfast', 'Lunch', 'Dinner', 'Desserts', 'Snacks'];
+type TagSelections = Tag[];
 
-type TagsSelections = {
+type Selections = {
   country: string;
   difficulty: string;
   meal: string;
+  occasion: string;
+};
+
+type RegisteredSelections = {
+  country: string;
+  difficulty: string;
+  meal: string;
+  occasion: string;
   time: string;
 };
 
@@ -46,35 +44,92 @@ const defaultSelections = {
   country: '',
   difficulty: '',
   meal: '',
-  time: '',
+  occasion: '',
 };
 
-type FormValues = {
-  mainIngredients: string;
+const defaultSelectedTime = {
+  display_tier: '',
+  tier: '',
 };
 
-const Tags = () => {
-  const [selections, setSelections] =
-    useState<TagsSelections>(defaultSelections);
-  const [mainIngredients, setMainIngredients] = useState<string[]>();
+const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
+  const [selections, setSelections] = useState<Selections>(defaultSelections);
+  const [selectedTime, setSelectedTime] =
+    useState<TotalTimeTier>(defaultSelectedTime);
 
-  const {
-    formState: { errors },
-    handleSubmit,
-    register,
-    reset,
-    setError,
-  } = useForm<FormValues>({
-    defaultValues: {
-      mainIngredients: '',
-    },
-  });
+  const { setRecipeToUpload, recipeToUpload, setDisplayMessage } =
+    useContext(StorageContext);
 
-  // useEffect(() => {
-  //   if (mainIngredients) {
-  //     console.log(mainIngredients);
-  //   }
-  // }, [mainIngredients]);
+  useEffect(() => {
+    if (recipeToUpload?.tags) {
+      let uploadedTags: Selections = defaultSelections;
+
+      recipeToUpload.tags.map((tag) => {
+        const { type, display_name: displayName } = tag;
+
+        uploadedTags = { ...uploadedTags, [type]: displayName };
+        setSelections(uploadedTags);
+      });
+    }
+    if (recipeToUpload?.total_time_tier) {
+      setSelectedTime(recipeToUpload.total_time_tier);
+    }
+  }, []);
+
+  const registeredTags = useMemo(() => {
+    const registeredSelections: any = {};
+
+    if (recipeToUpload?.tags && recipeToUpload.total_time_tier) {
+      recipeToUpload.tags.map((item: Tag) => {
+        registeredSelections[item.type] = item.display_name;
+      });
+
+      registeredSelections.time = recipeToUpload.total_time_tier.display_tier;
+      return registeredSelections as RegisteredSelections;
+    }
+
+    return {
+      country: '',
+      difficulty: '',
+      meal: '',
+      occasion: '',
+      time: '',
+    };
+  }, [recipeToUpload?.tags]);
+
+  useEffect(() => {
+    if (submitStep.initialized) {
+      try {
+        if (!selections || !selectedTime) {
+          setSubmitStep({ ...submitStep, initialized: false });
+          throw new Error('All fields are required.');
+        }
+        const tagsSelections: TagSelections = [];
+
+        Object.entries(selections).map((tag) => {
+          const name = tag[0];
+          const value = tag[1];
+
+          tagsSelections.push({
+            display_name: value,
+            id: tagsSelections.length,
+            name: value.toLowerCase(),
+            type: name,
+          });
+        });
+
+        setRecipeToUpload({
+          ...(recipeToUpload as RecipeItemToUpload),
+          tags: tagsSelections,
+          total_time_tier: selectedTime,
+        });
+
+        setSubmitStep({ initialized: false, submitted: true });
+      } catch (error) {
+        setDisplayMessage((error as Error).message);
+      }
+    }
+  }, [submitStep.initialized]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -83,29 +138,15 @@ const Tags = () => {
     setSelections({ ...selections, [name]: value });
   };
 
-  const onSubmit = (data: FormValues) => {
-    if (mainIngredients) {
-      if (mainIngredients?.length < 3) {
-        setMainIngredients([...mainIngredients, data.mainIngredients]);
-        reset();
-      } else {
-        setError('mainIngredients', {
-          type: 'custom',
-          message: 'Max limit reached',
-        });
-      }
-    } else {
-      setMainIngredients([data.mainIngredients]);
-      reset();
-    }
-  };
+  const handleTimeSelection = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { value } = event.target;
 
-  const handleDelete = (index: number) => {
-    const ingredients = [...(mainIngredients as string[])];
-
-    ingredients.splice(index, 1);
-
-    setMainIngredients(ingredients);
+    setSelectedTime({
+      display_tier: value,
+      tier: value.toLowerCase().replace(/ /g, '_'),
+    });
   };
 
   return (
@@ -119,7 +160,8 @@ const Tags = () => {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
+          alignItems: 'center',
           gap: '5rem',
         }}
       >
@@ -127,20 +169,23 @@ const Tags = () => {
           sx={{
             flex: '1 1 auto',
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
+            alignItems: 'center',
             width: '100%',
-            gap: '1rem',
+            gap: '5rem',
+            flexWrap: 'wrap',
           }}
         >
           <TextField
-            defaultValue=""
+            defaultValue={registeredTags.country}
             id="country"
             label="Select country"
             name="country"
             onChange={handleChange}
             select
             size="small"
-            sx={{ minWidth: '16rem' }}
+            sx={{ minWidth: '19rem' }}
+            value={selections.country}
             variant="filled"
           >
             {Object.entries(countriesOptions()).map((country, index) => (
@@ -151,14 +196,15 @@ const Tags = () => {
           </TextField>
 
           <TextField
-            defaultValue=""
+            defaultValue={registeredTags.meal}
             id="meal"
             label="Select Meal"
             name="meal"
             onChange={handleChange}
             select
             size="small"
-            sx={{ minWidth: '14rem' }}
+            sx={{ minWidth: '19rem' }}
+            value={selections.meal}
             variant="filled"
           >
             {mealsOptions.map((meal, index) => (
@@ -169,14 +215,15 @@ const Tags = () => {
           </TextField>
 
           <TextField
-            defaultValue=""
+            defaultValue={registeredTags.difficulty}
             id="difficulty"
             label="Difficulty"
             name="difficulty"
             onChange={handleChange}
             select
             size="small"
-            sx={{ minWidth: '12rem' }}
+            sx={{ minWidth: '19rem' }}
+            value={selections.difficulty}
             variant="filled"
           >
             {' '}
@@ -188,14 +235,15 @@ const Tags = () => {
           </TextField>
 
           <TextField
-            defaultValue=""
+            defaultValue={registeredTags.time}
             id="time"
             label="Select time"
             name="time"
-            onChange={handleChange}
+            onChange={handleTimeSelection}
             select
             size="small"
-            sx={{ minWidth: '13rem' }}
+            sx={{ minWidth: '19rem' }}
+            value={selectedTime.display_tier}
             variant="filled"
           >
             {' '}
@@ -205,66 +253,26 @@ const Tags = () => {
               </MenuItem>
             ))}
           </TextField>
-        </Container>
 
-        <Container>
-          <Autocomplete
-            multiple
+          <TextField
+            defaultValue={registeredTags.occasion}
             id="occasion"
-            // key={option => option.id}
-            options={occasionsObj}
-            getOptionLabel={(option) => option.name}
-            getOptionKey={(option) => option.id}
-            renderOption={(props, option) => (
-              <Box component="li" {...props} key={option.id}>
-                {option.name}
-              </Box>
-            )}
-            renderInput={(params) => (
-              <TextField {...params} label="Occasions" />
-            )}
-          ></Autocomplete>
-        </Container>
-
-        <Container
-          sx={{
-            flex: '1 1 auto',
-            display: 'flex',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-          }}
-        >
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <TextField
-              label="Main ingredients (max. 3)"
-              variant="filled"
-              sx={{ alignSelf: 'flex-start', width: '23rem' }}
-              {...register('mainIngredients', { required: 'required' })}
-            ></TextField>
-            <Button
-              variant="contained"
-              size="small"
-              type="submit"
-              sx={{ margin: '1rem 3rem' }}
-            >
-              Add
-            </Button>
-            {errors?.mainIngredients && (
-              <Alert variant="outlined" severity="warning">
-                Maximum limit reached
-              </Alert>
-            )}
-          </form>
-          <Stack gap={'1rem'} sx={{ flex: '1 1 auto', margin: '1rem 2rem' }}>
-            {mainIngredients?.map((ingredient, index) => (
-              <Chip
-                onDelete={() => handleDelete(index)}
-                key={index}
-                label={ingredient}
-                sx={{ width: 'fit-content', padding: '0 .5rem' }}
-              ></Chip>
+            label="Occasion"
+            name="occasion"
+            onChange={handleChange}
+            select
+            size="small"
+            sx={{ minWidth: '19rem' }}
+            value={selections.occasion}
+            variant="filled"
+          >
+            {' '}
+            {occasions.map((occasion, index) => (
+              <MenuItem key={index} value={occasion}>
+                {occasion}
+              </MenuItem>
             ))}
-          </Stack>
+          </TextField>
         </Container>
       </Container>
     </Fragment>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { UserContext } from 'context/user.context';
 
-import { uploadUserImage, getUserImage } from 'utils/firebase/storage';
+import { uploadImage, getImage } from 'utils/firebase/storage';
 
 import { resetPassword } from 'utils/firebase/auth';
 
@@ -33,8 +33,11 @@ const Profile = () => {
     if (userPhoto && currentUser) {
       const handleUpload = async () => {
         try {
-          await uploadUserImage(userPhoto, currentUser.userUid);
-          const userPhotoUrl = await getUserImage(currentUser.userUid);
+          await uploadImage(userPhoto, currentUser.userUid, 'profile');
+          const userPhotoUrl = await getImage(
+            currentUser.userUid,
+            'profile',
+          );
           const name = 'userPhotoUrl';
 
           setUpdateUserDoc({ [name]: userPhotoUrl });

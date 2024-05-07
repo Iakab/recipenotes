@@ -6,37 +6,49 @@ import {
   uploadRecipe,
 } from 'utils/firebase/db';
 
-import { RecipeItem, Recipes } from 'utils/api/api.types';
+import { RecipeItem, RecipeItemToUpload, Recipes } from 'utils/api/api.types';
 
 import { useUserContext } from './user.context';
 
 type StorageContextType = {
   displayMessage: string | undefined;
+  imgToStore: File | undefined;
   isLoading: boolean;
+  recipeToUpload: RecipeItemToUpload | undefined;
   removeItemFromStorage: (recipeId?: string, selectedIds?: string[]) => void;
   setDisplayMessage: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setImgToStore: React.Dispatch<React.SetStateAction<File | undefined>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setRecipeToUpload: React.Dispatch<
+    React.SetStateAction<RecipeItemToUpload | undefined>
+  >;
   storedRecipes: Recipes | undefined;
   uploadNewRecipe: (recipeToAdd: RecipeItem) => Promise<void>;
 };
 
 export const StorageContext = createContext<StorageContextType>({
   displayMessage: undefined,
+  imgToStore: undefined,
   isLoading: true,
+  recipeToUpload: undefined,
   removeItemFromStorage: () => {},
   setDisplayMessage: () => {},
+  setImgToStore: () => {},
   setIsLoading: () => {},
+  setRecipeToUpload: () => {},
   storedRecipes: undefined,
   uploadNewRecipe: async () => {},
 });
 
 export const StorageProvider = ({ children }: PropsWithChildren) => {
   const [displayMessage, setDisplayMessage] = useState<string>();
+  const [imgToStore, setImgToStore] = useState<File>();
   const [isLoading, setIsLoading] = useState(true);
+  const [recipeToUpload, setRecipeToUpload] = useState<RecipeItemToUpload>();
   const [storedRecipes, setStoredRecipes] = useState<Recipes>();
+  const collectionName = 'storage';
 
   const { currentUser, userIsLoading } = useUserContext();
-  const collectionName = 'storage';
 
   const addTimeStamp = (recipe: RecipeItem) => {
     const recipeToAdd = recipe;
@@ -65,19 +77,18 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
     }
   }, [currentUser]);
 
-  const isItemStored = (item: RecipeItem) =>
-    storedRecipes?.find(
-      (savedRecipe: RecipeItem) => savedRecipe.id === item.id,
-    );
+  const isItemStored = (itemId: string) =>
+    storedRecipes?.find((savedRecipe: RecipeItem) => savedRecipe.id === itemId);
 
   const uploadNewRecipe = async (item: RecipeItem) => {
-    const itemIsAlreadyAdded = isItemStored(item);
+    const itemIsAlreadyAdded = isItemStored(item.id);
 
     try {
       if (!itemIsAlreadyAdded) {
         const recipeToAdd = addTimeStamp(item);
 
         await uploadRecipe(currentUser?.userUid, collectionName, recipeToAdd);
+
         updateContext();
         setDisplayMessage('Successfully stored');
       } else {
@@ -96,6 +107,7 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
         updateContext();
       });
     }
+
     if (recipeId) {
       deleteRecipe(currentUser?.userUid, collectionName, recipeId);
       updateContext();
@@ -104,10 +116,14 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
 
   const value = {
     displayMessage,
+    imgToStore,
     isLoading,
+    recipeToUpload,
     removeItemFromStorage,
     setDisplayMessage,
+    setImgToStore,
     setIsLoading,
+    setRecipeToUpload,
     storedRecipes,
     uploadNewRecipe,
   };

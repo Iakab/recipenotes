@@ -14,7 +14,12 @@ import {
   where,
 } from 'firebase/firestore';
 
-import { getDownloadURL, ref } from 'firebase/storage';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  StorageReference,
+} from 'firebase/storage';
 
 import { User } from 'firebase/auth';
 
@@ -93,6 +98,14 @@ export const updateUserDocumentFormAuth = async (
   return getDoc(userDocRef);
 };
 
+// GET All DOCS FROM COLLECTION
+export const getCategoriesDocument = async () => {
+  const categoriesRef = collection(db, 'categories');
+  const queryResults = query(categoriesRef, orderBy('data'));
+
+  return getDocs(queryResults);
+};
+
 export const fetchSubcollection = (userUid: string, subcollection: string) => {
   const path = collection(db, 'users', userUid, subcollection);
   return getDocs(path);
@@ -112,20 +125,31 @@ export const uploadRecipe = async (
   }
 };
 
-export const deleteRecipe = async (
+export const deleteRecipe = (
   userUid: string,
   subcollection: string,
   recipeId: string,
 ) => {
-  const path = doc(db, 'users', userUid, subcollection, recipeId);
-  deleteDoc(path);
+  const recipeImgRef =
+    ref(storage, `images/${userUid}/recipes/${recipeId}`) || undefined;
+
+  try {
+    deleteObject(recipeImgRef).catch((error) => {
+      console.log((error as Error).message);
+    });
+
+    const path = doc(db, 'users', userUid, subcollection, recipeId);
+    deleteDoc(path);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-// GET All DOCS FROM COLLECTION
-
-export const getCategoriesDocument = async () => {
-  const categoriesRef = collection(db, 'categories');
-  const queryResults = query(categoriesRef, orderBy('data'));
-
-  return getDocs(queryResults);
+export const updateRecipe = async (
+  userUid: string,
+  recipeId: string,
+  field: string,
+) => {
+  const path = doc(db, 'users', userUid, 'storage', recipeId);
+  return updateDoc(path, { field });
 };

@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+
+import { StorageContext } from 'context/storage.context';
 
 import { Box, Container } from '@mui/system';
 import {
   Button,
-  Chip,
   IconButton,
   MenuItem,
-  Stack,
   TextField,
   Typography,
 } from '@mui/material';
@@ -15,58 +15,121 @@ import {
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import CloseIcon from '@mui/icons-material/Close';
 
+import { Instruction, Section, Component } from 'utils/api/api.types';
+
 import './ingredients.scss';
+
+import { StepsProps } from '../nameAndDescription/nameAndDescription';
 
 type FormValues = {
   ingredient: '';
-  instruction: '';
+  instructionInput: '';
 };
 
 const getServingOptions = () => {
   let n = 1;
-  const numbers: number[] = [];
+  const numbers: string[] = [];
   while (n <= 30) {
-    numbers.push(n);
+    numbers.push(n.toString());
     n++;
   }
+
   return numbers;
 };
 const servingsOptions = getServingOptions();
 
-const Ingredients = () => {
-  const [ingredientsList, setIngredientsList] = useState<string[]>([]);
-  const [instructionsList, setInstructionsList] = useState<string[]>([]);
+type Instructions = Instruction[];
+type Components = Component[];
+
+const Ingredients: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
+  const [components, setComponents] = useState<Components>([]);
+  const [instructions, setInstructions] = useState<Instructions>([]);
+  const [yields, setYields] = useState<string>('Servings: 1');
+
+  const { recipeToUpload, setDisplayMessage, setRecipeToUpload } =
+    useContext(StorageContext);
+
+  useEffect(() => {
+    if (recipeToUpload) {
+      if (recipeToUpload.instructions) {
+        setInstructions(recipeToUpload.instructions);
+      }
+      if (recipeToUpload.sections) {
+        setComponents(recipeToUpload.sections[0].components);
+      }
+      if (recipeToUpload?.yields) {
+        setYields(recipeToUpload?.yields);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (submitStep.initialized) {
+      try {
+        if (!instructions || !components || !yields) {
+          setSubmitStep({ ...submitStep, initialized: false });
+          throw new Error('All fields are required.');
+        }
+
+        const sections = [{ components }];
+        setRecipeToUpload({
+          ...recipeToUpload,
+          sections,
+          instructions,
+          yields,
+        });
+
+        setSubmitStep({ initialized: false, submitted: true });
+      } catch (error) {
+        setDisplayMessage((error as Error).message);
+      }
+    }
+  }, [submitStep.initialized]);
 
   const { handleSubmit, register, reset } = useForm<FormValues>({
-    defaultValues: { ingredient: '', instruction: '' },
+    defaultValues: { ingredient: '', instructionInput: '' },
   });
 
   const onSubmit = (data: FormValues) => {
-    const { ingredient, instruction } = data;
+    const { ingredient, instructionInput } = data;
 
     if (ingredient) {
-      setIngredientsList([...ingredientsList, ingredient]);
+      setComponents([
+        ...components,
+        {
+          id: (components[components.length - 1]?.id as number) + 1 || 0,
+          raw_text: ingredient,
+        },
+      ]);
       reset();
     }
 
-    if (instruction) {
-      setInstructionsList([...instructionsList, instruction]);
+    if (instructionInput) {
+      setInstructions([
+        ...instructions,
+        {
+          display_text: instructionInput,
+          id: (instructions[instructions.length - 1]?.id as number) + 1 || 0,
+        },
+      ]);
       reset();
     }
   };
 
-  const handleRemoveFromIngredients = (index: number) => {
-    const ingredients = [...ingredientsList];
-    ingredients.splice(index, 1);
-
-    setIngredientsList(ingredients);
+  const handleYieldsSelect = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setYields(`Servings: ${event.target.value}`);
   };
 
-  const handleRemoveFromInstrucitons = (index: number) => {
-    const instructions = [...instructionsList];
-    instructions.splice(index, 1);
+  const handleRemoveFromIngredients = (id: number) => {
+    setComponents(components.filter((component) => component.id !== id));
+  };
 
-    setInstructionsList(instructions);
+  const handleRemoveFromInstructions = (id: number) => {
+    setInstructions(
+      instructions.filter((instruction) => instruction.id !== id),
+    );
   };
 
   return (
@@ -111,31 +174,43 @@ const Ingredients = () => {
           </Button>
         </form>
 
-        <Stack
-          gap={'.5rem'}
+        <Box
           className="list"
-          sx={{ flexWrap: 'wrap', overflow: 'auto' }}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'auto',
+          }}
         >
-          {ingredientsList?.map((ingredient, index) => (
-            <Chip
-              onDelete={() => handleRemoveFromIngredients(index)}
-              key={index}
-              label={ingredient}
-              sx={{ width: 'fit-content', padding: '0 .5rem' }}
-            ></Chip>
+          <Typography>Ingredients:</Typography>
+          {components?.map((component) => (
+            <Typography
+              key={component.id}
+              variant="body2"
+              sx={{ margin: '-4px' }}
+            >
+              <IconButton
+                onClick={() => handleRemoveFromIngredients(component.id)}
+                size="small"
+              >
+                <CloseIcon fontSize="small" color="warning" />
+              </IconButton>
+              {`${component.id + 1}. ${component.raw_text}`}
+            </Typography>
           ))}
-        </Stack>
+        </Box>
       </Container>
 
       <TextField
-        id="yields"
-        select
-        label="Servings"
-        sx={{ alignSelf: 'flex-start', width: '11rem', margin: 'auto 7rem' }}
-        variant="filled"
-        size="small"
-        defaultValue={1}
         className="select-menu"
+        id="yields"
+        label="Servings"
+        onChange={handleYieldsSelect}
+        select
+        size="small"
+        sx={{ alignSelf: 'flex-start', width: '11rem', margin: 'auto 7rem' }}
+        value={yields.split(' ')[1]}
+        variant="filled"
       >
         {servingsOptions.map((number) => (
           <MenuItem key={number} value={number}>
@@ -155,8 +230,8 @@ const Ingredients = () => {
       >
         <form className="form" onSubmit={handleSubmit(onSubmit)}>
           <TextField
-            {...register('instruction')}
-            id="instruction"
+            {...register('instructionInput')}
+            id="instructionInput"
             label="Instruction"
             sx={{ flex: '1 1 auto' }}
             variant="filled"
@@ -179,15 +254,19 @@ const Ingredients = () => {
           }}
         >
           <Typography>Instructions:</Typography>
-          {instructionsList.map((instruction, index) => (
-            <Typography key={index} variant="body2" sx={{ margin: '-4px' }}>
+          {instructions.map((instruction) => (
+            <Typography
+              key={instruction.id}
+              sx={{ margin: '-4px' }}
+              variant="body2"
+            >
               <IconButton
-                onClick={() => handleRemoveFromInstrucitons(index)}
+                onClick={() => handleRemoveFromInstructions(instruction.id)}
                 size="small"
               >
                 <CloseIcon fontSize="small" color="warning" />
               </IconButton>
-              {`${index + 1}. ${instruction}`}
+              {`${instruction.id + 1}. ${instruction.display_text}`}
             </Typography>
           ))}
         </Box>

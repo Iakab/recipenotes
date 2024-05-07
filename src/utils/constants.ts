@@ -1,4 +1,5 @@
 import notebook from 'assets/img/notebook.png';
+import { RecipeItem } from './api/api.types';
 
 export const cuisines = [
   'Mexican',
@@ -90,4 +91,21 @@ export const instructions: Instruction[] = [
     image: notebook,
     title: 'VISIT STORAGE',
   },
+];
+
+export const timeOptions = [
+  'Under 15 minutes',
+  'Under 30 minutes',
+  'Under 1 hour',
+  'Under 2 hour',
+  'Under 3 hour',
+  'More than 3 hours',
+];
+export const difficultyOptions = ['Easy', 'Hard', 'Medium'];
+export const mealsOptions = [
+  'Breakfast',
+  'Desserts',
+  'Dinner',
+  'Lunch',
+  'Snacks',
 ];
