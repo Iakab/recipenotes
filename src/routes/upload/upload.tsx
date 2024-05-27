@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useUserContext } from 'context/user.context';
@@ -7,7 +7,14 @@ import { StorageContext } from 'context/storage.context';
 import { uploadImage, getImage } from 'utils/firebase/storage';
 
 import { Box } from '@mui/system';
-import { Stepper, Step, StepLabel, Button } from '@mui/material';
+import {
+  Button,
+  MobileStepper,
+  Step,
+  StepLabel,
+  Stepper,
+  useMediaQuery,
+} from '@mui/material';
 
 import Ingredients from 'components/steps/ingredients/ingredients';
 import NameAndDescription from 'components/steps/nameAndDescription/nameAndDescription';
@@ -35,6 +42,7 @@ const UploadRecipe = () => {
   const navigate = useNavigate();
 
   const { currentUser } = useUserContext();
+
   const {
     imgToStore,
     recipeToUpload,
@@ -43,6 +51,8 @@ const UploadRecipe = () => {
     setRecipeToUpload,
     uploadNewRecipe,
   } = useContext(StorageContext);
+
+  const phoneSize = useMediaQuery('(max-width: 600px)');
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
@@ -90,7 +100,7 @@ const UploadRecipe = () => {
       id: '4',
     },
     {
-      label: 'Nutrition(optional)',
+      label: 'Nutrition (optional)',
       content: (
         <Nutrition submitStep={submitStep} setSubmitStep={setSubmitStep} />
       ),
@@ -101,17 +111,20 @@ const UploadRecipe = () => {
 
   const handleSubmit = async () => {
     const recipeId = (recipeToUpload as RecipeItem).id;
+
+    if (!currentUser) return;
+    const { userUid } = currentUser;
+
     try {
-      await uploadImage(
-        imgToStore as File,
-        currentUser?.userUid,
-        `recipes/${recipeId}`,
-      );
+      await uploadImage(imgToStore as File, userUid, `recipes/${recipeId}`);
 
       const recipeImage = await getImage(
-        currentUser?.userUid,
-        `recipes/${recipeId}`,
+        `images/${userUid}/recipes/${recipeId}`,
       );
+
+      if (!recipeImage) {
+        throw new Error('Failed to upload image');
+      }
 
       uploadNewRecipe({
         ...(recipeToUpload as RecipeItem),
@@ -127,6 +140,58 @@ const UploadRecipe = () => {
     }
   };
 
+  const forwardButton = useMemo(() => {
+    if (activeStep === steps.length - 1) {
+      return (
+        <Button type="submit" onClick={handleSubmit} size="large">
+          Submit
+        </Button>
+      );
+    }
+    return (
+      <Button type="submit" onClick={handleNext} size="large">
+        Next
+      </Button>
+    );
+  }, [activeStep]);
+
+  const backButton = useMemo(
+    () => (
+      <Button onClick={handleBack} size="large" disabled={activeStep === 0}>
+        Back
+      </Button>
+    ),
+    [activeStep],
+  );
+
+  if (phoneSize) {
+    return (
+      <Box
+        sx={{
+          flex: '1 1 auto',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: '2rem',
+        }}
+      >
+        <Box
+          sx={{
+            mb: '2rem',
+          }}
+        >
+          {steps[activeStep].content}
+        </Box>
+        <MobileStepper
+          activeStep={activeStep}
+          backButton={backButton}
+          nextButton={forwardButton}
+          position="static"
+          steps={steps.length}
+        ></MobileStepper>
+      </Box>
+    );
+  }
   return (
     <Box className="upload">
       <Stepper
@@ -143,21 +208,9 @@ const UploadRecipe = () => {
 
       <Box className="step">
         {steps[activeStep].content}
-
         <Box width={'100%'} className="buttons">
-          <Button onClick={handleBack} size="large" disabled={activeStep === 0}>
-            Back
-          </Button>
-
-          {activeStep === steps.length - 1 ? (
-            <Button type="submit" onClick={handleSubmit} size="large">
-              Submit
-            </Button>
-          ) : (
-            <Button type="submit" onClick={handleNext} size="large">
-              Next
-            </Button>
-          )}
+          {backButton}
+          {forwardButton}
         </Box>
       </Box>
     </Box>

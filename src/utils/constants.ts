@@ -101,7 +101,7 @@ export const timeOptions = [
   'Under 3 hour',
   'More than 3 hours',
 ];
-export const difficultyOptions = ['Easy', 'Hard', 'Medium'];
+export const difficultyOptions = ['Easy', 'Medium', 'Hard'];
 export const mealsOptions = [
   'Breakfast',
   'Desserts',

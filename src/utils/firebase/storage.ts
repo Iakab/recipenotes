@@ -1,4 +1,10 @@
-import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+  deleteObject,
+} from 'firebase/storage';
 
 import { app } from './config';
 
@@ -16,9 +22,30 @@ export const uploadImage = async (
 };
 
 //  Get img url
-export const getImage = async (userUid: string, folderName: string) => {
-  const userImageRef = ref(storage, `images/${userUid}/${folderName}`);
+export const getImage = async (path: string) => {
+  try {
+    const userImageRef = ref(storage, path);
 
-  const userPhototUrl = getDownloadURL(userImageRef);
-  return userPhototUrl;
+    return await getDownloadURL(userImageRef);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'storage/object-not-found') {
+      console.log("File doesn't exist");
+      return undefined;
+    }
+    console.log(error);
+    return undefined;
+  }
+};
+
+export const deleteImg = async (path: string) => {
+  const img = await getImage(path);
+
+  try {
+    if (img) {
+      const imgRef = ref(storage, path);
+      await deleteObject(imgRef);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };

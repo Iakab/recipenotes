@@ -50,6 +50,12 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
 
   const { currentUser, userIsLoading } = useUserContext();
 
+  useEffect(() => {
+    if (recipeToUpload) {
+      console.log(recipeToUpload);
+    }
+  }, [recipeToUpload]);
+
   const addTimeStamp = (recipe: RecipeItem) => {
     const recipeToAdd = recipe;
 
@@ -100,16 +106,19 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const removeItemFromStorage = (recipeId?: string, selectedIds?: string[]) => {
+  const removeItemFromStorage = async (
+    recipeId?: string,
+    selectedIds?: string[],
+  ) => {
     if (selectedIds) {
-      selectedIds.forEach((id: string) => {
-        deleteRecipe(currentUser?.userUid, collectionName, id);
+      selectedIds.forEach(async (id: string) => {
+        await deleteRecipe(currentUser?.userUid, collectionName, id);
         updateContext();
       });
     }
 
     if (recipeId) {
-      deleteRecipe(currentUser?.userUid, collectionName, recipeId);
+      await deleteRecipe(currentUser?.userUid, collectionName, recipeId);
       updateContext();
     }
   };

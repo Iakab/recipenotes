@@ -27,13 +27,14 @@ const Favourites = () => {
     );
   };
 
-  const items = useMemo(
-    () =>
-      favouriteRecipes?.map((item: RecipeItem) => (
+  const items = useMemo(() => {
+    if (favouriteRecipes?.length) {
+      return favouriteRecipes?.map((item: RecipeItem) => (
         <ItemCard key={item.id} recipe={item} handlePreview={handlePreview} />
-      )),
-    [favouriteRecipes],
-  );
+      ));
+    }
+    return undefined;
+  }, [favouriteRecipes]);
 
   return (
     <div className="favourites">

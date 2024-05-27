@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { StorageContext } from 'context/storage.context';
@@ -10,16 +10,17 @@ import {
   MenuItem,
   TextField,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
+
+import { Instruction, Component } from 'utils/api/api.types';
 
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { Instruction, Section, Component } from 'utils/api/api.types';
+import { StepsProps } from '../nameAndDescription/nameAndDescription';
 
 import './ingredients.scss';
-
-import { StepsProps } from '../nameAndDescription/nameAndDescription';
 
 type FormValues = {
   ingredient: '';
@@ -38,16 +39,15 @@ const getServingOptions = () => {
 };
 const servingsOptions = getServingOptions();
 
-type Instructions = Instruction[];
-type Components = Component[];
-
 const Ingredients: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
-  const [components, setComponents] = useState<Components>([]);
-  const [instructions, setInstructions] = useState<Instructions>([]);
+  const [components, setComponents] = useState<Component[]>();
+  const [instructions, setInstructions] = useState<Instruction[]>();
   const [yields, setYields] = useState<string>('Servings: 1');
 
   const { recipeToUpload, setDisplayMessage, setRecipeToUpload } =
     useContext(StorageContext);
+
+  const maxTabLandSize = useMediaQuery('(max-width:1200px)');
 
   useEffect(() => {
     if (recipeToUpload) {
@@ -66,7 +66,7 @@ const Ingredients: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
   useEffect(() => {
     if (submitStep.initialized) {
       try {
-        if (!instructions || !components || !yields) {
+        if (!instructions || !components) {
           setSubmitStep({ ...submitStep, initialized: false });
           throw new Error('All fields are required.');
         }
@@ -94,24 +94,45 @@ const Ingredients: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
     const { ingredient, instructionInput } = data;
 
     if (ingredient) {
-      setComponents([
-        ...components,
-        {
-          id: (components[components.length - 1]?.id as number) + 1 || 0,
-          raw_text: ingredient,
-        },
-      ]);
+      const lastId = components?.length
+        ? components[components.length - 1]?.id
+        : -1;
+
+      if (components) {
+        setComponents([
+          ...components,
+          {
+            id: lastId + 1,
+            raw_text: ingredient,
+          },
+        ]);
+      } else {
+        setComponents([{ id: lastId + 1, raw_text: ingredient }]);
+      }
       reset();
     }
 
     if (instructionInput) {
-      setInstructions([
-        ...instructions,
-        {
-          display_text: instructionInput,
-          id: (instructions[instructions.length - 1]?.id as number) + 1 || 0,
-        },
-      ]);
+      const lastId = instructions?.length
+        ? instructions[instructions.length - 1]?.id
+        : -1;
+
+      if (instructions) {
+        setInstructions([
+          ...instructions,
+          {
+            display_text: instructionInput,
+            id: lastId + 1 || 0,
+          },
+        ]);
+      } else {
+        setInstructions([
+          {
+            display_text: instructionInput,
+            id: lastId + 1 || 0,
+          },
+        ]);
+      }
       reset();
     }
   };
@@ -123,14 +144,54 @@ const Ingredients: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
   };
 
   const handleRemoveFromIngredients = (id: number) => {
-    setComponents(components.filter((component) => component.id !== id));
+    setComponents(components?.filter((component) => component.id !== id));
   };
 
   const handleRemoveFromInstructions = (id: number) => {
     setInstructions(
-      instructions.filter((instruction) => instruction.id !== id),
+      instructions?.filter((instruction) => instruction.id !== id),
     );
   };
+
+  const ingredientsList = useCallback(
+    () =>
+      components?.map((component) => {
+        const { id, raw_text: rawText } = component;
+
+        return (
+          <Typography key={id} variant="body2" style={{ lineHeight: '1.5' }}>
+            <IconButton
+              onClick={() => handleRemoveFromIngredients(id)}
+              style={{ height: '.5rem' }}
+            >
+              <CloseIcon fontSize="small" color="warning" />
+            </IconButton>
+            {`${id + 1}. ${rawText}`}
+          </Typography>
+        );
+      }),
+    [components],
+  );
+
+  const instructionsList = useCallback(
+    () =>
+      instructions?.map((instruction) => {
+        const { id, display_text: displayText } = instruction;
+
+        return (
+          <Typography key={id} variant="body2" style={{ lineHeight: '1.5' }}>
+            <IconButton
+              onClick={() => handleRemoveFromInstructions(id)}
+              style={{ height: '.5rem' }}
+            >
+              <CloseIcon fontSize="small" color="warning" />
+            </IconButton>
+            {`${id + 1}. ${displayText}`}
+          </Typography>
+        );
+      }),
+    [instructions],
+  );
 
   return (
     <Container
@@ -141,32 +202,43 @@ const Ingredients: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
-        alignItems: 'center',
+        alignItems: 'flex-start',
+        gap: '2rem',
       }}
     >
       <Typography variant="h4" sx={{ alignSelf: 'flex-start' }}>
         Add ingredients and instructions:
       </Typography>
-      <Container
+      <Box
         sx={{
           width: '100%',
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-start',
           alignItems: 'center',
+          flexWrap: 'wrap',
         }}
-        className="ingredients-step"
       >
-        <form className="form-ingredient" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          style={{
+            flex: '1 0 auto',
+            display: 'flex',
+            justifyContent: 'stretch',
+          }}
+        >
           <TextField
             {...register('ingredient')}
+            className="step-input"
             id="ingredient"
             label="Ingredient"
-            sx={{ flex: '1 1 auto' }}
             variant="filled"
           ></TextField>
           <Button
             size="small"
-            sx={{ margin: '1rem 3rem' }}
+            sx={{
+              margin: maxTabLandSize ? '1rem 1rem' : '1rem 3rem',
+              flex: '0 1 10rem',
+            }}
             type="submit"
             variant="contained"
           >
@@ -174,32 +246,11 @@ const Ingredients: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
           </Button>
         </form>
 
-        <Box
-          className="list"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'auto',
-          }}
-        >
+        <Box className="list">
           <Typography>Ingredients:</Typography>
-          {components?.map((component) => (
-            <Typography
-              key={component.id}
-              variant="body2"
-              sx={{ margin: '-4px' }}
-            >
-              <IconButton
-                onClick={() => handleRemoveFromIngredients(component.id)}
-                size="small"
-              >
-                <CloseIcon fontSize="small" color="warning" />
-              </IconButton>
-              {`${component.id + 1}. ${component.raw_text}`}
-            </Typography>
-          ))}
+          {ingredientsList()}
         </Box>
-      </Container>
+      </Box>
 
       <TextField
         className="select-menu"
@@ -208,7 +259,7 @@ const Ingredients: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
         onChange={handleYieldsSelect}
         select
         size="small"
-        sx={{ alignSelf: 'flex-start', width: '11rem', margin: 'auto 7rem' }}
+        sx={{ width: '11rem' }}
         value={yields.split(' ')[1]}
         variant="filled"
       >
@@ -219,58 +270,47 @@ const Ingredients: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
         ))}
       </TextField>
 
-      <Container
+      <Box
         sx={{
           width: '100%',
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-start',
           alignItems: 'center',
+          flexWrap: 'wrap',
         }}
-        className="ingredients-step"
       >
-        <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          style={{
+            flex: '1 0 auto',
+            display: 'flex',
+            justifyContent: 'stretch',
+          }}
+        >
           <TextField
             {...register('instructionInput')}
+            className="step-input"
             id="instructionInput"
             label="Instruction"
-            sx={{ flex: '1 1 auto' }}
             variant="filled"
           ></TextField>
           <Button
             size="small"
-            sx={{ margin: '1rem 3rem' }}
+            sx={{
+              margin: maxTabLandSize ? '1rem 1rem' : '1rem 3rem',
+              flex: '0 1 10rem',
+            }}
             type="submit"
             variant="contained"
           >
             Add <ArrowRightAltIcon fontSize="small" />
           </Button>
         </form>
-        <Box
-          className="list"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'auto',
-          }}
-        >
+        <Box className="list">
           <Typography>Instructions:</Typography>
-          {instructions.map((instruction) => (
-            <Typography
-              key={instruction.id}
-              sx={{ margin: '-4px' }}
-              variant="body2"
-            >
-              <IconButton
-                onClick={() => handleRemoveFromInstructions(instruction.id)}
-                size="small"
-              >
-                <CloseIcon fontSize="small" color="warning" />
-              </IconButton>
-              {`${instruction.id + 1}. ${instruction.display_text}`}
-            </Typography>
-          ))}
+          {instructionsList()}
         </Box>
-      </Container>
+      </Box>
     </Container>
   );
 };

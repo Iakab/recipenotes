@@ -15,9 +15,8 @@ import {
 } from 'firebase/auth';
 
 import { deleteDoc, doc } from 'firebase/firestore';
-import { deleteObject, ref } from 'firebase/storage';
 
-import { storage } from './storage';
+import { deleteImg } from './storage';
 import { db } from './db';
 
 const auth = getAuth();
@@ -66,20 +65,16 @@ export const resetPassword = (email: string) => {
 //  Delete user
 export const deleteAccount = (password: string) => {
   const { currentUser } = auth;
-  const { email } = currentUser || {};
+  const { email, uid } = currentUser || {};
 
-  if (!currentUser || !email) return;
-
-  const userImageRef = ref(storage, `images/${currentUser.uid}`);
+  if (!currentUser || !email || !uid) return;
 
   const userCredentials = EmailAuthProvider.credential(email, password);
 
   try {
     reauthenticateWithCredential(currentUser, userCredentials).then(() => {
-      deleteDoc(doc(db, 'users', currentUser.uid));
-      deleteObject(userImageRef).catch((error) => {
-        console.log((error as Error).message);
-      });
+      deleteDoc(doc(db, 'users', uid));
+      deleteImg(`images/${uid}/profile`);
       deleteUser(currentUser).then(() => {
         alert('Account successfully deleted');
       });

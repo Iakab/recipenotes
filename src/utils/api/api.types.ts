@@ -36,11 +36,10 @@ type UserRatings = {
   score: number;
 };
 
-type Credit = {
+export type Credit = {
   name: string;
   type: string;
 };
-type Credits = Credit;
 
 type Renditions = {
   aspect: string;
@@ -88,7 +87,7 @@ export type Section = {
 export type RecipeItem = {
   approved_at: number;
   country: string;
-  credits: Credits[];
+  credits: Credit[];
   description: string;
   id: string;
   instructions: Instruction[];
@@ -114,7 +113,7 @@ export type Recipes = RecipeItem[];
 export type RecipeItemToUpload = {
   approved_at?: number;
   country?: string;
-  credits?: Credits[];
+  credits?: Credit[];
   description?: string;
   id?: string;
   instructions?: Instruction[];

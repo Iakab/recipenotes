@@ -37,7 +37,7 @@ const SignUpForm: React.FC<SignUpProps> = ({ setDisplaySignIn }) => {
 
   const onSubmit = async (data: FormValues) => {
     const { displayName, email, password, confirmPassword } = data;
-
+    console.log(displayName);
     try {
       if (password !== confirmPassword) {
         throw new Error(`Passwords don't match`);

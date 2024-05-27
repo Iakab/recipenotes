@@ -2,7 +2,13 @@ import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
 
 import { StorageContext } from 'context/storage.context';
 
-import { Container, MenuItem, TextField, Typography } from '@mui/material';
+import {
+  Container,
+  MenuItem,
+  TextField,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 
 import { RecipeItemToUpload, Tag, TotalTimeTier } from 'utils/api/api.types';
 
@@ -60,6 +66,8 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
   const { setRecipeToUpload, recipeToUpload, setDisplayMessage } =
     useContext(StorageContext);
 
+  const phoneSize = useMediaQuery('(max-width:600px)');
+
   useEffect(() => {
     if (recipeToUpload?.tags) {
       let uploadedTags: Selections = defaultSelections;
@@ -97,18 +105,23 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
     };
   }, [recipeToUpload?.tags]);
 
+  const inputStyle = {
+    minWidth: phoneSize ? '25rem' : '19rem',
+  };
+
   useEffect(() => {
     if (submitStep.initialized) {
       try {
-        if (!selections || !selectedTime) {
-          setSubmitStep({ ...submitStep, initialized: false });
-          throw new Error('All fields are required.');
-        }
         const tagsSelections: TagSelections = [];
 
         Object.entries(selections).map((tag) => {
           const name = tag[0];
           const value = tag[1];
+
+          if (!value || !selectedTime.display_tier) {
+            setSubmitStep({ ...submitStep, initialized: false });
+            throw new Error('All fields are required.');
+          }
 
           tagsSelections.push({
             display_name: value,
@@ -135,6 +148,7 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = event.target;
+
     setSelections({ ...selections, [name]: value });
   };
 
@@ -151,12 +165,12 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
 
   return (
     <Fragment>
-      <Typography variant="h4" sx={{ mb: '2rem' }}>
+      <Typography variant="h4" sx={{ mb: phoneSize ? '3rem' : '2rem' }}>
         Tags
       </Typography>
 
       <Container
-        sx={{
+        style={{
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
@@ -184,7 +198,7 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
             onChange={handleChange}
             select
             size="small"
-            sx={{ minWidth: '19rem' }}
+            sx={inputStyle}
             value={selections.country}
             variant="filled"
           >
@@ -203,7 +217,7 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
             onChange={handleChange}
             select
             size="small"
-            sx={{ minWidth: '19rem' }}
+            sx={inputStyle}
             value={selections.meal}
             variant="filled"
           >
@@ -222,7 +236,7 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
             onChange={handleChange}
             select
             size="small"
-            sx={{ minWidth: '19rem' }}
+            sx={inputStyle}
             value={selections.difficulty}
             variant="filled"
           >
@@ -242,7 +256,7 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
             onChange={handleTimeSelection}
             select
             size="small"
-            sx={{ minWidth: '19rem' }}
+            sx={inputStyle}
             value={selectedTime.display_tier}
             variant="filled"
           >
@@ -262,7 +276,7 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
             onChange={handleChange}
             select
             size="small"
-            sx={{ minWidth: '19rem' }}
+            sx={inputStyle}
             value={selections.occasion}
             variant="filled"
           >

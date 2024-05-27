@@ -35,8 +35,7 @@ const Profile = () => {
         try {
           await uploadImage(userPhoto, currentUser.userUid, 'profile');
           const userPhotoUrl = await getImage(
-            currentUser.userUid,
-            'profile',
+            `images/${currentUser.userUid}/profile`,
           );
           const name = 'userPhotoUrl';
 

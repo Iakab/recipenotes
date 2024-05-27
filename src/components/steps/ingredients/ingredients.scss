@@ -1,16 +1,13 @@
 .list {
   flex: 1 1 auto;
-  max-width: 30vw;
-  min-width: 50%;
-  min-height: 10rem;
-  max-height: 17rem;
+  min-width: 30rem;
+  width: 50%;
+  height: 25vh;
+  overflow-y: auto;
   padding: 1rem;
   border: 1px solid black;
 }
 
-.form-ingredient {
+.step-input {
   flex: 1 1 auto;
-  width: 50%;
-
-  display: flex;
 }

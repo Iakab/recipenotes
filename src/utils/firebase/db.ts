@@ -14,17 +14,12 @@ import {
   where,
 } from 'firebase/firestore';
 
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  StorageReference,
-} from 'firebase/storage';
+import { getDownloadURL, ref } from 'firebase/storage';
 
 import { User } from 'firebase/auth';
 
 import { app } from './config';
-import { storage } from './storage';
+import { storage, deleteImg } from './storage';
 
 import { RecipeItem } from '../api/api.types';
 
@@ -125,23 +120,20 @@ export const uploadRecipe = async (
   }
 };
 
-export const deleteRecipe = (
+export const deleteRecipe = async (
   userUid: string,
   subcollection: string,
   recipeId: string,
 ) => {
-  const recipeImgRef =
-    ref(storage, `images/${userUid}/recipes/${recipeId}`) || undefined;
+  if (subcollection === 'storage') {
+    deleteImg(`images/${userUid}/recipes/${recipeId}`);
+  }
 
   try {
-    deleteObject(recipeImgRef).catch((error) => {
-      console.log((error as Error).message);
-    });
-
     const path = doc(db, 'users', userUid, subcollection, recipeId);
-    deleteDoc(path);
+    await deleteDoc(path);
   } catch (error) {
-    console.log(error);
+    console.log((error as Error).message);
   }
 };
 

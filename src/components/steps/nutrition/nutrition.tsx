@@ -2,7 +2,7 @@ import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
 
 import { StorageContext } from 'context/storage.context';
 
-import { Container, TextField, Typography } from '@mui/material';
+import { Container, TextField, Typography, useMediaQuery } from '@mui/material';
 
 import { Nutrition as NutritionType } from 'utils/api/api.types';
 
@@ -13,22 +13,21 @@ const Nutrition: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
 
   const { setRecipeToUpload, recipeToUpload } = useContext(StorageContext);
 
-  const registeredNutrition = useMemo(() => {
-    let defaultNutrition: NutritionType = {
-      calories: undefined,
-      carbohydrates: undefined,
-      fat: undefined,
-      fiber: undefined,
-      protein: undefined,
-      sugar: undefined,
-    };
+  const phoneSize = useMediaQuery('(max-width:600px)');
 
-    if (recipeToUpload?.nutrition) {
-      defaultNutrition = recipeToUpload.nutrition;
-    }
+  const registeredNutrition = useMemo(
+    () =>
+      recipeToUpload?.nutrition || {
+        calories: undefined,
+        carbohydrates: undefined,
+        fat: undefined,
+        fiber: undefined,
+        protein: undefined,
+        sugar: undefined,
+      },
 
-    return defaultNutrition;
-  }, [recipeToUpload?.nutrition]);
+    [recipeToUpload?.nutrition],
+  );
 
   useEffect(() => {
     if (recipeToUpload?.nutrition) {
@@ -40,11 +39,12 @@ const Nutrition: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
     event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>,
   ) => {
     const { id, value } = event.target;
-
-    if (nutrition) {
-      setNutrition({ ...nutrition, [id]: Number(value) });
-    } else {
-      setNutrition({ [id]: value });
+    if (value) {
+      if (nutrition) {
+        setNutrition({ ...nutrition, [id]: Number(value) });
+      } else {
+        setNutrition({ [id]: value });
+      }
     }
   };
 
@@ -78,6 +78,7 @@ const Nutrition: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
           justifyContent: 'center',
           gap: '2rem',
           flexWrap: 'wrap',
+          mt: phoneSize ? '3rem' : 0,
         }}
       >
         <TextField
