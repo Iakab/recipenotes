@@ -1,7 +1,11 @@
 .upload {
+  flex: 1 1 auto;
   display: flex;
-
+  justify-content: center;
   .stepper {
+    flex: 0 1 30rem;
+    min-width: 15rem;
+
     margin: 3rem 0 3rem 7rem;
     padding: 0 3rem;
     border-right: 1px solid black;
@@ -9,11 +13,11 @@
   }
 
   .step {
-    width: 100%;
-    min-height: 77vh;
+    flex: 1 1 45rem;
     margin: 3rem 7rem 3rem 0;
     padding: 3rem;
     border-top: 1px solid black;
+    text-wrap: wrap;
 
     display: flex;
     flex-direction: column;

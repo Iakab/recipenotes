@@ -31,6 +31,7 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
     slidesToScroll: 5,
     slidesToShow: 5,
     speed: 500,
+
     responsive: [
       {
         breakpoint: 1800,
@@ -40,10 +41,10 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
         },
       },
       {
-        breakpoint: 900,
+        breakpoint: 1200,
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
+          slidesToShow: 4,
+          slidesToScroll: 4,
         },
       },
       {

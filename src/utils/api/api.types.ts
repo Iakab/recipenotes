@@ -1,29 +1,27 @@
 export type Instruction = {
-  appliance: string;
-  display_text: string;
-  end_time: number;
+  appliance?: string;
+  display_text?: string;
+  end_time?: number;
   id: number;
-  position: number;
-  start_time: number;
-  temperature: number;
+  position?: number;
+  start_time?: number;
+  temperature?: number;
 };
 
-export type Instructions = Instruction;
-
-type Nutrition = {
-  calories: number;
-  carbohydrates: number;
-  fat: number;
-  fiber: number;
-  protein: number;
-  sugar: number;
+export type Nutrition = {
+  calories?: number;
+  carbohydrates?: number;
+  fat?: number;
+  fiber?: number;
+  protein?: number;
+  sugar?: number;
 };
 
-type Tags = {
+export type Tag = {
   display_name: string;
   id: number;
   name: string;
-  root_tag_type: string;
+  root_tag_type?: string;
   type: string;
 };
 type TipsSummary = {
@@ -38,11 +36,10 @@ type UserRatings = {
   score: number;
 };
 
-type Credit = {
+export type Credit = {
   name: string;
   type: string;
 };
-type Credits = Credit;
 
 type Renditions = {
   aspect: string;
@@ -60,15 +57,9 @@ type Renditions = {
   width: number;
 };
 
-type TotalTimeTier = {
+export type TotalTimeTier = {
   display_tier: string;
   tier: string;
-};
-
-type Ingredient = {
-  display_plural: string;
-  display_singular: string;
-  name: string;
 };
 
 type Unit = {
@@ -78,41 +69,35 @@ type Unit = {
   name: string;
   system: string;
 };
-type Measurement = {
-  id: number;
-  quantity: string;
-  unit: Unit[];
-};
+// type Measurement = {
+//   id: number;
+//   quantity: string;
+//   unit: Unit[];
+// };
 
 export type Component = {
-  extra_comment: string;
   id: number;
-  ingredient: Ingredient[];
-  measurements: Measurement[];
-  position: number;
   raw_text: string;
 };
-type Components = Component;
 
-type Section = {
-  components: Components[];
-  name: string;
-  position: number;
+export type Section = {
+  components: Component[];
 };
+
 export type RecipeItem = {
   approved_at: number;
   country: string;
-  credits: Credits[];
+  credits: Credit[];
   description: string;
   id: string;
-  instructions: Instructions[];
+  instructions: Instruction[];
   lastEdit?: string;
   name: string;
-  nutrition: Nutrition[];
+  nutrition: Nutrition;
   original_video_url: string;
   prep_time_minuntes: number;
   sections: Section[];
-  tags: Tags[];
+  tags: Tag[];
   thumbnail_url: string;
   tips_summary: TipsSummary[];
   total_time_tier: TotalTimeTier;
@@ -124,3 +109,27 @@ export type RecipeItem = {
 };
 
 export type Recipes = RecipeItem[];
+
+export type RecipeItemToUpload = {
+  approved_at?: number;
+  country?: string;
+  credits?: Credit[];
+  description?: string;
+  id?: string;
+  instructions?: Instruction[];
+  lastEdit?: string;
+  name?: string;
+  nutrition?: Nutrition;
+  original_video_url?: string;
+  prep_time_minuntes?: number;
+  sections?: Section[];
+  tags?: Tag[];
+  thumbnail_url?: string;
+  tips_summary?: TipsSummary[];
+  total_time_tier?: TotalTimeTier;
+  updated_at?: number;
+  user_ratings?: UserRatings;
+  video_id?: number;
+  video_url?: string;
+  yields?: string;
+};

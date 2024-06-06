@@ -1,21 +1,51 @@
-import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+  deleteObject,
+} from 'firebase/storage';
 
 import { app } from './config';
 
 export const storage = getStorage(app);
 
 //  Upload photo
-export const uploadUserImage = async (file: File, userUid: string) => {
-  const userImgRef = ref(storage, `images/${userUid}`);
+export const uploadImage = async (
+  file: File,
+  userUid: string,
+  folderName: string,
+) => {
+  const userImgRef = ref(storage, `images/${userUid}/${folderName}`);
 
-  //  with blob api
   await uploadBytes(userImgRef, file);
 };
 
 //  Get img url
-export const getUserImage = async (userUid: string) => {
-  const userImageRef = ref(storage, `images/${userUid}`);
+export const getImage = async (path: string) => {
+  try {
+    const userImageRef = ref(storage, path);
 
-  const userPhototUrl = getDownloadURL(userImageRef);
-  return userPhototUrl;
+    return await getDownloadURL(userImageRef);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'storage/object-not-found') {
+      console.log("File doesn't exist");
+      return undefined;
+    }
+    console.log(error);
+    return undefined;
+  }
+};
+
+export const deleteImg = async (path: string) => {
+  const img = await getImage(path);
+
+  try {
+    if (img) {
+      const imgRef = ref(storage, path);
+      await deleteObject(imgRef);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };

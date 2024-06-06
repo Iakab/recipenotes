@@ -7,13 +7,14 @@ import ReactPlayer from 'react-player';
 
 import { RecipeItem, Component, Instruction } from 'utils/api/api.types';
 
-import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
+import { Checkbox, IconButton, Tooltip, useMediaQuery } from '@mui/material';
 
-import { ReactComponent as CustomCloseIcon } from 'assets/icons/SVG/cross.svg';
-import { ReactComponent as HeartIcon } from 'assets/icons/SVG/heart.svg';
-import { ReactComponent as HeartIconOutlined } from 'assets/icons/SVG/heart-outlined.svg';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+
+import { ReactComponent as CustomCloseIcon } from 'assets/icons/SVG/cross.svg';
 
 import './preview-item.scss';
 
@@ -29,7 +30,7 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
   setTargetRecipe,
 }) => {
   const closeIconRef = useRef<null | SVGAElement>(null);
-  const [addedToFavorites, setAddedToFavorites] = useState<RecipeItem>();
+  const [addedToFavorites, setAddedToFavorites] = useState(false);
 
   const { updateFavourites, isItemFavourite, favouriteRecipes } =
     useContext(FavourtiesContext);
@@ -70,6 +71,7 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
   const closePreview = () => {
     setTargetRecipe(undefined);
   };
+
   return (
     <div className="overlay" onClick={exitPreview}>
       {!isMaxTabPortSize && (
@@ -98,21 +100,14 @@ const PreviewItem: React.FC<PreviewItemProps> = ({
           )}
           <div style={{ flex: '1 1 auto' }}></div>
 
-          {addedToFavorites ? (
-            <Tooltip title="Remove from Favourites">
-              <HeartIcon
-                onClick={handleAddToFavourites}
-                className="icon-heart"
-              />
-            </Tooltip>
-          ) : (
-            <Tooltip title="Add to Favourites">
-              <HeartIconOutlined
-                onClick={handleAddToFavourites}
-                className="icon-heart"
-              />
-            </Tooltip>
-          )}
+          <Checkbox
+            className="icon-heart"
+            checked={addedToFavorites}
+            onClick={handleAddToFavourites}
+            icon={<FavoriteBorder />}
+            checkedIcon={<Favorite sx={{ fill: 'red' }} />}
+          />
+
           <Tooltip title="Add to Storage">
             <IconButton onClick={handleAddToStorage}>
               <LibraryAddIcon />

@@ -60,7 +60,7 @@ const Navigation = () => {
                 action={messageAction}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 autoHideDuration={4000}
-                message={(displayMessage as Error).message}
+                message={displayMessage}
                 onClose={handleCloseMessage}
                 open={true}
               />

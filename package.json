@@ -4,10 +4,10 @@
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/styled": "^11.11.5",
     "@hookform/devtools": "^4.3.1",
     "@mui/icons-material": "^5.15.11",
-    "@mui/material": "^5.15.11",
+    "@mui/material": "^5.15.18",
     "@mui/system": "^5.15.11",
     "@mui/x-data-grid": "^6.19.5",
     "@mui/x-data-grid-generator": "^6.19.6",
@@ -41,6 +41,7 @@
     "react-slick": "^0.30.2",
     "sass": "^1.69.6",
     "slick-carousel": "^1.8.1",
+    "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -69,6 +70,7 @@
     ]
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint-config-airbnb": "^19.0.4",

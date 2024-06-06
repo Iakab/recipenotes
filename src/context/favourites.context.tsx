@@ -7,12 +7,10 @@ import {
 } from 'react';
 
 import {
-  getRecipesDocument,
-  removeRecipeFromDoc,
-  updateCollection,
+  deleteRecipe,
+  fetchSubcollection,
+  uploadRecipe,
 } from 'utils/firebase/db';
-
-import { DocumentData, DocumentSnapshot } from 'firebase/firestore';
 
 import { RecipeItem, Recipes } from 'utils/api/api.types';
 
@@ -20,7 +18,7 @@ import { UserContext } from './user.context';
 
 export type FavourtiesContextType = {
   favouriteRecipes: Recipes | undefined;
-  isItemFavourite: (item: RecipeItem) => RecipeItem | undefined;
+  isItemFavourite: (item: RecipeItem) => boolean;
   setFavouriteRecipes: React.Dispatch<
     React.SetStateAction<Recipes | undefined>
   >;
@@ -29,7 +27,7 @@ export type FavourtiesContextType = {
 
 export const FavourtiesContext = createContext<FavourtiesContextType>({
   favouriteRecipes: undefined,
-  isItemFavourite: () => undefined,
+  isItemFavourite: () => false,
   setFavouriteRecipes: () => {},
   updateFavourites: async () => {},
 });
@@ -40,58 +38,48 @@ export const FavouritesProvider = ({ children }: PropsWithChildren) => {
 
   const collectionName = 'favourites';
 
-  const isItemFavourite = (item: RecipeItem) =>
-    favouriteRecipes?.find(
-      (savedRecipe: RecipeItem) => savedRecipe.id === item.id,
-    );
+  // DEFAULT
+  const updateContext = async () => {
+    const data = (
+      await fetchSubcollection(currentUser?.userUid, collectionName)
+    ).docs;
 
-  const setDataFromSnapshot = (
-    favouritesSnapshot:
-      | DocumentSnapshot<DocumentData, DocumentData>
-      | undefined,
-  ) => {
-    const data = favouritesSnapshot?.data();
+    const recipes = data.map((document) => document.data());
 
-    if (data) {
-      setFavouriteRecipes(Object.values(data));
+    if (recipes) {
+      setFavouriteRecipes(recipes as Recipes);
     }
   };
 
-  // DEFAULT
   useEffect(() => {
-    if (!favouriteRecipes && !userIsLoading && currentUser) {
-      const getFavouritesDoc = async () => {
-        const favouritesSnapshot = await getRecipesDocument(
-          collectionName,
-          currentUser?.userUid,
-        );
-        setDataFromSnapshot(favouritesSnapshot);
-      };
-      getFavouritesDoc();
+    if (!userIsLoading && currentUser) {
+      updateContext();
     }
   }, [currentUser]);
 
-  // ADD OR REMOVE
+  const isItemFavourite = (item: RecipeItem) => {
+    const isFavourite = favouriteRecipes?.find(
+      (savedRecipe: RecipeItem) => savedRecipe.id === item.id,
+    );
+    if (isFavourite) {
+      return true;
+    }
+    return false;
+  };
+
   const updateFavourites = async (item: RecipeItem) => {
     const itemIsAlreadyAdded = isItemFavourite(item);
 
     if (!itemIsAlreadyAdded) {
-      const favouritesSnapshot = await updateCollection(
-        collectionName,
-        currentUser?.userUid,
-        item,
-      );
-      setDataFromSnapshot(favouritesSnapshot);
+      await uploadRecipe(currentUser?.userUid, collectionName, item);
+      updateContext();
     } else {
-      const favouritesSnapshot = await removeRecipeFromDoc(
-        collectionName,
-        currentUser?.userUid,
-        item,
-      );
-      setDataFromSnapshot(favouritesSnapshot);
+      await deleteRecipe(currentUser?.userUid, collectionName, item.id);
+      updateContext();
     }
   };
 
+  // ADD OR REMOVE
   const value = {
     favouriteRecipes,
     isItemFavourite,

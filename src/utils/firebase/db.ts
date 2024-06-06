@@ -1,6 +1,6 @@
 import {
   collection,
-  deleteField,
+  deleteDoc,
   doc,
   DocumentData,
   DocumentSnapshot,
@@ -12,7 +12,6 @@ import {
   setDoc,
   updateDoc,
   where,
-  writeBatch,
 } from 'firebase/firestore';
 
 import { getDownloadURL, ref } from 'firebase/storage';
@@ -20,7 +19,7 @@ import { getDownloadURL, ref } from 'firebase/storage';
 import { User } from 'firebase/auth';
 
 import { app } from './config';
-import { storage } from './storage';
+import { storage, deleteImg } from './storage';
 
 import { RecipeItem } from '../api/api.types';
 
@@ -35,8 +34,7 @@ export const createUserDocumentFormAuth = async (
   const userSnapshot = await getDoc(userDocRef);
 
   if (!userSnapshot.exists()) {
-    const { email } = userAuth;
-    const { displayName } = additionalInformation || userAuth;
+    const { email, displayName } = userAuth;
 
     const userUid = userAuth.uid;
 
@@ -44,7 +42,7 @@ export const createUserDocumentFormAuth = async (
 
     //  get photo from Google or set the default icon
     const userPhotoUrl =
-      userAuth.photoURL ||
+      userAuth.photoURL ??
       (await getDownloadURL(ref(storage, 'images/defaultUserIcon.png')));
 
     try {
@@ -54,6 +52,7 @@ export const createUserDocumentFormAuth = async (
         userBio,
         userPhotoUrl,
         userUid,
+        ...additionalInformation,
       });
       return await createUserDocumentFormAuth(userAuth, additionalInformation);
     } catch (e) {
@@ -79,6 +78,7 @@ export type Updates = {
   userBio?: string;
   userPhotoUrl?: string;
 };
+
 //  Update doc
 export const updateUserDocumentFormAuth = async (
   userAuth: DocumentData,
@@ -92,20 +92,6 @@ export const updateUserDocumentFormAuth = async (
   return getDoc(userDocRef);
 };
 
-// UPLOAD CATEGORIES
-export const addCollectionAndDocumentsAsBatch = async (
-  collectionName: string,
-  documentName: string,
-  jsonToAdd: string,
-) => {
-  const batch = writeBatch(db);
-  const docRef = doc(db, collectionName, documentName);
-
-  batch.set(docRef, { data: jsonToAdd });
-  await batch.commit();
-  console.log('done');
-};
-
 // GET All DOCS FROM COLLECTION
 export const getCategoriesDocument = async () => {
   const categoriesRef = collection(db, 'categories');
@@ -113,52 +99,48 @@ export const getCategoriesDocument = async () => {
 
   return getDocs(queryResults);
 };
-// getDocs(collection(db, collectionName));
 
-// Get DOC
-export const getRecipesDocument = async (
-  collectionName: string,
-  documentName: string,
-) => {
-  const docRef = doc(db, collectionName, documentName);
-  const recipesSnapshot = await getDoc(docRef);
-  
-  if (recipesSnapshot.exists()) {
-    return recipesSnapshot;
-  }
-  return undefined;
+export const fetchSubcollection = (userUid: string, subcollection: string) => {
+  const path = collection(db, 'users', userUid, subcollection);
+  return getDocs(path);
 };
 
-// UPDATE OR CREATE
-export const updateCollection = async (
-  collectionName: string,
-  documentName: string,
-  objectsToAdd: RecipeItem,
+export const uploadRecipe = async (
+  userUid: string,
+  subcollection: string,
+  recipe: RecipeItem,
 ) => {
-  const recipeDocRef = doc(db, collectionName, documentName);
-  const favouritesSnapshot = await getDoc(recipeDocRef);
+  const favouritesRef = doc(db, 'users', userUid, subcollection, recipe.id);
 
-  if (favouritesSnapshot.exists()) {
-    await updateDoc(recipeDocRef, { [objectsToAdd.id]: objectsToAdd });
-  } else {
-    await setDoc(recipeDocRef, {
-      [objectsToAdd.id]: objectsToAdd,
-    });
+  try {
+    await setDoc(favouritesRef, { ...recipe });
+  } catch (error) {
+    console.error(error);
   }
-
-  return getDoc(recipeDocRef);
 };
 
-// REMOVE RECIPE FROM FAVOURITES
-export const removeRecipeFromDoc = async (
-  collectionName: string,
-  documentName: string,
-  objectsToAdd: RecipeItem,
+export const deleteRecipe = async (
+  userUid: string,
+  subcollection: string,
+  recipeId: string,
 ) => {
-  const recipeDocRef = doc(db, collectionName, documentName);
-  await updateDoc(recipeDocRef, {
-    [objectsToAdd.id]: deleteField(),
-  });
+  if (subcollection === 'storage') {
+    deleteImg(`images/${userUid}/recipes/${recipeId}`);
+  }
 
-  return getDoc(recipeDocRef);
+  try {
+    const path = doc(db, 'users', userUid, subcollection, recipeId);
+    await deleteDoc(path);
+  } catch (error) {
+    console.log((error as Error).message);
+  }
+};
+
+export const updateRecipe = async (
+  userUid: string,
+  recipeId: string,
+  field: string,
+) => {
+  const path = doc(db, 'users', userUid, 'storage', recipeId);
+  return updateDoc(path, { field });
 };

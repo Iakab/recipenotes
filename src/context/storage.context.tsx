@@ -1,63 +1,60 @@
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 
 import {
-  addCollectionAndDocumentsAsBatch,
-  getRecipesDocument,
+  deleteRecipe,
+  fetchSubcollection,
+  uploadRecipe,
 } from 'utils/firebase/db';
 
-import { RecipeItem, Recipes } from 'utils/api/api.types';
+import { RecipeItem, RecipeItemToUpload, Recipes } from 'utils/api/api.types';
 
 import { useUserContext } from './user.context';
 
 type StorageContextType = {
-  displayMessage: Error | undefined;
+  displayMessage: string | undefined;
+  imgToStore: File | undefined;
   isLoading: boolean;
-  removeItemFromStorage: (
-    recipeId?: string,
-    selectedIds?: string[],
-  ) => Promise<void>;
-  setDisplayMessage: React.Dispatch<React.SetStateAction<Error | undefined>>;
+  recipeToUpload: RecipeItemToUpload | undefined;
+  removeItemFromStorage: (recipeId?: string, selectedIds?: string[]) => void;
+  setDisplayMessage: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setImgToStore: React.Dispatch<React.SetStateAction<File | undefined>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setRecipeToUpload: React.Dispatch<
+    React.SetStateAction<RecipeItemToUpload | undefined>
+  >;
   storedRecipes: Recipes | undefined;
   uploadNewRecipe: (recipeToAdd: RecipeItem) => Promise<void>;
 };
 
 export const StorageContext = createContext<StorageContextType>({
   displayMessage: undefined,
+  imgToStore: undefined,
   isLoading: true,
-  removeItemFromStorage: async () => {},
+  recipeToUpload: undefined,
+  removeItemFromStorage: () => {},
   setDisplayMessage: () => {},
+  setImgToStore: () => {},
   setIsLoading: () => {},
+  setRecipeToUpload: () => {},
   storedRecipes: undefined,
   uploadNewRecipe: async () => {},
 });
 
 export const StorageProvider = ({ children }: PropsWithChildren) => {
-  const [displayMessage, setDisplayMessage] = useState<Error>();
+  const [displayMessage, setDisplayMessage] = useState<string>();
+  const [imgToStore, setImgToStore] = useState<File>();
   const [isLoading, setIsLoading] = useState(true);
+  const [recipeToUpload, setRecipeToUpload] = useState<RecipeItemToUpload>();
   const [storedRecipes, setStoredRecipes] = useState<Recipes>();
+  const collectionName = 'storage';
 
   const { currentUser, userIsLoading } = useUserContext();
 
-  const getData = async () => {
-    const data = (
-      await getRecipesDocument('storage', currentUser?.userUid)
-    )?.data()?.data;
-    if (data) {
-      return JSON.parse(data);
+  useEffect(() => {
+    if (recipeToUpload) {
+      console.log(recipeToUpload);
     }
-    return null;
-  };
-
-  const uploadRecipes = async (newRecipesCollection: Recipes | undefined) => {
-    await addCollectionAndDocumentsAsBatch(
-      'storage',
-      currentUser?.userUid,
-      JSON.stringify(newRecipesCollection),
-    );
-    setStoredRecipes(await getData());
-    setIsLoading(false);
-  };
+  }, [recipeToUpload]);
 
   const addTimeStamp = (recipe: RecipeItem) => {
     const recipeToAdd = recipe;
@@ -68,71 +65,74 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
     return recipeToAdd;
   };
 
-  const isUnique = (item: RecipeItem) =>
-    !storedRecipes?.find(
-      (savedRecipe: RecipeItem) => savedRecipe.id === item.id,
-    );
+  const updateContext = async () => {
+    const data = (
+      await fetchSubcollection(currentUser?.userUid, collectionName)
+    ).docs;
+
+    if (data) {
+      const recipes = data.map((document) => document.data());
+      setStoredRecipes(recipes as Recipes);
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (!storedRecipes && currentUser && !userIsLoading) {
-      const fetchStoredData = async () => {
-        setStoredRecipes(await getData());
-        setIsLoading(false);
-      };
-      fetchStoredData();
+    if (!userIsLoading && currentUser) {
+      updateContext();
     }
   }, [currentUser]);
 
-  const uploadNewRecipe = async (recipe: RecipeItem) => {
-    const recipeToAdd = addTimeStamp(recipe);
+  const isItemStored = (itemId: string) =>
+    storedRecipes?.find((savedRecipe: RecipeItem) => savedRecipe.id === itemId);
 
-    if (storedRecipes) {
-      try {
-        if (isUnique(recipeToAdd)) {
-          await addCollectionAndDocumentsAsBatch(
-            'storage',
-            currentUser?.userUid,
-            JSON.stringify([...storedRecipes, recipeToAdd]),
-          );
-        } else {
-          throw new Error('Recipe is already saved in your storage');
-        }
-      } catch (error) {
-        setDisplayMessage(error as Error);
+  const uploadNewRecipe = async (item: RecipeItem) => {
+    const itemIsAlreadyAdded = isItemStored(item.id);
+
+    try {
+      if (!itemIsAlreadyAdded) {
+        const recipeToAdd = addTimeStamp(item);
+
+        await uploadRecipe(currentUser?.userUid, collectionName, recipeToAdd);
+
+        updateContext();
+        setDisplayMessage('Successfully stored');
+      } else {
+        setIsLoading(false);
+        throw new Error('Recipe already added');
       }
-    } else {
-      uploadRecipes([recipeToAdd]);
+    } catch (error) {
+      setDisplayMessage((error as Error).message);
     }
-
-    setStoredRecipes(await getData());
-    setIsLoading(false);
   };
 
   const removeItemFromStorage = async (
     recipeId?: string,
     selectedIds?: string[],
   ) => {
+    if (selectedIds) {
+      selectedIds.forEach(async (id: string) => {
+        await deleteRecipe(currentUser?.userUid, collectionName, id);
+        updateContext();
+      });
+    }
+
     if (recipeId) {
-      const newRecipesCollection = storedRecipes?.filter(
-        (recipe: RecipeItem) => recipe.id !== recipeId,
-      );
-
-      uploadRecipes(newRecipesCollection);
-    } else {
-      const newRecipesCollection = storedRecipes?.filter(
-        (recipe: RecipeItem) => !selectedIds?.includes(recipe.id),
-      );
-
-      uploadRecipes(newRecipesCollection);
+      await deleteRecipe(currentUser?.userUid, collectionName, recipeId);
+      updateContext();
     }
   };
 
   const value = {
     displayMessage,
+    imgToStore,
     isLoading,
+    recipeToUpload,
     removeItemFromStorage,
     setDisplayMessage,
+    setImgToStore,
     setIsLoading,
+    setRecipeToUpload,
     storedRecipes,
     uploadNewRecipe,
   };
