@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import { useForm } from 'react-hook-form';
 
 import { AuthError, AuthErrorCodes } from 'firebase/auth';
@@ -35,9 +37,15 @@ const SignUpForm: React.FC<SignUpProps> = ({ setDisplaySignIn }) => {
     },
   });
 
+  const submitBtn = useRef<HTMLButtonElement>(null);
+
   const onSubmit = async (data: FormValues) => {
+    if (submitBtn.current) {
+      submitBtn.current.disabled = true;
+    }
+
     const { displayName, email, password, confirmPassword } = data;
-    console.log(displayName);
+
     try {
       if (password !== confirmPassword) {
         throw new Error(`Passwords don't match`);
@@ -53,6 +61,10 @@ const SignUpForm: React.FC<SignUpProps> = ({ setDisplaySignIn }) => {
       );
 
       await createUserDocumentFormAuth(user, { displayName });
+
+      if (submitBtn.current) {
+        submitBtn.current.disabled = false;
+      }
     } catch (error) {
       if ((error as AuthError).code === AuthErrorCodes.EMAIL_EXISTS) {
         alert('Email already in use!');
@@ -149,7 +161,7 @@ const SignUpForm: React.FC<SignUpProps> = ({ setDisplaySignIn }) => {
           </label>
         </div>
 
-        <button type="submit" className="btn">
+        <button type="submit" className="btn" ref={submitBtn}>
           Submit
         </button>
       </form>

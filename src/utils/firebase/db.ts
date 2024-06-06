@@ -34,8 +34,7 @@ export const createUserDocumentFormAuth = async (
   const userSnapshot = await getDoc(userDocRef);
 
   if (!userSnapshot.exists()) {
-    const { email } = userAuth;
-    const { displayName } = additionalInformation || userAuth;
+    const { email, displayName } = userAuth;
 
     const userUid = userAuth.uid;
 
@@ -43,17 +42,17 @@ export const createUserDocumentFormAuth = async (
 
     //  get photo from Google or set the default icon
     const userPhotoUrl =
-      userAuth.photoURL ||
+      userAuth.photoURL ??
       (await getDownloadURL(ref(storage, 'images/defaultUserIcon.png')));
 
     try {
       await setDoc(userDocRef, {
-        ...additionalInformation,
         displayName,
         email,
         userBio,
         userPhotoUrl,
         userUid,
+        ...additionalInformation,
       });
       return await createUserDocumentFormAuth(userAuth, additionalInformation);
     } catch (e) {
