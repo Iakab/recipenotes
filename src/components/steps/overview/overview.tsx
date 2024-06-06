@@ -2,7 +2,7 @@ import { useContext, useMemo } from 'react';
 
 import { StorageContext } from 'context/storage.context';
 
-import { Instruction, RecipeItemToUpload, Section } from 'utils/api/api.types';
+import { Instruction, Section } from 'utils/api/api.types';
 
 import {
   Accordion,
@@ -30,7 +30,7 @@ const Overview = () => {
     sections,
     total_time_tier: totalTimeTier,
     yields,
-  } = recipeToUpload as RecipeItemToUpload;
+  } = recipeToUpload || {};
 
   const ingredients = useMemo(
     () =>
