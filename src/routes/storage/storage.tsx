@@ -14,14 +14,25 @@ import CustomNoRowsOverlay from 'components/storage-table/no-content-overlay';
 import CustomFooter from 'components/storage-table/custom-table-footer';
 import StorageColumns from 'components/storage-table/storage-elements';
 
+import PreviewItem from 'components/preview-item/preview-item';
+
+import { RecipeItem } from 'utils/api/api.types';
+
 import { Box, Button, LinearProgress, Stack } from '@mui/material';
 
 import './storage.scss';
 
 const Storage = () => {
   const [selectedRecipesId, setSelectedRecipesId] = useState<string[]>([]);
-  const { isLoading, removeItemFromStorage, setIsLoading, storedRecipes } =
-    useContext(StorageContext);
+  const [targetRecipe, setTargetRecipe] = useState<RecipeItem>();
+
+  const {
+    isLoading,
+    removeItemFromStorage,
+    setIsLoading,
+    storedRecipes,
+    setRecipeToUpload,
+  } = useContext(StorageContext);
   const navigate = useNavigate();
 
   const handleDelete = (id?: string) => {
@@ -45,15 +56,15 @@ const Storage = () => {
     return id;
   };
 
-  // TODO: handle edit after creating the component for creating new recipes
   const handleEdit = (id: string) => {
-    console.log('edit', id);
-    return id;
+    setRecipeToUpload(storedRecipes?.find((recipe) => recipe.id === id));
+
+    navigate('/upload');
+    return '';
   };
 
-  // TODO: handle clicks/hover on different elements from the rows
   const handleRowClick = (event: GridRowParams<any>) => {
-    console.log(event);
+    setTargetRecipe(storedRecipes?.find((recipe) => recipe.id === event.id));
   };
 
   const columns = StorageColumns(handleDelete, handleEdit);
@@ -104,14 +115,18 @@ const Storage = () => {
 
   return (
     <div className="storage">
-      <Stack gap={2} height="100vh">
+      {targetRecipe && (
+        <PreviewItem recipe={targetRecipe} setTargetRecipe={setTargetRecipe} />
+      )}
+
+      <Stack gap={2}>
         <Box flexDirection="row">
           <h2>STORAGE</h2>
         </Box>
         <Button
           fullWidth={false}
           size="large"
-          sx={{ width: '30%', margin: 'auto' }}
+          sx={{ minWidth: '30%', margin: 'auto' }}
           variant="outlined"
           onClick={handleNavigateToUpload}
         >

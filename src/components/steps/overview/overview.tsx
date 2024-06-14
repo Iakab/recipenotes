@@ -30,6 +30,7 @@ const Overview = () => {
     sections,
     total_time_tier: totalTimeTier,
     yields,
+    thumbnail_url: thumbnailUrl,
   } = recipeToUpload || {};
 
   const ingredients = useMemo(
@@ -102,7 +103,11 @@ const Overview = () => {
         </Box>
         <Box sx={phoneSize ? { order: '-1', alignSelf: 'center' } : {}}>
           <img
-            src={URL.createObjectURL(imgToStore as File)}
+            src={
+              imgToStore
+                ? URL.createObjectURL(imgToStore as File)
+                : thumbnailUrl
+            }
             style={{
               width: '17rem',
               height: '17rem',

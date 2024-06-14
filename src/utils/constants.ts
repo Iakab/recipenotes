@@ -109,3 +109,26 @@ export const mealsOptions = [
   'Lunch',
   'Snacks',
 ];
+
+export const cuisineOptions = [
+  'Caribbean',
+  'Central African',
+  'Central American',
+  'Central Asian',
+  'Chinese',
+  'East African',
+  'East Asian',
+  'Eastern European',
+  'Indian',
+  'Indonesian',
+  'North African',
+  'North American',
+  'Northern European',
+  'Oceanic cuisine',
+  'South American',
+  'Southern African',
+  'Southern European',
+  'West African',
+  'West Asian',
+  'Western European',
+];

@@ -50,12 +50,6 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
 
   const { currentUser, userIsLoading } = useUserContext();
 
-  useEffect(() => {
-    if (recipeToUpload) {
-      console.log(recipeToUpload);
-    }
-  }, [recipeToUpload]);
-
   const addTimeStamp = (recipe: RecipeItem) => {
     const recipeToAdd = recipe;
 
@@ -96,7 +90,9 @@ export const StorageProvider = ({ children }: PropsWithChildren) => {
         await uploadRecipe(currentUser?.userUid, collectionName, recipeToAdd);
 
         updateContext();
-        setDisplayMessage('Successfully stored');
+        if (!displayMessage) {
+          setDisplayMessage('Successfully stored');
+        }
       } else {
         setIsLoading(false);
         throw new Error('Recipe already added');

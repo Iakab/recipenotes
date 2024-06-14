@@ -13,33 +13,26 @@ import {
 import { RecipeItemToUpload, Tag, TotalTimeTier } from 'utils/api/api.types';
 
 import {
+  cuisineOptions,
   difficultyOptions,
   mealsOptions,
   occasions,
   timeOptions,
 } from 'utils/constants';
 
-import countries from 'i18n-iso-countries';
-import enLocale from 'i18n-iso-countries/langs/en.json';
-
 import { StepsProps } from '../nameAndDescription/nameAndDescription';
-
-const countriesOptions = () => {
-  countries.registerLocale(enLocale);
-  return countries.getNames('en', { select: 'official' });
-};
 
 type TagSelections = Tag[];
 
 type Selections = {
-  country: string;
+  cuisine: string;
   difficulty: string;
   meal: string;
   occasion: string;
 };
 
 type RegisteredSelections = {
-  country: string;
+  cuisine: string;
   difficulty: string;
   meal: string;
   occasion: string;
@@ -47,7 +40,7 @@ type RegisteredSelections = {
 };
 
 const defaultSelections = {
-  country: '',
+  cuisine: '',
   difficulty: '',
   meal: '',
   occasion: '',
@@ -71,7 +64,6 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
   useEffect(() => {
     if (recipeToUpload?.tags) {
       let uploadedTags: Selections = defaultSelections;
-
       recipeToUpload.tags.map((tag) => {
         const { type, display_name: displayName } = tag;
 
@@ -85,7 +77,7 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
   }, []);
 
   const registeredTags = useMemo(() => {
-    const registeredSelections: any = {};
+    const registeredSelections: any = defaultSelections;
 
     if (recipeToUpload?.tags && recipeToUpload.total_time_tier) {
       recipeToUpload.tags.map((item: Tag) => {
@@ -97,13 +89,34 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
     }
 
     return {
-      country: '',
+      cuisine: '',
       difficulty: '',
       meal: '',
       occasion: '',
       time: '',
     };
   }, [recipeToUpload?.tags]);
+
+  const extendedDifficultyOptions = useMemo(
+    () => [...difficultyOptions, registeredTags.difficulty],
+    [recipeToUpload, registeredTags],
+  );
+  const extendedMealsOptions = useMemo(
+    () => [...mealsOptions, registeredTags.meal],
+    [recipeToUpload, registeredTags],
+  );
+  const extendedOccasionsOptions = useMemo(
+    () => [...occasions, registeredTags.occasion],
+    [recipeToUpload, registeredTags],
+  );
+  const extendedTimeOptions = useMemo(
+    () => [...timeOptions, registeredTags.time],
+    [recipeToUpload, registeredTags],
+  );
+  const extendedCuisineOptions = useMemo(
+    () => [...cuisineOptions, registeredTags.cuisine],
+    [recipeToUpload, registeredTags],
+  );
 
   const inputStyle = {
     minWidth: phoneSize ? '25rem' : '19rem',
@@ -191,20 +204,20 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
           }}
         >
           <TextField
-            defaultValue={registeredTags.country}
-            id="country"
-            label="Select country"
-            name="country"
+            defaultValue={registeredTags.cuisine}
+            id="cuisine"
+            label="Select cuisine"
+            name="cuisine"
             onChange={handleChange}
             select
             size="small"
             sx={inputStyle}
-            value={selections.country}
+            value={selections.cuisine}
             variant="filled"
           >
-            {Object.entries(countriesOptions()).map((country, index) => (
-              <MenuItem key={index} value={country[1]}>
-                {country[1]}
+            {extendedCuisineOptions.map((cuisine, index) => (
+              <MenuItem key={index} value={cuisine}>
+                {cuisine}
               </MenuItem>
             ))}
           </TextField>
@@ -221,7 +234,7 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
             value={selections.meal}
             variant="filled"
           >
-            {mealsOptions.map((meal, index) => (
+            {extendedMealsOptions.map((meal, index) => (
               <MenuItem key={index} value={meal}>
                 {meal}
               </MenuItem>
@@ -241,7 +254,7 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
             variant="filled"
           >
             {' '}
-            {difficultyOptions.map((difficulty, index) => (
+            {extendedDifficultyOptions.map((difficulty, index) => (
               <MenuItem key={index} value={difficulty}>
                 {difficulty}
               </MenuItem>
@@ -261,7 +274,7 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
             variant="filled"
           >
             {' '}
-            {timeOptions.map((timeOption, index) => (
+            {extendedTimeOptions.map((timeOption, index) => (
               <MenuItem key={index} value={timeOption}>
                 {timeOption}
               </MenuItem>
@@ -281,7 +294,7 @@ const Tags: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
             variant="filled"
           >
             {' '}
-            {occasions.map((occasion, index) => (
+            {extendedOccasionsOptions.map((occasion, index) => (
               <MenuItem key={index} value={occasion}>
                 {occasion}
               </MenuItem>
