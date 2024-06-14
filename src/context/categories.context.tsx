@@ -49,7 +49,6 @@ export const CategoriesProvider = ({ children }: PropsWithChildren<{}>) => {
     if (!categories) {
       const fetchData = async () => {
         const response = await getCategoriesDocument();
-        // console.log(response.docs);
         const categoriesCollection: CategoriesCollection = [];
         response.docs.forEach((category) => {
           const categoryId: string = category.id;

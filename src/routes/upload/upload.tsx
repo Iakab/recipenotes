@@ -116,23 +116,26 @@ const UploadRecipe = () => {
     const { userUid } = currentUser;
 
     try {
-      await uploadImage(imgToStore as File, userUid, `recipes/${recipeId}`);
+      if (imgToStore) {
+        await uploadImage(imgToStore as File, userUid, `recipes/${recipeId}`);
 
-      const recipeImage = await getImage(
-        `images/${userUid}/recipes/${recipeId}`,
-      );
+        const recipeImage = await getImage(
+          `images/${userUid}/recipes/${recipeId}`,
+        );
 
-      if (!recipeImage) {
-        throw new Error('Failed to upload image');
+        if (!recipeImage) {
+          throw new Error('Failed to upload image');
+        }
+
+        uploadNewRecipe({
+          ...(recipeToUpload as RecipeItem),
+          thumbnail_url: recipeImage ?? recipeToUpload?.thumbnail_url,
+        });
+      } else {
+        uploadNewRecipe(recipeToUpload as RecipeItem);
       }
 
-      uploadNewRecipe({
-        ...(recipeToUpload as RecipeItem),
-        thumbnail_url: recipeImage,
-      });
-
       navigate('/storage');
-      setDisplayMessage('Recipe successfully uploaded');
       setRecipeToUpload(undefined);
       setImgToStore(undefined);
     } catch (error) {

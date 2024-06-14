@@ -45,7 +45,7 @@ const UploadImage: React.FC<StepsProps> = ({ submitStep, setSubmitStep }) => {
   useEffect(() => {
     if (submitStep.initialized && currentUser) {
       try {
-        if (!file && !imgToStore) {
+        if (!file && !imgUrl) {
           setSubmitStep({ ...submitStep, initialized: false });
           throw new Error('Image required');
         }
